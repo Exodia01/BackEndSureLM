@@ -1,12 +1,34 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import { Prisma } from "@prisma/client";
-
-type LeadWithRelations = Prisma.PolicyLeadGetPayload<{
-  include: { issuances: true; reminders: true }
-}>;
-
+type LeadWithRelations = {
+  id: string;
+  householdName: string;
+  phone: string | null;
+  status: string;
+  notes: string | null;
+  income: number | null;
+  familySize: number | null;
+  followUpAt: Date | null;
+  agentId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  issuances: {
+    id: string;
+    policyName: string;
+    premiumAmount: number | null;
+    status: string;
+    issuedAt: Date;
+    expiresAt: Date | null;
+    nextPremiumDue: Date | null;
+  }[];
+  reminders: {
+    id: string;
+    note: string;
+    dueAt: Date;
+    isDone: boolean;
+  }[];
+};
 export async function GET() {
   try {
     const { userId: clerkId } = await auth();
