@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import { PolicyLead, PolicyIssuance, Reminder } from "@prisma/client";
+import type { PolicyLead, PolicyIssuance, Reminder } from "@prisma/client";
 
 type LeadWithRelations = PolicyLead & {
   issuances: PolicyIssuance[];
