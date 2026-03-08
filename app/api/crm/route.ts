@@ -10,6 +10,7 @@ type LeadWithRelations = {
   income: number | null;
   familySize: number | null;
   followUpAt: Date | null;
+  dateOfBirth: Date | null;
   agentId: string;
   createdAt: Date;
   updatedAt: Date;
