@@ -2,35 +2,6 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 
-type LeadWithRelations = {
-  id: string;
-  householdName: string;
-  phone: string | null;
-  status: string;
-  notes: string | null;
-  income: number | null;
-  familySize: number | null;
-  followUpAt: Date | null;
-  dateOfBirth: Date | null;
-  agentId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  issuances: {
-    id: string;
-    policyName: string;
-    premiumAmount: number | null;
-    status: string;
-    issuedAt: Date;
-    expiresAt: Date | null;
-    nextPremiumDue: Date | null;
-  }[];
-  reminders: {
-    id: string;
-    note: string;
-    isDone: boolean;
-  }[];
-};
-
 export async function GET() {
   try {
     const { userId: clerkId } = await auth();
@@ -45,7 +16,7 @@ export async function GET() {
     const in7Days = new Date(today);
     in7Days.setDate(today.getDate() + 7);
 
-    const leads: LeadWithRelations[] = await db.policyLead.findMany({
+    const leads = await db.policyLead.findMany({
       where: { agentId: user.id },
       include: {
         issuances: true,
