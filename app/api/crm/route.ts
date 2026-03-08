@@ -1,12 +1,11 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import type { PolicyLead, PolicyIssuance, Reminder } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
-type LeadWithRelations = PolicyLead & {
-  issuances: PolicyIssuance[];
-  reminders: Reminder[];
-};
+type LeadWithRelations = Prisma.PolicyLeadGetPayload<{
+  include: { issuances: true; reminders: true }
+}>;
 
 export async function GET() {
   try {
