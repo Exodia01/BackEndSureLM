@@ -99,8 +99,4 @@ export async function PATCH(req: NextRequest) {
     console.error("CRM update error:", error);
     return Response.json({ success: false, error: "Failed to update lead" }, { status: 500 });
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> dd36aebbe4b9eca1e156b964b385a98dd64e3d39

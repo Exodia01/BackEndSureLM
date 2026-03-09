@@ -31,17 +31,10 @@ RULE 2 - CONVERSATION MODE:
 Triggered for follow-up questions, policy details, comparisons, greetings, anything else.
 - Answer using specific details from the provided policy documents
 - Give concrete numbers, facts, eligibility criteria from the documents
-<<<<<<< HEAD
 - If history contains [Policies shown to user: ...], ONLY explain those exact policies. Never substitute or add different ones.
 - Respond ONLY with:
 {"type":"message","content":"Specific, detailed answer using facts from the policy documents"}`;
 
-=======
-- Respond ONLY with:
-{"type":"message","content":"Specific, detailed answer using facts from the policy documents"}`;
-
-// ← NEW: history message type
->>>>>>> dd36aebbe4b9eca1e156b964b385a98dd64e3d39
 interface HistoryMessage {
   role: "agent" | "ai";
   content: string;
@@ -71,10 +64,6 @@ async function retrieveContext(message: string): Promise<string> {
   }
 }
 
-<<<<<<< HEAD
-=======
-// ← CHANGED: accepts history, spreads it before the current message
->>>>>>> dd36aebbe4b9eca1e156b964b385a98dd64e3d39
 async function callBedrock(message: string, history: HistoryMessage[]): Promise<string> {
   const command = new ConverseCommand({
     modelId: process.env.BEDROCK_MODEL_ID!,
@@ -92,10 +81,6 @@ async function callBedrock(message: string, history: HistoryMessage[]): Promise<
   return response.output?.message?.content?.[0]?.text ?? "{}";
 }
 
-<<<<<<< HEAD
-=======
-// ← CHANGED: accepts history, spreads it before the current message
->>>>>>> dd36aebbe4b9eca1e156b964b385a98dd64e3d39
 async function callGroq(message: string, history: HistoryMessage[]): Promise<string> {
   const response = await groqClient.chat.completions.create({
     model: "meta-llama/llama-4-scout-17b-16e-instruct",
@@ -115,7 +100,6 @@ async function callGroq(message: string, history: HistoryMessage[]): Promise<str
 
 export async function POST(req: NextRequest) {
   try {
-<<<<<<< HEAD
     const { message, history = [] } = await req.json() as { message: string; history: HistoryMessage[] };
 
     // Build a better search query using policy names from history
@@ -128,12 +112,6 @@ export async function POST(req: NextRequest) {
       : message;
 
     const context = await retrieveContext(searchQuery);
-=======
-    // ← CHANGED: destructure history (defaults to [] so nothing breaks if not sent)
-    const { message, history = [] } = await req.json() as { message: string; history: HistoryMessage[] };
-
-    const context = await retrieveContext(message);
->>>>>>> dd36aebbe4b9eca1e156b964b385a98dd64e3d39
     const augmentedMessage = context
       ? `POLICY DOCUMENTS (use these for accurate info):\n\n${context}\n\n---\n\nAgent message: ${message}`
       : message;
@@ -156,7 +134,6 @@ export async function POST(req: NextRequest) {
       parsed = { type: "message", content: clean };
     }
 
-<<<<<<< HEAD
     // Guard: if content is itself a JSON string, unwrap it
     if (parsed.type === "message" && parsed.content) {
       try {
@@ -165,8 +142,6 @@ export async function POST(req: NextRequest) {
       } catch { /* fine */ }
     }
 
-=======
->>>>>>> dd36aebbe4b9eca1e156b964b385a98dd64e3d39
     if (parsed.type === "recommendation" && Array.isArray(parsed.policies)) {
       if (parsed.policies.length < 2) {
         parsed = { type: "message", content: parsed.analysis ?? "Here are some policy suggestions based on the household profile." };
