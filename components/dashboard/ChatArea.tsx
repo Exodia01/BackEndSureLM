@@ -274,7 +274,12 @@ export default function ChatArea({ lead }: ChatAreaProps) {
     if (!input.trim() || loading) return;
     const history = messages
       .filter((m) => m.id !== "welcome")
-      .map((m) => ({ role: m.role, content: m.content }));
+      .map((m) => ({
+        role: m.role,
+        content: m.policies?.length
+          ? `${m.content}\n\n[Policies shown to user: ${m.policies.map((p: Policy) => `"${p.name}" by ${p.provider} (${p.premium}, ${p.coverage})`).join(" | ")}]`
+          : m.content,
+      }));
 
     const userMsg: Message = { id: Date.now().toString(), role: "agent", content: input, timestamp: new Date() };
     setMessages((p) => [...p, userMsg]);

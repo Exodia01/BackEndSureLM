@@ -31,10 +31,10 @@ RULE 2 - CONVERSATION MODE:
 Triggered for follow-up questions, policy details, comparisons, greetings, anything else.
 - Answer using specific details from the provided policy documents
 - Give concrete numbers, facts, eligibility criteria from the documents
+- If history contains [Policies shown to user: ...], ONLY explain those exact policies. Never substitute or add different ones.
 - Respond ONLY with:
 {"type":"message","content":"Specific, detailed answer using facts from the policy documents"}`;
 
-// ← NEW: history message type
 interface HistoryMessage {
   role: "agent" | "ai";
   content: string;
@@ -64,7 +64,6 @@ async function retrieveContext(message: string): Promise<string> {
   }
 }
 
-// ← CHANGED: accepts history, spreads it before the current message
 async function callBedrock(message: string, history: HistoryMessage[]): Promise<string> {
   const command = new ConverseCommand({
     modelId: process.env.BEDROCK_MODEL_ID!,
@@ -82,7 +81,6 @@ async function callBedrock(message: string, history: HistoryMessage[]): Promise<
   return response.output?.message?.content?.[0]?.text ?? "{}";
 }
 
-// ← CHANGED: accepts history, spreads it before the current message
 async function callGroq(message: string, history: HistoryMessage[]): Promise<string> {
   const response = await groqClient.chat.completions.create({
     model: "meta-llama/llama-4-scout-17b-16e-instruct",
@@ -102,10 +100,18 @@ async function callGroq(message: string, history: HistoryMessage[]): Promise<str
 
 export async function POST(req: NextRequest) {
   try {
-    // ← CHANGED: destructure history (defaults to [] so nothing breaks if not sent)
     const { message, history = [] } = await req.json() as { message: string; history: HistoryMessage[] };
 
-    const context = await retrieveContext(message);
+    // Build a better search query using policy names from history
+    const lastPoliciesInHistory = history
+      .filter((m) => m.role === "ai" && m.content.includes("Policies shown to user:"))
+      .slice(-1)[0]?.content ?? "";
+
+    const searchQuery = lastPoliciesInHistory
+      ? `${message} ${lastPoliciesInHistory.split("Policies shown to user:")[1] ?? ""}`
+      : message;
+
+    const context = await retrieveContext(searchQuery);
     const augmentedMessage = context
       ? `POLICY DOCUMENTS (use these for accurate info):\n\n${context}\n\n---\n\nAgent message: ${message}`
       : message;
@@ -126,6 +132,14 @@ export async function POST(req: NextRequest) {
       parsed = JSON.parse(clean);
     } catch {
       parsed = { type: "message", content: clean };
+    }
+
+    // Guard: if content is itself a JSON string, unwrap it
+    if (parsed.type === "message" && parsed.content) {
+      try {
+        const inner = JSON.parse(parsed.content);
+        if (inner.type) parsed = inner;
+      } catch { /* fine */ }
     }
 
     if (parsed.type === "recommendation" && Array.isArray(parsed.policies)) {
