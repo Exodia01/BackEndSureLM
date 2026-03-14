@@ -80,9 +80,12 @@ export async function PATCH(req: NextRequest) {
 
     const { leadId, ...updates } = await req.json();
     if (!leadId) return Response.json({ success: false, error: "leadId required" }, { status: 400 });
+    
+    const user = await db.user.findUnique({ where: { clerkId } });
+    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const lead = await db.policyLead.update({
-      where: { id: leadId },
+      where: { id: leadId, agentId:user.id },
       data: {
         ...(updates.status && { status: updates.status }),
         ...(updates.phone !== undefined && { phone: updates.phone }),

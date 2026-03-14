@@ -10,6 +10,12 @@ export async function GET(req: NextRequest) {
     const leadId = req.nextUrl.searchParams.get("leadId");
     if (!leadId) return Response.json({ success: false, error: "leadId required" }, { status: 400 });
 
+    const user = await db.user.findUnique({ where: { clerkId } });
+    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+
+    const lead = await db.policyLead.findFirst({ where: { id: leadId, agentId: user.id } });
+    if (!lead) return Response.json({ success: false, error: "Lead not found" }, { status: 404 });
+
     const issuances = await db.policyIssuance.findMany({
       where: { leadId },
       select: { policyName: true },
@@ -31,7 +37,12 @@ export async function POST(req: NextRequest) {
     if (!leadId || !policyName) {
       return Response.json({ success: false, error: "Missing fields" }, { status: 400 });
     }
-    console.log("ISSUANCE POST HIT");
+
+    const user = await db.user.findUnique({ where: { clerkId } });
+    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+
+    const lead = await db.policyLead.findFirst({ where: { id: leadId, agentId: user.id } });
+    if (!lead) return Response.json({ success: false, error: "Lead not found" }, { status: 404 });
 
     const parsedPremium = premiumAmount
       ? parseInt(premiumAmount.replace(/[^0-9]/g, ""))

@@ -11,6 +11,12 @@ export async function GET(req: NextRequest) {
     const leadId = req.nextUrl.searchParams.get("leadId");
     if (!leadId) return Response.json({ success: false, error: "leadId required" }, { status: 400 });
 
+    const user = await db.user.findUnique({ where: { clerkId } });
+    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+
+    const lead = await db.policyLead.findFirst({ where: { id: leadId, agentId: user.id } });
+    if (!lead) return Response.json({ success: false, error: "Lead not found" }, { status: 404 });
+
     const messages = await db.message.findMany({
       where: { leadId },
       orderBy: { createdAt: "asc" },
@@ -33,6 +39,12 @@ export async function POST(req: NextRequest) {
     if (!leadId || !role || !content) {
       return Response.json({ success: false, error: "Missing fields" }, { status: 400 });
     }
+
+    const user = await db.user.findUnique({ where: { clerkId } });
+    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+
+    const lead = await db.policyLead.findFirst({ where: { id: leadId, agentId: user.id } });
+    if (!lead) return Response.json({ success: false, error: "Lead not found" }, { status: 404 });
 
     const message = await db.message.create({
       data: {
