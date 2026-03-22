@@ -1,8 +1,10 @@
-import { BedrockRuntimeClient, ConverseCommand } from "@aws-sdk/client-bedrock-runtime";
+// app/api/chat/route.ts
+import { BedrockRuntimeClient, ConverseCommand, ConverseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
 import Groq from "groq-sdk";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { NextRequest } from "next/server";
 
+// ── Clients ───────────────────────────────────────────────────────────────────
 const bedrockClient = new BedrockRuntimeClient({
   region: process.env.AWS_REGION!,
   token: { token: process.env.AWS_BEARER_TOKEN_BEDROCK! },
@@ -11,6 +13,10 @@ const bedrockClient = new BedrockRuntimeClient({
 const groqClient = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
 const index = pc.Index(process.env.PINECONE_INDEX!);
+
+// ── Constants ─────────────────────────────────────────────────────────────────
+// How many recent messages to keep verbatim before summarizing the rest
+const RECENT_WINDOW = 8;
 
 const SYSTEM_PROMPT = `You are an AI insurance assistant for rural India, helping field agents recommend insurance policies to low-income households.
 
@@ -35,16 +41,36 @@ Triggered for follow-up questions, policy details, comparisons, greetings, anyth
 - Respond ONLY with:
 {"type":"message","content":"Specific, detailed answer using facts from the policy documents"}`;
 
+const SUMMARY_PROMPT = `You are a conversation summarizer. Summarize the following insurance agent conversation history into 3-5 concise bullet points. 
+Focus on: household details discussed, policies recommended, decisions made, and key questions asked.
+Be brief. Plain text only, no JSON.`;
+
+// ── Types ─────────────────────────────────────────────────────────────────────
 interface HistoryMessage {
   role: "agent" | "ai";
   content: string;
 }
 
-async function retrieveContext(message: string): Promise<string> {
+interface BedrockMessage {
+  role: "user" | "assistant";
+  content: [{ text: string }];
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+async function retrieveContext(message: string, history: HistoryMessage[]): Promise<string> {
   try {
+    const lastPoliciesInHistory = history
+      .filter((m) => m.role === "ai" && m.content.includes("Policies shown to user:"))
+      .slice(-1)[0]?.content ?? "";
+
+    const searchQuery = lastPoliciesInHistory
+      ? `${message} ${lastPoliciesInHistory.split("Policies shown to user:")[1] ?? ""}`
+      : message;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const results = await (index as any).searchRecords({
-      query: { topK: 8, inputs: { text: message } },
+      query: { topK: 8, inputs: { text: searchQuery } },
       fields: ["text", "source"],
     });
 
@@ -64,91 +90,260 @@ async function retrieveContext(message: string): Promise<string> {
   }
 }
 
-async function callBedrock(message: string, history: HistoryMessage[]): Promise<string> {
-  const command = new ConverseCommand({
-    modelId: process.env.BEDROCK_MODEL_ID!,
-    system: [{ text: SYSTEM_PROMPT }],
-    messages: [
-      ...history.slice(-20).map((m) => ({
-        role: (m.role === "agent" ? "user" : "assistant") as "user" | "assistant",
-        content: [{ text: m.content }],
-      })),
-      { role: "user", content: [{ text: message }] },
-    ],
-    inferenceConfig: { maxTokens: 1500, temperature: 0.2 },
-  });
-  const response = await bedrockClient.send(command);
-  return response.output?.message?.content?.[0]?.text ?? "{}";
+/**
+ * Summarize old messages (everything outside the recent window) using Groq.
+ * Returns a compact string like "• Family of 5, farmer…\n• Recommended PM Fasal Bima…"
+ * Falls back to an empty string if summarization fails — never breaks the main flow.
+ */
+async function summarizeOldHistory(oldMessages: HistoryMessage[]): Promise<string> {
+  if (oldMessages.length === 0) return "";
+
+  const transcript = oldMessages
+    .map((m) => `${m.role === "agent" ? "Agent" : "AI"}: ${m.content}`)
+    .join("\n");
+
+  try {
+    const res = await groqClient.chat.completions.create({
+      model: "meta-llama/llama-4-scout-17b-16e-instruct",
+      messages: [
+        { role: "system", content: SUMMARY_PROMPT },
+        { role: "user", content: transcript },
+      ],
+      max_tokens: 300,
+      temperature: 0,
+    });
+    return res.choices[0]?.message?.content?.trim() ?? "";
+  } catch (err) {
+    console.error("Summary generation failed (non-fatal):", err);
+    return "";
+  }
 }
 
-async function callGroq(message: string, history: HistoryMessage[]): Promise<string> {
-  const response = await groqClient.chat.completions.create({
+/**
+ * Build the messages array for the LLM.
+ * - If history is short (<= RECENT_WINDOW) → pass it all verbatim
+ * - If history is long → summarize old messages, pass summary as first user/assistant
+ *   exchange, then pass the recent window verbatim
+ */
+async function buildMessages(
+  augmentedMessage: string,
+  history: HistoryMessage[]
+): Promise<BedrockMessage[]> {
+  const recent = history.slice(-RECENT_WINDOW);
+  const old    = history.slice(0, -RECENT_WINDOW);
+
+  const recentMapped: BedrockMessage[] = recent.map((m) => ({
+    role: m.role === "agent" ? "user" : "assistant",
+    content: [{ text: m.content }],
+  }));
+
+  if (old.length === 0) {
+    // Short conversation — no summarization needed
+    return [
+      ...recentMapped,
+      { role: "user", content: [{ text: augmentedMessage }] },
+    ];
+  }
+
+  // Long conversation — summarize old history first
+  const summary = await summarizeOldHistory(old);
+  const summaryBlock: BedrockMessage[] = summary
+    ? [
+        {
+          role: "user",
+          content: [{ text: `[Earlier conversation summary]\n${summary}` }],
+        },
+        {
+          role: "assistant",
+          content: [{ text: '{"type":"message","content":"Understood, I have context from our earlier conversation."}' }],
+        },
+      ]
+    : [];
+
+  return [
+    ...summaryBlock,
+    ...recentMapped,
+    { role: "user", content: [{ text: augmentedMessage }] },
+  ];
+}
+
+// ── Streaming helpers ─────────────────────────────────────────────────────────
+
+/**
+ * Stream via Bedrock's ConverseStream API.
+ * Yields text chunks as they arrive.
+ */
+async function* streamBedrock(
+  messages: BedrockMessage[]
+): AsyncGenerator<string> {
+  const command = new ConverseStreamCommand({
+    modelId: process.env.BEDROCK_MODEL_ID!,
+    system: [{ text: SYSTEM_PROMPT }],
+    messages,
+    inferenceConfig: { maxTokens: 1500, temperature: 0.2 },
+  });
+
+  const response = await bedrockClient.send(command);
+  if (!response.stream) return;
+
+  for await (const event of response.stream) {
+    const chunk = event.contentBlockDelta?.delta?.text;
+    if (chunk) yield chunk;
+  }
+}
+
+/**
+ * Stream via Groq (already supports streaming natively).
+ */
+async function* streamGroq(
+  augmentedMessage: string,
+  history: HistoryMessage[]
+): AsyncGenerator<string> {
+  const recent = history.slice(-RECENT_WINDOW);
+
+  const stream = await groqClient.chat.completions.create({
     model: "meta-llama/llama-4-scout-17b-16e-instruct",
+    stream: true,
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
-      ...history.slice(-20).map((m) => ({
+      ...recent.map((m) => ({
         role: (m.role === "agent" ? "user" : "assistant") as "user" | "assistant",
         content: m.content,
       })),
-      { role: "user", content: message },
+      { role: "user", content: augmentedMessage },
     ],
     max_tokens: 1500,
     temperature: 0.2,
   });
-  return response.choices[0]?.message?.content ?? "{}";
+
+  for await (const chunk of stream) {
+    const text = chunk.choices[0]?.delta?.content;
+    if (text) yield text;
+  }
 }
+
+/**
+ * Parse and validate the accumulated JSON string from the stream.
+ */
+function parseAccumulated(
+  raw: string
+): { type: string; analysis?: string; policies?: unknown[]; content?: string } {
+  const clean = raw.replace(/```json|```/g, "").trim();
+
+  let parsed: { type: string; analysis?: string; policies?: unknown[]; content?: string };
+
+  try {
+    parsed = JSON.parse(clean);
+  } catch {
+    parsed = { type: "message", content: clean };
+  }
+
+  // Unwrap double-encoded JSON
+  if (parsed.type === "message" && parsed.content) {
+    try {
+      const inner = JSON.parse(parsed.content);
+      if (inner.type) parsed = inner;
+    } catch { /* fine */ }
+  }
+
+  // Guard: need at least 2 policies for a recommendation
+  if (parsed.type === "recommendation" && Array.isArray(parsed.policies)) {
+    if (parsed.policies.length < 2) {
+      parsed = {
+        type: "message",
+        content: parsed.analysis ?? "Here are some policy suggestions based on the household profile.",
+      };
+    }
+  }
+
+  return parsed;
+}
+
+// ── Route handler ─────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
   try {
-    const { message, history = [] } = await req.json() as { message: string; history: HistoryMessage[] };
+    const { message, history = [] } = await req.json() as {
+      message: string;
+      history: HistoryMessage[];
+    };
 
-    // Build a better search query using policy names from history
-    const lastPoliciesInHistory = history
-      .filter((m) => m.role === "ai" && m.content.includes("Policies shown to user:"))
-      .slice(-1)[0]?.content ?? "";
-
-    const searchQuery = lastPoliciesInHistory
-      ? `${message} ${lastPoliciesInHistory.split("Policies shown to user:")[1] ?? ""}`
-      : message;
-
-    const context = await retrieveContext(searchQuery);
+    const context = await retrieveContext(message, history);
     const augmentedMessage = context
       ? `POLICY DOCUMENTS (use these for accurate info):\n\n${context}\n\n---\n\nAgent message: ${message}`
       : message;
 
-    let text: string;
-    try {
-      text = await callBedrock(augmentedMessage, history);
-      console.log("Used Bedrock");
-    } catch {
-      text = await callGroq(augmentedMessage, history);
-      console.log("Used Groq fallback");
-    }
+    const messages = await buildMessages(augmentedMessage, history);
 
-    const clean = text.replace(/```json|```/g, "").trim();
+    // ── Build a ReadableStream that:
+    //    1. Tries Bedrock streaming first
+    //    2. Falls back to Groq streaming on any error
+    //    3. Accumulates the full JSON, parses it, then sends ONE final JSON event
+    //       (your existing ChatArea.tsx just needs to read the last SSE event)
+    // ─────────────────────────────────────────────────────────────────────────
+    const stream = new ReadableStream({
+      async start(controller) {
+        const encode = (s: string) => new TextEncoder().encode(s);
+        let accumulated = "";
+        let usedBedrock = true;
 
-    let parsed: { type: string; analysis?: string; policies?: unknown[]; content?: string };
-    try {
-      parsed = JSON.parse(clean);
-    } catch {
-      parsed = { type: "message", content: clean };
-    }
+        const sendChunk = (text: string) => {
+          accumulated += text;
+          // Send raw token so the UI can show a typing effect (optional)
+          controller.enqueue(encode(`data: ${JSON.stringify({ type: "token", token: text })}\n\n`));
+        };
 
-    // Guard: if content is itself a JSON string, unwrap it
-    if (parsed.type === "message" && parsed.content) {
-      try {
-        const inner = JSON.parse(parsed.content);
-        if (inner.type) parsed = inner;
-      } catch { /* fine */ }
-    }
+        try {
+          // ── Try Bedrock first ────────────────────────────────────────────
+          for await (const chunk of streamBedrock(messages)) {
+            sendChunk(chunk);
+          }
+          console.log("Used Bedrock (streaming)");
+        } catch (bedrockErr) {
+          console.warn("Bedrock stream failed, falling back to Groq:", bedrockErr);
+          usedBedrock = false;
+          accumulated = ""; // reset — nothing was committed yet
 
-    if (parsed.type === "recommendation" && Array.isArray(parsed.policies)) {
-      if (parsed.policies.length < 2) {
-        parsed = { type: "message", content: parsed.analysis ?? "Here are some policy suggestions based on the household profile." };
-      }
-    }
+          try {
+            // ── Groq fallback ──────────────────────────────────────────────
+            for await (const chunk of streamGroq(augmentedMessage, history)) {
+              sendChunk(chunk);
+            }
+            console.log("Used Groq (streaming fallback)");
+          } catch (groqErr) {
+            console.error("Both LLMs failed:", groqErr);
+            controller.enqueue(
+              encode(
+                `data: ${JSON.stringify({
+                  type: "done",
+                  success: false,
+                  data: { type: "message", content: "Sorry, the AI is temporarily unavailable." },
+                })}\n\n`
+              )
+            );
+            controller.close();
+            return;
+          }
+        }
 
-    return Response.json({ success: true, data: parsed });
+        // ── Parse the full accumulated response ────────────────────────────
+        const parsed = parseAccumulated(accumulated);
+
+        // Send the final structured payload — ChatArea reads this event
+        controller.enqueue(
+          encode(`data: ${JSON.stringify({ type: "done", success: true, data: parsed })}\n\n`)
+        );
+        controller.close();
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type":  "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection":    "keep-alive",
+      },
+    });
   } catch (error) {
     console.error("AI error:", error);
     return Response.json({ success: false, error: "AI unavailable" }, { status: 500 });

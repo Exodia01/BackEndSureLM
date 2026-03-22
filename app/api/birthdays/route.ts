@@ -110,6 +110,14 @@ export async function PATCH(req: Request) {
     if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
     const { id } = await req.json();
+    const user = await db.user.findUnique({ where: { clerkId } });
+    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+
+    const existing = await db.birthdayReminder.findFirst({
+      where: { id, lead: { agentId: user.id } },
+      include: { lead: true },
+    });
+if (!existing) return Response.json({ success: false, error: "Not found" }, { status: 404 });
     const updated = await db.birthdayReminder.update({
       where: { id },
       data: { wishSent: true },
