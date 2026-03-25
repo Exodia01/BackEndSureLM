@@ -8,7 +8,7 @@ datasource db {
 
 model User {
   id            String   @id @default(cuid())
-  clerkId       String   @unique  // Clerk's user ID — links auth to our DB
+  clerkId       String   @unique
   email         String   @unique
   name          String
   avatar        String?
@@ -24,22 +24,21 @@ model AgentProfile {
   id             String   @id @default(cuid())
   userId         String   @unique
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bankCustomerId String?  // ID assigned by the bank partner that onboarded this agent
-  location       String?  // Village/district they operate in
-  language       String?  // Primary language they speak
+  bankCustomerId String?
+  location       String?
+  language       String?
   isActive       Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
 
-// A household flagged by an agent as interested in insurance
 model PolicyLead {
   id            String           @id @default(cuid())
   agentId       String
   agent         User             @relation(fields: [agentId], references: [id], onDelete: Cascade)
   householdName String
   phone         String?
-  income        Int?             // Monthly income in INR
+  income        Int?
   familySize    Int?
   messages      Message[]
   status        LeadStatus       @default(NEW)
@@ -50,25 +49,35 @@ model PolicyLead {
   followUpAt    DateTime?
   reminders     Reminder[]
   birthdayReminders BirthdayReminder[]
+  issuances     PolicyIssuance[]
 
-  issuances     PolicyIssuance[] // One household can have multiple policies issued
+  // Indexes
+  @@index([agentId])
+  @@index([status])
+  @@index([followUpAt])
+
+  // Composite indexes (important)
+  @@index([agentId, status])
+  @@index([agentId, followUpAt])
+  @@index([agentId, status, followUpAt])
 }
 
-// Tracks which policy was actually issued to a household
-// Policy details come from AI — we just store the outcome here
 model PolicyIssuance {
   id             String          @id @default(cuid())
   leadId         String
   lead           PolicyLead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  policyName     String          // e.g. "PM Fasal Bima Yojana" — returned by AI
-  policyProvider String?         // e.g. "Government of India"
-  premiumAmount  Int?            // Annual premium in INR
+  policyName     String
+  policyProvider String?
+  premiumAmount  Int?
   issuedAt       DateTime        @default(now())
   expiresAt      DateTime?
   status         IssuanceStatus  @default(ACTIVE)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   nextPremiumDue DateTime?
+
+  // Indexes
+  @@index([leadId])
 }
 
 model Message {
@@ -79,6 +88,9 @@ model Message {
   content   String
   policies  Json?
   createdAt DateTime    @default(now())
+
+  // Indexes
+  @@index([leadId, createdAt])
 }
 
 model Reminder {
@@ -90,6 +102,10 @@ model Reminder {
   note        String?
   isDone      Boolean      @default(false)
   createdAt   DateTime     @default(now())
+
+  // Indexes
+  @@index([leadId])
+  @@index([scheduledAt])
 }
 
 model BirthdayReminder {
@@ -99,10 +115,13 @@ model BirthdayReminder {
   name          String
   phone         String?
   dateOfBirth   DateTime
-  daysUntil     Int        // 0 = today, 1-7 = this week, etc.
+  daysUntil     Int
   isToday       Boolean    @default(false)
   wishSent      Boolean    @default(false)
   refreshedAt   DateTime   @default(now())
+
+  // Indexes
+  @@index([leadId])
 }
 
 enum ReminderType {
