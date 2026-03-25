@@ -52,14 +52,12 @@ model PolicyLead {
   issuances     PolicyIssuance[]
 
   // Indexes
-  @@index([agentId])
+  @@unique([agentId, phone])
+
+  @@index([agentId, status, followUpAt])
   @@index([status])
   @@index([followUpAt])
-
-  // Composite indexes (important)
-  @@index([agentId, status])
-  @@index([agentId, followUpAt])
-  @@index([agentId, status, followUpAt])
+  @@index([agentId, createdAt])
 }
 
 model PolicyIssuance {
