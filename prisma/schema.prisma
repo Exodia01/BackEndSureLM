@@ -51,9 +51,7 @@ model PolicyLead {
   birthdayReminders BirthdayReminder[]
   issuances     PolicyIssuance[]
 
-  // Indexes
   @@unique([agentId, phone])
-
   @@index([agentId, status, followUpAt])
   @@index([status])
   @@index([followUpAt])
@@ -74,7 +72,6 @@ model PolicyIssuance {
   updatedAt      DateTime        @updatedAt
   nextPremiumDue DateTime?
 
-  // Indexes
   @@index([leadId])
 }
 
@@ -87,7 +84,6 @@ model Message {
   policies  Json?
   createdAt DateTime    @default(now())
 
-  // Indexes
   @@index([leadId, createdAt])
 }
 
@@ -101,7 +97,6 @@ model Reminder {
   isDone      Boolean      @default(false)
   createdAt   DateTime     @default(now())
 
-  // Indexes
   @@index([leadId])
   @@index([scheduledAt])
 }
@@ -118,8 +113,33 @@ model BirthdayReminder {
   wishSent      Boolean    @default(false)
   refreshedAt   DateTime   @default(now())
 
-  // Indexes
   @@index([leadId])
+}
+
+model Document {
+  id           String     @id @default(cuid())
+  filename     String
+  source       String?
+  metadata     Json?
+  version      Int        @default(1)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  chunks       Chunk[]
+}
+
+model Chunk {
+  id            String   @id @default(cuid())
+  documentId    String
+  document      Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  content       String
+  chunkOrder    Int
+  pageNumber    Int?
+  category      String?
+  metadata      Json?
+  createdAt     DateTime @default(now())
+
+  @@index([documentId, chunkOrder])
 }
 
 enum ReminderType {

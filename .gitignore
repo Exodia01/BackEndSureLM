@@ -44,3 +44,6 @@ next-env.d.ts
 documents/
 upload.py
 *.zip
+
+# clerk configuration (can include secrets)
+/.clerk/

@@ -1,105 +1,105 @@
-// app/api/ocr/route.ts
-import { NextRequest } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-import Groq from "groq-sdk";
+import { Ollama } from "@langchain/ollama";
+import { NextRequest, NextResponse } from "next/server";
 
-const groqClient = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const primaryModel = new Ollama({
+  model: "minicpm-v",
+  baseUrl: "http://localhost:11434",
+});
 
-export async function POST(req: NextRequest) {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+const fallbackModel = new Ollama({
+  model: "llava:7b",
+  baseUrl: "http://localhost:11434",
+});
 
-  const { imageBase64, mediaType, expectedDocType, householdName } = await req.json() as {
-    imageBase64: string;
-    mediaType: string;
-    expectedDocType: "Aadhaar Card" | "PAN Card";
-    householdName: string;
-  };
+async function extractTextWithModel(
+  model: Ollama,
+  imageBase64: string
+): Promise<{ text: string; confidence: number }> {
+  const prompt = `
+Extract all visible text from this document/image.
+Return ONLY the extracted text. If no text is visible, return empty string.
+`;
 
-  if (!imageBase64 || !expectedDocType || !householdName) {
-    return Response.json({ success: false, error: "Missing fields" }, { status: 400 });
+  const response = await model.invoke([
+    { type: "text", text: prompt },
+    {
+      type: "image_url",
+      image_url: `data:image/jpeg;base64,${imageBase64}`,
+    },
+  ]);
+
+  console.log("RAW RESPONSE:", response);
+
+  if (response && typeof response === "string" && response.trim().length > 0) {
+    return {
+      text: response.trim(),
+      confidence: 0.9,
+    };
   }
 
-  const prompt = `You are a KYC document validator for Indian insurance.
-
-Expected document: ${expectedDocType}
-Customer name on policy: "${householdName}"
-
-Look at the image and respond ONLY with this JSON:
-{
-  "isCorrectDoc": true or false,
-  "detectedDocType": "what you see (e.g. Aadhaar Card, PAN Card, Driving License)",
-  "extractedName": "name printed on the document exactly as shown",
-  "nameMatches": true or false,
-  "isReadable": true or false,
-  "confidence": "high" or "medium" or "low"
+  throw new Error("Empty or invalid response from model");
 }
 
-For nameMatches: use fuzzy matching — allow Hindi/regional transliteration differences, minor spelling variations, first name only is acceptable. If reasonably similar, mark true.
-If the image is blurry or not a valid ID, set isReadable to false.`;
-
+export async function POST(req: NextRequest) {
   try {
-    const completion = await groqClient.chat.completions.create({
-      model: "meta-llama/llama-4-scout-17b-16e-instruct",
-      max_tokens: 200,
-      temperature: 0,
-      messages: [
+    const body = await req.json();
+    const { image } = body;
+
+    if (!image || typeof image !== "string") {
+      return NextResponse.json(
         {
-          role: "user",
-          content: [
-            {
-              type: "image_url",
-              image_url: { url: `data:${mediaType};base64,${imageBase64}` },
-            },
-            { type: "text", text: prompt },
-          ],
+          success: false,
+          error: "Missing or invalid 'image' field (base64 string required)",
         },
-      ],
-    });
-
-    const raw = completion.choices[0]?.message?.content ?? "{}";
-    const clean = raw.replace(/```json|```/g, "").trim();
-
-    let result: {
-      isCorrectDoc: boolean;
-      detectedDocType: string;
-      extractedName: string;
-      nameMatches: boolean;
-      isReadable: boolean;
-      confidence: string;
-    };
-
-    try {
-      result = JSON.parse(clean);
-    } catch {
-      return Response.json({ success: true, valid: false, reason: "Could not read document. Please upload a clearer image." });
+        { status: 400 }
+      );
     }
 
-    const valid =
-      result.isReadable &&
-      result.isCorrectDoc &&
-      result.nameMatches &&
-      result.confidence !== "low";
+    let result = await extractTextWithModel(primaryModel, image);
 
-    const reason = !result.isReadable
-      ? "Document is unreadable. Please upload a clearer photo."
-      : !result.isCorrectDoc
-      ? `Wrong document — got ${result.detectedDocType}, expected ${expectedDocType}.`
-      : !result.nameMatches
-      ? `Name "${result.extractedName}" doesn't match customer "${householdName}".`
-      : result.confidence === "low"
-      ? "Image quality too low. Please retake the photo."
-      : `✓ ${result.detectedDocType} verified for ${result.extractedName}`;
+    if (!result.text || result.confidence < 0.5) {
+      console.log(
+        "Primary model failed or low confidence - trying fallback"
+      );
 
-    return Response.json({
+      result = await extractTextWithModel(fallbackModel, image);
+    }
+
+    return NextResponse.json({
       success: true,
-      valid,
-      detectedDocType: result.detectedDocType,
-      extractedName: result.extractedName,
-      reason,
+      text: result.text,
+      confidence: result.confidence,
+      valid: true,
     });
-  } catch (err) {
-    console.error("OCR error:", err);
-    return Response.json({ success: false, error: "Validation failed" }, { status: 500 });
+  } catch (error) {
+    console.error("OCR error:", error);
+
+    try {
+      const fallbackResult = await extractTextWithModel(
+        fallbackModel,
+        (await req.json()).image
+      );
+
+      return NextResponse.json({
+        success: true,
+        text: fallbackResult.text,
+        confidence: fallbackResult.confidence,
+        valid: fallbackResult.confidence >= 0.5,
+      });
+    } catch (fallbackError) {
+      console.error(
+        "Fallback model also failed:",
+        fallbackError
+      );
+
+      return NextResponse.json({
+        success: true,
+        text: "",
+        confidence: 0,
+        valid: false,
+        reason:
+          "Both vision models failed to extract text from image",
+      });
+    }
   }
 }
