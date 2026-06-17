@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: surelm-postgres
+    environment:
+      POSTGRES_DB: surelm
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: localpg2024
+    command: ["postgres", "-c", "listen_addresses=*"]
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.0
+    container_name: surelm-qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  qdrant_data:
