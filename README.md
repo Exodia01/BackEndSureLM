@@ -52,8 +52,9 @@ SureLM is a comprehensive platform that empowers grassroots agents to bring fina
 | Styling | Tailwind CSS 4 |
 | Database | PostgreSQL (Neon adapter via Prisma) |
 | Vector DB | Qdrant |
-| AI/LLM | Ollama (qwen3-coder-next + llama3 fallback) |
-| Embeddings | Transformers.js (@xenova/transformers) |
+| AI/LLM | Ollama (qwen2.5:7b + llama3.2:3b fallback) |
+| Vision | Ollama (minicpm-v, llava:7b for OCR) |
+| Embeddings | Ollama API (nomic-embed-text) |
 | Auth | Clerk authentication |
 | PDF Processing | pdfjs-dist |
 
@@ -77,8 +78,8 @@ Copy `.env.example` and set:
 DATABASE_URL=postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm
 QDRANT_URL=http://localhost:6333
 OLLAMA_HOST=http://localhost:11434/v1
-PRIMARY_MODEL_NAME=qwen3-coder-next:latest
-FALLBACK_MODEL_NAME=llama3:latest
+PRIMARY_MODEL_NAME=qwen2.5-coder:1.5b
+FALLBACK_MODEL_NAME=llama3.2:3b
 ```
 
 ### Step 3: Install Dependencies & Run Migrations
@@ -317,13 +318,17 @@ model Chunk {
 - Fallback if primary model fails
 
 ### `/api/ocr` (POST)
-**Document Processing**
+**Document Processing with Vision Models**
 
 Processes images/PDFs for:
 - Aadhaar card extraction
 - PAN card verification
 - Income certificates
 - Address proofs
+
+**Vision Models:**
+- Primary: `minicpm-v` (Multimodal vision model)
+- Fallback: `llava:7b` (Vision-language model)
 
 ### `/api/crm` (GET, POST, PATCH)
 **Lead Management**
@@ -342,8 +347,10 @@ Processes images/PDFs for:
 | `DATABASE_URL` | ✅ | PostgreSQL connection string |
 | `QDRANT_URL` | ✅ | Qdrant vector DB endpoint |
 | `OLLAMA_HOST` | ✅ | Ollama server URL (e.g., `http://localhost:11434/v1`) |
-| `PRIMARY_MODEL_NAME` | ⚠️ | Main LLM model (`qwen3-coder-next:latest`) |
-| `FALLBACK_MODEL_NAME` | ⚠️ | Fallback LLM model (`llama3:latest`) |
+| `PRIMARY_MODEL_NAME` | ⚠️ | Main LLM model (default: `qwen2.5-coder:1.5b`) |
+| `FALLBACK_MODEL_NAME` | ⚠️ | Fallback LLM model (default: `llama3.2:3b`) |
+| `VISION_PRIMARY_MODEL` | ⚠️ | OCR vision model (default: `minicpm-v`) |
+| `VISION_FALLBACK_MODEL` | ⚠️ | Fallback OCR model (default: `llava:7b`) |
 | `CLERK_WEBHOOK_SECRET` | ✅ | Clerk authentication secret |
 
 ---
