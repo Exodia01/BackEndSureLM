@@ -351,7 +351,7 @@ Processes images/PDFs for:
 | `OLLAMA_HOST` | ✅ | Ollama server URL (e.g., `http://localhost:11434/v1`) |
 | `PRIMARY_MODEL_NAME` | ✅ | Main LLM model (default: `qwen2.5-coder:1.5b`) |
 | `FALLBACK_MODEL_NAME` | ⚠️ | Fallback LLM model (default: `llama3.2:3b`) |
-| `VISION_PRIMARY_MODEL` | ⚠️ | OCR vision model (default: `minicpm-v`) |
+| `VISION_PRIMARY_MODEL` | ✅ | OCR vision model (default: `minicpm-v`) |
 | `VISION_FALLBACK_MODEL` | ⚠️ | Fallback OCR model (default: `llava:7b`) |
 | `CLERK_WEBHOOK_SECRET` | ✅ | Clerk authentication secret |
 
