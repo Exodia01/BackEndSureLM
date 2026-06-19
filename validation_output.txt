@@ -1,0 +1,15 @@
+﻿Γùç injected env (4) from .env // tip: Γîÿ enable debugging { debug: true }
+Γùç injected env (0) from .env // tip: Γîÿ multiple files { path: ['.env.local', '.env'] }
+Γùç injected env (4) from .env.local // tip: Γîÿ suppress logs { quiet: true }
+
+[2026-06-19T07:48:09.863Z] Starting: Service Health Check
+[Γ£ù FAIL] Service Health Check (0.28s)
+node.exe :   Error: PostgreSQL database is not available: [object ErrorEvent]
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\Altair\AppData\Roaming ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (  Error: Postgr...ect ErrorEvent]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+[REPORT] Generated: S:\BackEndSureLM\test\validation\retrieval-validation-report.md

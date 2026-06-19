@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { Button } from "../ui/button";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
@@ -111,91 +109,59 @@ export default function Navbar() {
 
         {/* Auth */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-          <SignedOut>
-            <Link href="/sign-in">
-              <button
-                style={{
-                  fontFamily:      "'DM Sans', sans-serif",
-                  fontWeight:      400,
-                  fontSize:        14,
-                  color:           "#475569",
-                  background:      "none",
-                  border:          "none",
-                  cursor:          "pointer",
-                  padding:         "6px 12px",
-                  borderRadius:    999,
-                  transition:      "background 0.15s ease, color 0.15s ease",
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = "rgba(0,0,0,0.04)";
-                  e.currentTarget.style.color = "#0c1a12";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = "none";
-                  e.currentTarget.style.color = "#475569";
-                }}
-              >
-                Sign in
-              </button>
-            </Link>
+          <Link href="/sign-in">
+            <button
+              style={{
+                fontFamily:      "'DM Sans', sans-serif",
+                fontWeight:      400,
+                fontSize:        14,
+                color:           "#475569",
+                background:      "none",
+                border:          "none",
+                cursor:          "pointer",
+                padding:         "6px 12px",
+                borderRadius:    999,
+                transition:      "background 0.15s ease, color 0.15s ease",
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = "rgba(0,0,0,0.04)";
+                e.currentTarget.style.color = "#0c1a12";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = "none";
+                e.currentTarget.style.color = "#475569";
+              }}
+            >
+              Sign in
+            </button>
+          </Link>
 
-            <Link href="/sign-up">
-              <button
-                style={{
-                  fontFamily:      "'DM Sans', sans-serif",
-                  fontWeight:      500,
-                  fontSize:        14,
-                  color:           "#fff",
-                  backgroundColor: "#059669",
-                  border:          "none",
-                  cursor:          "pointer",
-                  padding:         "7px 16px",
-                  borderRadius:    999,
-                  transition:      "background 0.15s ease, transform 0.1s ease",
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.backgroundColor = "#047857";
-                  e.currentTarget.style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.backgroundColor = "#059669";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                Get Started
-              </button>
-            </Link>
-          </SignedOut>
-
-          <SignedIn>
-            <Link href="/dashboard">
-              <button
-                style={{
-                  fontFamily:      "'DM Sans', sans-serif",
-                  fontWeight:      400,
-                  fontSize:        14,
-                  color:           "#475569",
-                  background:      "none",
-                  border:          "none",
-                  cursor:          "pointer",
-                  padding:         "6px 12px",
-                  borderRadius:    999,
-                  transition:      "background 0.15s ease, color 0.15s ease",
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = "rgba(0,0,0,0.04)";
-                  e.currentTarget.style.color = "#0c1a12";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = "none";
-                  e.currentTarget.style.color = "#475569";
-                }}
-              >
-                Dashboard
-              </button>
-            </Link>
-            <UserButton afterSignOutUrl="/" />
-          </SignedIn>
+          <Link href="/sign-up">
+            <button
+              style={{
+                fontFamily:      "'DM Sans', sans-serif",
+                fontWeight:      500,
+                fontSize:        14,
+                color:           "#fff",
+                backgroundColor: "#059669",
+                border:          "none",
+                cursor:          "pointer",
+                padding:         "7px 16px",
+                borderRadius:    999,
+                transition:      "background 0.15s ease, transform 0.1s ease",
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.backgroundColor = "#047857";
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.backgroundColor = "#059669";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              Get Started
+            </button>
+          </Link>
         </div>
       </nav>
     </div>

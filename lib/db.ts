@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-// Prisma 7 requires the Neon adapter to be passed directly to PrismaClient
+// Prisma with PostgreSQL (local) adapter
 function createPrismaClient() {
-  const adapter = new PrismaNeon({
+  const adapter = new PrismaPg({
     connectionString: process.env.DATABASE_URL!,
   });
   return new PrismaClient({ adapter });

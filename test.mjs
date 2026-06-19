@@ -1,0 +1,1 @@
+process.env.DATABASE_URL = "postgresql://admin:localpg2024@localhost:5432/surelm";
