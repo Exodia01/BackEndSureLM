@@ -6,7 +6,7 @@ process.env.DATABASE_URL = "postgresql://admin:localpg2024@localhost:5432/surelm
 
 console.log("BEFORE import - DATABASE_URL:", process.env.DATABASE_URL);
 
-import { db } from "./lib/db.ts";
+import { db } from "../lib/db.ts";
 
 console.log("AFTER import - DATABASE_URL:", process.env.DATABASE_URL);
 

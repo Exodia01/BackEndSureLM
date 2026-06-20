@@ -1,0 +1,261 @@
+{
+  "dataset_name": "Kotak Premier Life Plan - Factual_Questions",
+  "source_document": "Kotak_Premier_Life_Plan_-_Brochure_-_18th_June_2020.pdf",
+  "questions": [
+    {
+      "question": "What type of insurance plan is Kotak Premier Life Plan?",
+      "expected_answer": "A limited premium paying non-linked participating whole life plan",
+      "source_page": 1
+    },
+    {
+      "question": "Until what age does the Kotak Premier Life Plan offer protection?",
+      "expected_answer": "99 years (golden age)",
+      "source_page": 1
+    },
+    {
+      "question": "What are the two bonus options available under the Kotak Premier Life Plan?",
+      "expected_answer": "Cash Payout and Paid-Up Additions",
+      "source_page": 2
+    },
+    {
+      "question": "When is Simple Reversionary Bonus declared under the plan?",
+      "expected_answer": "From 1st policy year till the end of Premium payment term",
+      "source_page": 2
+    },
+    {
+      "question": "What is paid at maturity under the Kotak Premier Life Plan?",
+      "expected_answer": "Sum Assured on maturity plus accrued Paid-Up Additions (if any) plus Cash Bonus (if any) plus Terminal Bonus (if any)",
+      "source_page": 2
+    },
+    {
+      "question": "What is included in Death Benefit if death occurs during the premium payment term?",
+      "expected_answer": "Sum Assured on death Plus Accrued Simple Reversionary Bonuses (if any) Plus Terminal Bonus (if any)",
+      "source_page": 2
+    },
+    {
+      "question": "What is included in Death Benefit if death occurs after premium payment term but during policy term?",
+      "expected_answer": "Sum Assured on death Plus Accrued Paid-Up Additions (if any) Plus Terminal Bonus (if any)",
+      "source_page": 2
+    },
+    {
+      "question": "How is Sum Assured on death defined in the plan?",
+      "expected_answer": "Higher of: 11 times of Annualised Premium, or Sum Assured on maturity, or 105% of premiums paid till date of death (excluding GST and Cess)",
+      "source_page": 2
+    },
+    {
+      "question": "When can a policyholder change the bonus option selected at inception?",
+      "expected_answer": "Within 3 months prior to the end of premium payment term",
+      "source_page": 3
+    },
+    {
+      "question": "What happens if the request to change bonus option is not received within the defined time frame?",
+      "expected_answer": "The policy will continue as per the Option selected at inception",
+      "source_page": 3
+    },
+    {
+      "question": "Under Cash Payout option, when is Simple Reversionary Bonus payable?",
+      "expected_answer": "At the end of the premium payment term",
+      "source_page": 3
+    },
+    {
+      "question": "Under Paid-Up Additions option, what happens to Simple Reversionary Bonus?",
+      "expected_answer": "It will be utilized to purchase Paid-Up Additions",
+      "source_page": 3
+    },
+    {
+      "question": "What are Paid-Up Additions?",
+      "expected_answer": "Additional guaranteed benefits payable on death or maturity",
+      "source_page": 4
+    },
+    {
+      "question": "At what age is the Paid-Up Addition Factor 1.69812 for standard lives?",
+      "expected_answer": "35 years (on exercising Paid-Up Addition option)",
+      "source_page": 4
+    },
+    {
+      "question": "What happens to a Reduced Paid-Up Policy regarding Simple Reversionary Bonus and Cash Bonus?",
+      "expected_answer": "Not eligible after conversion to Reduced Paid-Up",
+      "source_page": 5
+    },
+    {
+      "question": "How many times can policyholders encash Paid-Up Additions in a policy year?",
+      "expected_answer": "Maximum of 6 times",
+      "source_page": 5
+    },
+    {
+      "question": "What is the minimum encashment amount for Paid-Up Additions?",
+      "expected_answer": "₹10,000",
+      "source_page": 5
+    },
+    {
+      "question": "At what age is the Cash Value factor for Paid-Up Additions 0.673496?",
+      "expected_answer": "55 years (on exercising encashment of Paid-Up Additions)",
+      "source_page": 6
+    },
+    {
+      "question": "Under Maturity Benefit, what components are payable on survival till end of policy term?",
+      "expected_answer": "Sum Assured on maturity Plus Cash Bonus (if any) plus accrued Paid-Up Additions (if any) plus Terminal Bonus (if any)",
+      "source_page": 6
+    },
+    {
+      "question": "What tax benefits are available under the plan?",
+      "expected_answer": "Under Section 80C and Section 10(10D) of Income Tax Act, 1961",
+      "source_page": 6
+    },
+    {
+      "question": "What is the maximum entry age for a policy with 55 years PPT?",
+      "expected_answer": "8 years",
+      "source_page": 8
+    },
+    {
+      "question": "At what maximum age can one enter the plan with a premium payment term of 20 years?",
+      "expected_answer": "45 years",
+      "source_page": 8
+    },
+    {
+      "question": "What are the fixed premium payment term options available?",
+      "expected_answer": "8, 12, 15 and 20 years",
+      "source_page": 8
+    },
+    {
+      "question": "What is the policy term for Kotak Premier Life Plan?",
+      "expected_answer": "99 years or 99 years less entry age",
+      "source_page": 8
+    },
+    {
+      "question": "What is the maximum sum assured on maturity available under the plan?",
+      "expected_answer": "No limit, subject to underwriting",
+      "source_page": 8
+    },
+    {
+      "question": "What is the minimum premium required for the Kotak Premier Life Plan?",
+      "expected_answer": "₹2,00,000",
+      "source_page": 8
+    },
+    {
+      "question": "What are the available premium payment modes?",
+      "expected_answer": "Yearly, Half yearly, Quarterly, Monthly",
+      "source_page": 6
+    },
+    {
+      "question": "What is the modal factor for monthly premium payment as a percentage of annual premium?",
+      "expected_answer": "8.8%",
+      "source_page": 6
+    },
+    {
+      "question": "Which rider provides additional protection over and above the Death Benefit under the base plan?",
+      "expected_answer": "Kotak Term Benefit Rider (UIN: 107B003V03)",
+      "source_page": 7
+    },
+    {
+      "question": "What benefit does Kotak Accidental Death Benefit Rider provide?",
+      "expected_answer": "Lump sum benefit paid on accidental death of life insured in addition to Death Benefit under the base plan",
+      "source_page": 7
+    },
+    {
+      "question": "What does Kotak Permanent Disability Benefit Rider provide?",
+      "expected_answer": "Installments paid on admission of a claimon life insured becoming disabled due to accident",
+      "source_page": 7
+    },
+    {
+      "question": "Which rider pays remaining premiums on behalf of the policyholder in case of his/her death?",
+      "expected_answer": "Kotak Life Guardian Benefit Rider (UIN: 107B012V02)",
+      "source_page": 7
+    },
+    {
+      "question": "What does Kotak Critical Illness Plus Benefit Rider cover?",
+      "expected_answer": "Rider Sum Assured shall be payable on admission of a claim on any one of the 37 covered critical illness",
+      "source_page": 7
+    },
+    {
+      "question": "What is the minimum entry age for Kotak Premier Life Plan?",
+      "expected_answer": "3 years",
+      "source_page": 8
+    },
+    {
+      "question": "For which policy modes is the grace period 30 days?",
+      "expected_answer": "Yearly, half-yearly and quarterly modes",
+      "source_page": 9
+    },
+    {
+      "question": "What is the grace period for monthly mode premium payment?",
+      "expected_answer": "15 days",
+      "source_page": 9
+    },
+    {
+      "question": "What is the interest rate currently charged on policy loans?",
+      "expected_answer": "9.80% p.a.",
+      "source_page": 10
+    },
+    {
+      "question": "What percentage of Surrender Value can be availed as a loan?",
+      "expected_answer": "Up to 80%",
+      "source_page": 10
+    },
+    {
+      "question": "What is the minimum loan amount available under the plan?",
+      "expected_answer": "₹10,000",
+      "source_page": 10
+    },
+    {
+      "question": "If premiums are discontinued in the first two policy years, what happens to the policy?",
+      "expected_answer": "The policy shall lapse at the end of the grace period and no benefits will be payable",
+      "source_page": 10
+    },
+    {
+      "question": "Within how many years can a lapsed policy be reinstated without evidence of good health?",
+      "expected_answer": "Within five years from the date of first unpaid premium (if within six months)",
+      "source_page": 10
+    },
+    {
+      "question": "What is the late payment charge for revival of policy?",
+      "expected_answer": "9% p.a. of outstanding premiums",
+      "source_page": 10
+    },
+    {
+      "question": "After how many consecutive policy years does a policy acquire Guaranteed Surrender Value (GSV)?",
+      "expected_answer": "2 years",
+      "source_page": 11
+    },
+    {
+      "question": "What percentage of total premiums paid is the GSV factor for 3rd year surrender?",
+      "expected_answer": "35%",
+      "source_page": 11
+    },
+    {
+      "question": "What percentage of total premiums paid is the GSV factor for 4th to 7th year surrender?",
+      "expected_answer": "50%",
+      "source_page": 11
+    },
+    {
+      "question": "At what rate does the GSV factor reach 90%?",
+      "expected_answer": "In the last policy year",
+      "source_page": 11
+    },
+    {
+      "question": "If the Reduced Paid-Up Sum Assured on maturity is less than ₹1,250 exclusive of attached bonuses, what happens after revival period expires?",
+      "expected_answer": "Policy may be terminated by paying the Surrender Value",
+      "source_page": 13
+    },
+    {
+      "question": "What percentage of premiums paid till date of death shall be payable in case of suicide within 12 months from date of commencement of risk?",
+      "expected_answer": "80%",
+      "source_page": 13
+    },
+    {
+      "question": "Under the illustration provided, what is the Sum Assured on maturity for the example male aged 35 years?",
+      "expected_answer": "₹10 Lakhs",
+      "source_page": 6
+    },
+    {
+      "question": "For the illustration with premium payment term of 15 years, what is the Total Maturity Benefit at higher rate (8% p.a.) in the end of policy year?",
+      "expected_answer": "₹27,566,781",
+      "source_page": 6
+    },
+    {
+      "question": "What are the assumed rates of return used in the illustration?",
+      "expected_answer": "4% p.a. for lower rate and 8% p.a. for higher rate",
+      "source_page": 6
+    }
+  ]
+}

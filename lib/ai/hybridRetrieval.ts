@@ -71,8 +71,15 @@ export async function hybridRetrieve(
   query: string,
   agentId?: string,
   vector: number[] = [],
-  filter?: SearchFilter
+  brochureIds?: string[]
 ): Promise<RetrievalResult[]> {
+  const filter: SearchFilter | undefined = brochureIds && brochureIds.length > 0 ? {
+    should: brochureIds.map(brochureId => ({
+      key: "brochure_id",
+      match: { value: brochureId }
+    }))
+  } : undefined;
+  
   const results = await Promise.all([
     postgresFullTextSearch(query),
     semanticSearch(vector, filter).then((r) => r.map(row => ({

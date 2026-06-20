@@ -77,7 +77,7 @@ Copy `.env.example` and set:
 ```bash
 DATABASE_URL=postgresql://admin:localpg2024@localhost:5432/surelm
 QDRANT_URL=http://localhost:6333
-OLLAMA_HOST=http://localhost:11434/v1
+OLLAMA_HOST=http://localhost:11434/
 PRIMARY_MODEL_NAME=qwen2.5-coder:1.5b
 FALLBACK_MODEL_NAME=llama3.2:3b
 ```
@@ -348,7 +348,7 @@ Processes images/PDFs for:
 |----------|----------|-------------|
 | `DATABASE_URL` | ✅ | PostgreSQL connection string |
 | `QDRANT_URL` | ✅ | Qdrant vector DB endpoint |
-| `OLLAMA_HOST` | ✅ | Ollama server URL (e.g., `http://localhost:11434/v1`) |
+| `OLLAMA_HOST` | ✅ | Ollama server URL (e.g., `http://localhost:11434/`) |
 | `PRIMARY_MODEL_NAME` | ✅ | Main LLM model (default: `qwen2.5-coder:1.5b`) |
 | `FALLBACK_MODEL_NAME` | ⚠️ | Fallback LLM model (default: `llama3.2:3b`) |
 | `VISION_PRIMARY_MODEL` | ✅ | OCR vision model (default: `minicpm-v`) |

@@ -1,1 +1,0 @@
-﻿process.env.DATABASE_URL = "postgresql://admin:localpg2024@localhost:5432/surelm"; const { db } = require("./lib/db.ts"); async function main() { try { await db.$queryRaw`SELECT 1 as x`; console.log("OK"); } catch (err) { console.error(err.message); } finally { await db.$disconnect(); } } main();
