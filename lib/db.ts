@@ -1,10 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import dotenv from "dotenv";
 
-// Prisma with PostgreSQL (local) adapter
+dotenv.config();
+
+const DATABASE_URL = process.env.DATABASE_URL;
+
+console.log("[db.ts] DATABASE_URL from env:", DATABASE_URL);
+console.log("[db.ts] DATABASE_URL type:", typeof DATABASE_URL);
+
 function createPrismaClient() {
   const adapter = new PrismaPg({
-    connectionString: process.env.DATABASE_URL!,
+    connectionString: DATABASE_URL,
   });
   return new PrismaClient({ adapter });
 }

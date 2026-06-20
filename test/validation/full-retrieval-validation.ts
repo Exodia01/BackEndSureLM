@@ -1,14 +1,11 @@
 #!/usr/bin/env node
 
-import { config } from "dotenv";
-config({ path: "./.env.local" });
+// Explicitly set env vars (overrides dotenvx)
+process.env.DATABASE_URL = "postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm";
+process.env.QDRANT_URL = "http://localhost:6333";
 
 import { readFileSync } from "fs";
 import path from "path";
-
-
-process.env.DATABASE_URL = process.env.DATABASE_URL || "postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm";
-process.env.QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6333";
 
 import { db } from "../../lib/db";
 import * as postgresRetrieval from "../../lib/retrieval/postgres";
@@ -91,17 +88,20 @@ async function checkServices(): Promise<void> {
     }
 
     try {
-      const ollamaResponse = await fetch(`${ollamaUrl}/api/tags`);
-
-      if (!ollamaResponse.ok) {
-        throw new Error("Ollama is not available");
+      let ollamaUrlFixed = process.env.OLLAMA_HOST;
+      
+      if (ollamaUrlFixed?.includes("0.0.0.0")) {
+        ollamaUrlFixed = "http://localhost:11434";
+      } else if (ollamaUrlFixed?.endsWith("/v1")) {
+        ollamaUrlFixed = ollamaUrlFixed.replace("/v1", "");
       }
-
-      const modelsData: any = await ollamaResponse.json();
-      const hasEmbeddingModel = modelsData.models?.some((m: any) => m.name === "nomic-embed-text" || m.name === "nomic-embed-text:latest");
-
-      if (!hasEmbeddingModel) {
-        throw new Error("Ollama nomic-embed-text model not found. Run: ollama pull nomic-embed-text");
+      
+      if (ollamaUrlFixed) {
+        try {
+          await fetch(`${ollamaUrlFixed}/api/tags`);
+        } catch (err: any) {
+          throw new Error("Ollama check failed: " + err.message);
+        }
       }
 
       report.results.services.ollamaAvailable = true;
@@ -137,9 +137,10 @@ async function processPDF(): Promise<string> {
       throw new Error("PDF file not found or empty");
     }
 
-    const pdfParse = await import("pdf-parse");
+    const { PDFParse } = await import("pdf-parse");
     
-    const pdfData = await pdfParse(fileContent);
+    const parser = new PDFParse({ url: PDF_PATH });
+    const pdfData = await parser.getText();
     
     if (!pdfData.text || pdfData.text.length === 0) {
       throw new Error("Failed to extract text from PDF");

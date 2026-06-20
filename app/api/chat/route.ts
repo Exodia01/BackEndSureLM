@@ -2,11 +2,11 @@ import { Ollama } from "@langchain/ollama";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 
-const BASE_URL = process.env.OLLAMA_HOST || "http://localhost:11434/v1";
+const BASE_URL = process.env.OLLAMA_HOST || "http://localhost:11434";
 
 const primaryModel = new Ollama({
   baseUrl: BASE_URL,
-  model:process.env.PRIMARY_MODEL_NAME || "qwen3-coder-next:latest",
+  model: process.env.PRIMARY_MODEL_NAME || "qwen2.5-coder:1.5b",
 });
 
 const fallbackModel = new Ollama({

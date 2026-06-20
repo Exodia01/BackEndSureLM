@@ -1,0 +1,1 @@
+import * as fs from 'fs'; import path from 'path'; const PDF_PATH = path.join(__dirname, 'test', 'Kotak_Premier_Life_Plan_-_Brochure_-_18th_June_2020.pdf'); async function main() { console.log('End-to-End Validation'); } main();

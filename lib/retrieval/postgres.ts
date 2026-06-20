@@ -11,9 +11,9 @@ export async function postgresFullTextSearch(
       c."documentId",
       c."chunkOrder",
       c.content,
-      ts_rank(to_tsvector('english', c.content), plainto_tsquery('english', ${query})) as score
+      ts_rank(to_tsvector('english', coalesce(c.content, '')), plainto_tsquery('english', ${query})) as score
     FROM "Chunk" c
-    WHERE to_tsvector('english', c.content) @@ plainto_tsquery('english', ${query})
+    WHERE to_tsvector('english', coalesce(c.content, '')) @@ plainto_tsquery('english', ${query})
     ORDER BY score DESC
     LIMIT ${limit}
   `;

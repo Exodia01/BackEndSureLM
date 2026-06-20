@@ -4,23 +4,22 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Stages | 2 |
-| Passed | 1 |
+| Total Stages | 1 |
+| Passed | 0 |
 | Failed | 1 |
-| Duration | 0.54s |
+| Duration | 0.00s |
 
 ## Stage Results
 
 | Stage | Status | Duration |
 |-------|--------|----------|
-| Service Health Check | ✓ PASS | 0.18s |
-| PDF Extraction | ✗ FAIL | 0.35s |
+| Service Health Check | ✗ FAIL | 0.38s |
 
 ## Failed Stages Details
 
-### PDF Extraction
+### Service Health Check
 
-**Error:** page.getTextContent is not a function
+**Error:** Ollama check failed: Ollama check failed: fetch failed
 
 
 ## Validation Results
@@ -36,9 +35,9 @@
 
 ## Recommendations
 
-### PDF Extraction
+### Service Health Check
 
-**Error:** page.getTextContent is not a function
+**Error:** Ollama check failed: Ollama check failed: fetch failed
 
 
 ---
