@@ -128,18 +128,50 @@ model Document {
   chunks       Chunk[]
 }
 
+model Brochure {
+  id           String         @id @default(cuid())
+  basename     String         // e.g., "Kotak_Premier_Life_Plan"
+  originalName String         // Full filename with version info
+  pdfData      Bytes          // Store raw PDF in DB (BYTEA)
+  currentPage  Int            @default(0)
+  totalPages   Int
+  status       BrochureStatus @default(PENDING)
+  versionHash  String?        // MD5 for deduplication across versions
+  versionNum   Int            @default(1)
+  metadata     Json?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  chunks       Chunk[]
+  Log          BrochureLog[]
+}
+
+model BrochureLog {
+  id           String         @id @default(cuid())
+  brochureId   String
+  brochure     Brochure       @relation(fields: [brochureId], references: [id])
+  
+  versionNum   Int            // Version number at time of log
+  action       BrochureAction
+  metadata     Json?          // {pages: 45, chunks: 128, error: "..."}
+  timestamp    DateTime       @default(now())
+}
+
 model Chunk {
   id            String   @id @default(cuid())
-  documentId    String
-  document      Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId    String?
+  brochureId    String?
+  document      Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  brochure      Brochure? @relation(fields: [brochureId], references: [id])
   content       String
   chunkOrder    Int
   pageNumber    Int?
-  category      String?
+  category      String?    // Header/section detection for Qdrant payload
   metadata      Json?
   createdAt     DateTime @default(now())
 
   @@index([documentId, chunkOrder])
+  @@index([brochureId, chunkOrder])
 }
 
 enum ReminderType {
@@ -168,4 +200,19 @@ enum IssuanceStatus {
   ACTIVE
   EXPIRED
   CLAIMED
+}
+
+enum BrochureStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum BrochureAction {
+  UPLOAD
+  VERSION_CREATED
+  PROCESS_START
+  PROCESS_COMPLETE
+  FAILED
 }

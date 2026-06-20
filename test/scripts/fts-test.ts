@@ -1,4 +1,4 @@
-import { postgresFullTextSearch } from "./lib/retrieval/postgres"
+import { postgresFullTextSearch } from "../lib/retrieval/postgres"
 
 async function testFTS() {
   console.log("\n=== Testing Postgres Full-Text Search ===\n")

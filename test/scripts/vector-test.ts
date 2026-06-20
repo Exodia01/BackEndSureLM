@@ -1,4 +1,4 @@
-import { ensureCollection, healthCheck } from "./lib/retrieval/vector/index";
+import { ensureCollection, healthCheck } from "../lib/retrieval/vector/index";
 
 async function testVectorStorage() {
   console.log("Testing Qdrant connectivity...");

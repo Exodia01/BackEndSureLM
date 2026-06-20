@@ -1,0 +1,1 @@
+export default function BrochureManager() { return <div>Hello</div>; }

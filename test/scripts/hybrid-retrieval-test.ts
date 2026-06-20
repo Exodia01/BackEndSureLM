@@ -1,10 +1,10 @@
 // Set environment variable before anything else
 process.env.DATABASE_URL = "postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm";
 
-import { db } from "./lib/db";
-import * as postgresRetrieval from "./lib/retrieval/postgres";
-import * as qdrantRetrieval from "./lib/retrieval/vector/index";
-import { hybridSearch } from "./lib/retrieval/hybrid";
+import { db } from "../lib/db";
+import * as postgresRetrieval from "../lib/retrieval/postgres";
+import * as qdrantRetrieval from "../lib/retrieval/vector/index";
+import { hybridSearch } from "../lib/retrieval/hybrid";
 
 const TEST_CHUNK_ID = "test_hybrid_" + Date.now();
 

@@ -1,4 +1,4 @@
-import { db } from './lib/db.js';
+import { db } from '../lib/db.js';
 
 try {
   if (!process.env.DATABASE_URL) {

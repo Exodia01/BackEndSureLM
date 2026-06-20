@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Pool } from "pg"
-import { db } from "./lib/db"
+import { db } from "../lib/db"
 
 async function testPostgres() {
   try {

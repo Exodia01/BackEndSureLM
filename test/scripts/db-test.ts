@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { db } from "./lib/db";
+import { db } from "../lib/db";
 
 async function testDB() {
   console.log("Testing DB connection...");

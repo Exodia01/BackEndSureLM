@@ -6,7 +6,7 @@ process.env.DATABASE_URL = "postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5
 
 console.log("BEFORE import - DATABASE_URL:", process.env.DATABASE_URL);
 
-import { db } from "./lib/db.ts";
+import { db } from "../lib/db.ts";
 
 console.log("AFTER import - DATABASE_URL:", process.env.DATABASE_URL);
 
