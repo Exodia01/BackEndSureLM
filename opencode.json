@@ -1,27 +1,41 @@
 {
-  "version": "1",
+  "$schema": "https://opencode.ai/config.json",
   "name": "surelm-backend",
   "description": "BackEndSureLM - AI-powered document processing and retrieval system",
-  "agents": [
-    {
-      "name": "testing",
-      "role": "Test Orchestrator",
-      "tasks": ["unit", "integration", "e2e", "validate"],
-      "default": true
+  "agent": {
+    "testing": {
+      "description": "Test Orchestrator - runs unit, integration, e2e tests and validates",
+      "tasks": ["unit", "integration", "e2e", "validate"]
     },
-    {
-      "name": "orchestrator",
-      "role": "Orchestration Pipeline Tester",
-      "tasks": ["pipeline", "workflow", "rag-validation"]
+    "orchestrator": {
+      "description": "Orchestration Pipeline Tester - handles pipeline, workflow, and rag-validation tasks"
     }
-  ],
-  "commands": {
-    "test:unit": "npx vitest run test/unit/*.test.ts --reporter=verbose",
-    "test:integration": "npx vitest run test/integration/*.test.ts --reporter=verbose",
-    "test:e2e": "npx vitest run test/e2e/*.test.ts --reporter=verbose",
-    "test:orchestrator": "npx vitest run test/unit/orchestrator.test.ts test/integration/orchestrator-pipeline.test.ts test/e2e/orchestrator-e2e.test.ts",
-    "test:all": "npx vitest run --reporter=verbose",
-    "validate:rag": "tsx scripts/validate-rag.mts"
+  },
+  "command": {
+    "test:unit": {
+      "template": "npx vitest run test/unit/*.test.ts --reporter=verbose",
+      "description": "Run unit tests"
+    },
+    "test:integration": {
+      "template": "npx vitest run test/integration/*.test.ts --reporter=verbose",
+      "description": "Run integration tests"
+    },
+    "test:e2e": {
+      "template": "npx vitest run test/e2e/*.test.ts --reporter=verbose",
+      "description": "Run end-to-end tests"
+    },
+    "test:orchestrator": {
+      "template": "npx vitest run test/unit/orchestrator.test.ts test/integration/orchestrator-pipeline.test.ts test/e2e/orchestrator-e2e.test.ts",
+      "description": "Run orchestrator tests"
+    },
+    "test:all": {
+      "template": "npx vitest run --reporter=verbose",
+      "description": "Run all tests"
+    },
+    "validate:rag": {
+      "template": "tsx scripts/validate-rag.mts",
+      "description": "Validate RAG pipeline"
+    }
   },
   "validation": {
     "enabled": true,
