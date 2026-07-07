@@ -1,0 +1,62 @@
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import type { AgentMessage } from "../../types/orchestrator";
+
+const TEST_CHUNK_ID = "test_orch_" + Date.now();
+beforeAll(async () => {
+  console.log("Orchestrator Integration Tests - Requires PostgreSQL, Qdrant, Ollama");
+});
+
+afterAll(() => {
+  console.log("Cleaning up test data...");
+});
+
+describe("AgentOrchestrator - Integration Tests", () => {
+  it.skip("should run full query workflow with real retrieval", async () => {
+    const { AgentOrchestrator } = await import("../../lib/ai/orchestrator");
+    const orchestrator = new AgentOrchestrator();
+
+    const result = await orchestrator.runQueryWorkflow({
+      messages: [{ role: "user", content: "What is Term Life Insurance?" }],
+      sessionId: "test-session-123",
+    });
+
+    expect(result).toHaveProperty("content");
+    expect(result).toHaveProperty("context");
+    expect(result).toHaveProperty("toolsUsed");
+
+    console.log("Tools used:", result.toolsUsed);
+    console.log("Context sources:", result.context.map(c => c.source));
+  });
+
+  it.skip("should handle streaming query workflow", async () => {
+    const { AgentOrchestrator } = await import("../../lib/ai/orchestrator");
+    const orchestrator = new AgentOrchestrator();
+
+    const stream = await orchestrator.runQueryWorkflowStreaming({
+      messages: [{ role: "user", content: "Test query" }],
+      sessionId: "test-stream-123",
+    });
+
+    expect(stream).toBeDefined();
+  });
+
+  it.skip("should verify Ollama health before running tests", async () => {
+    const response = await fetch(process.env.OLLAMA_HOST || "http://localhost:11434/api/tags");
+    expect(response.ok).toBe(true);
+    
+    const data = await response.json();
+    expect(data.models).toBeDefined();
+  });
+
+  it.skip("should handle empty retrieval results gracefully", async () => {
+    const { AgentOrchestrator } = await import("../../lib/ai/orchestrator");
+    const orchestrator = new AgentOrchestrator();
+
+    const result = await orchestrator.runQueryWorkflow({
+      messages: [{ role: "user", content: "Query with no matches" }],
+    });
+
+    expect(result.content).toBeDefined();
+  });
+});
+

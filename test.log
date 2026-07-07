@@ -1,0 +1,57 @@
+
+> surelm@0.1.0 dev
+> next dev -H 127.0.0.1
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+- Environments: .env.local, .env
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 2.1s
+Warning: Please use the `legacy` build in Node.js environments.
+◇ injected env (0) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+[db.ts] DATABASE_URL from env: postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm
+[db.ts] DATABASE_URL type: string
+⨯ ReferenceError: DOMMatrix is not defined
+    at module evaluation (webpack://pdf.js/src/display/canvas.js:65:22)
+    at <unknown> (lib\pdf\batchProcess.ts:2:1)
+    at module evaluation (S:\BackEndSureLM\.next\dev\server\chunks\[root-of-the-server]__27e9ab05._.js:310:30)
+    at <unknown> (app\api\brochures\batch\route.ts:3:1)
+    at module evaluation (S:\BackEndSureLM\.next\dev\server\chunks\[root-of-the-server]__27e9ab05._.js:924:30)
+    at Object.<anonymous> (S:\BackEndSureLM\.next\dev\server\app\api\brochures\batch\route.js:8:3)
+  63 | // Only used in rescaleAndStroke. The goal is to avoid
+  64 | // creating a new DOMMatrix object each time we need it.
+> 65 | const SCALE_MATRIX = new DOMMatrix();
+     |                      ^
+  66 |
+  67 | // Used to get some coordinates.
+  68 | const XY = new Float32Array(2); {
+  page: '/api/brochures/batch'
+}
+ POST /api/brochures/batch 500 in 2.6s (compile: 2.3s, proxy.ts: 90ms, render: 172ms)
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+- Environments: .env.local, .env
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 2s
+⨯ ERROR: This build is using Turbopack, with a `webpack` config and no `turbopack` config.
+   This may be a mistake.
+
+   As of Next.js 16 Turbopack is enabled by default and
+   custom webpack configurations may need to be migrated to Turbopack.
+
+   NOTE: your `webpack` config may have been added by a configuration plugin.
+
+   To configure Turbopack, see https://nextjs.org/docs/app/api-reference/next-config-js/turbopack
+
+   TIP: Many applications work fine under Turbopack with no configuration,
+   if that is the case for you, you can silence this error by passing the
+   `--turbopack` or `--webpack` flag explicitly or simply setting an 
+   empty turbopack config in your Next config file (e.g. `turbopack: {}`).
+[?25h

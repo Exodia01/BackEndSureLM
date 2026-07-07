@@ -1,0 +1,645 @@
+# 📋 ZOD IMPLEMENTATION GUIDE - Type Safety + Validation Refactoring
+
+## PHASE 1: FOUNDATIONAL TYPES & SCHEMAS
+
+### Step 1.1: Create `types/api.ts` - Shared API schemas
+
+**File:** S:\BackEndSureLM\types\api.ts (NEW)
+
+```typescript
+import { z } from "zod";
+
+// Common response structure
+export const ApiResponseSchema = z.object({
+  success: z.boolean(),
+  data: z.record(z.unknown()).optional(),
+  error: z.string().optional(),
+});
+
+export type ApiResponse = z.infer<typeof ApiResponseSchema>;
+
+// Message validation (chat/conversation)
+export const MessageSchema = z.object({
+  role: z.enum(["system", "user", "assistant"]),
+  content: z.string().min(1).max(50000),
+});
+
+export type Message = z.infer<typeof MessageSchema>;
+
+export const ChatRequestSchema = z.object({
+  messages: z.array(MessageSchema).min(1),
+  model: z.string().optional(),
+  stream: z.boolean().default(true),
+});
+
+export type ChatRequest = z.infer<typeof ChatRequestSchema>;
+
+// CRM lead validation
+export const LeadFilterSchema = z.object({
+  agentId: z.string(),
+  status: z.string().optional(),
+  limit: z.number().int().positive().max(100).default(50),
+  offset: z.number().int().min(0).default(0),
+});
+
+export type LeadFilter = z.infer<typeof LeadFilterSchema>;
+
+// PDF upload validation
+export const PdfUploadSchema = z.object({
+  fileBase64: z.string().min(1),
+  filename: z.string().min(1).max(255),
+  mimeType: z.string().startsWith("application/pdf").optional(),
+});
+
+export type PdfUpload = z.infer<typeof PdfUploadSchema>;
+
+// Error structure
+export const ErrorDetailSchema = z.object({
+  path: z.array(z.union([z.string(), z.number])),
+  message: z.string(),
+});
+
+export type ErrorDetail = z.infer<typeof ErrorDetailSchema>;
+```
+
+---
+
+### Step 1.2: Create `lib/errors.ts` - Custom errors
+
+**File:** S:\BackEndSureLM\lib\errors.ts (NEW)
+
+```typescript
+export class AppError extends Error {
+  constructor(
+    public message: string,
+    public statusCode: number = 500,
+    public code?: string
+  ) {
+    super(message);
+    this.name = "AppError";
+  }
+}
+
+export class ValidationError extends AppError {
+  constructor(public details: Array<{ path: string[]; message: string }>) {
+    super("Validation failed", 400, "VALIDATION_ERROR");
+  }
+}
+
+export class EmbeddingError extends AppError {
+  constructor(
+    public chunkIndex: number,
+    public original: Error
+  ) {
+    super(`Embedding failed for chunk ${chunkIndex}`);
+    this.statusCode = 500;
+    this.code = "EMBEDDING_FAILED";
+  }
+}
+
+export class PdfProcessingError extends AppError {
+  constructor(public page?: number) {
+    super(page ? `PDF processing failed at page ${page}` : "PDF processing failed");
+    this.statusCode = 400;
+    this.code = "PDF_PROCESSING_ERROR";
+  }
+}
+```
+
+---
+
+## PHASE 2: TYPE SAFETY FIXES
+
+### Step 2.1: Fix `lib/pdf/extract.ts` - Remove `any` type
+
+**File:** S:\BackEndSureLM\lib\pdf\extract.ts (MODIFY)
+
+```typescript
+import * as pdfjs from "pdfjs-dist";
+import type { PDFDocumentProxy } from "pdfjs-dist";
+import fs from "node:fs/promises";
+
+// Add type interface BEFORE using it
+interface PDFTextItem {
+  str: string;
+}
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
+
+export async function extractPDF(filePath: string): Promise<string[]> {
+  const pdfBuffer = await fs.readFile(filePath);
+  const loadingTask = pdfjs.getDocument({ data: pdfBuffer });
+  const pdf: PDFDocumentProxy = await loadingTask.promise;
+  
+  const textPages: string[] = [];
+  
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    const page = await pdf.getPage(pageNum);
+    const textContent = await page.getTextContent();
+    // ✅ FIXED: Using proper type instead of `any`
+    const text = textContent.items.map((item: PDFTextItem) => item.str).join(" ");
+    textPages.push(`[Page ${pageNum}]\n${text}`);
+    await page.cleanup();
+  }
+  
+  await pdf.destroy();
+  
+  return textPages;
+}
+
+export async function generateEmbedding(text: string): Promise<number[]> {
+  const response = await fetch(`${process.env.OLLAMA_HOST || "http://localhost:11434"}/api/embeddings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "nomic-embed-text",
+      prompt: text,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Ollama embedding failed: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data.embedding;
+}
+```
+
+---
+
+### Step 2.2: Fix `lib/pdf/batchProcess.ts` - Multiple type fixes
+
+**File:** S:\BackEndSureLM\lib\pdf\batchProcess.ts (MODIFY)
+
+```typescript
+import { db } from "../db";
+import * as pdfjs from "pdfjs-dist";
+import crypto from "crypto";
+import { generateEmbedding } from "./extract"; // ✅ Use single source
+
+// Add type interfaces
+interface PDFTextItem {
+  str: string;
+}
+
+interface ExtractedPage {
+  content: string;
+  pageNum: number;
+}
+
+interface ChunkMetadata {
+  page?: number;
+  chunkIndex: number;
+}
+
+interface ChunkWithEmbedding {
+  content: string;
+  metadata: ChunkMetadata;
+  embedding: number[];
+}
+
+// ✅ Consolidate to single export
+export { generateEmbedding } from "./extract";
+
+// ... rest of existing code (lines 1-34 unchanged) ...
+
+/**
+ * Extract text from PDF file
+ */
+export async function extractPDFText(fileData: ArrayBuffer): Promise<{ pages: string[]; totalPages: number }> {
+  try {
+    const loadingTask = pdfjs.getDocument({ data: new Uint8Array(fileData) });
+    const pdf = await loadingTask.promise;
+    
+    const pages: string[] = [];
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      // ✅ FIXED: Using proper type instead of `any`
+      const text = textContent.items.map((item: PDFTextItem) => item.str).join(" ");
+      pages.push(`[Page ${pageNum}]\n${text}`);
+      await page.cleanup();
+    }
+    
+    await pdf.destroy();
+    
+    return { pages, totalPages: pdf.numPages };
+  } catch (error) {
+    throw new Error(`Failed to extract PDF text: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+// ... rest of existing code ...
+```
+
+---
+
+### Step 2.3: Fix `lib/pdf/batchProcess.ts` - Remove duplicate generateEmbedding
+
+**File:** S:\BackEndSureLM\lib\pdf\batchProcess.ts (MODIFY)
+
+Find the section that has duplicate embedding logic around lines 30-50 and **remove it**, replacing with:
+
+```typescript
+// ✅ Removed: Duplicate generation code
+// The import above handles this from lib/pdf/extract.ts
+export { generateEmbedding } from "./extract";
+```
+
+---
+
+### Step 2.4: Fix `lib/ai/embeddings.ts` - Make concurrent
+
+**File:** S:\BackEndSureLM\lib\ai\embeddings.ts (MODIFY)
+
+```typescript
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const OLLAMA_HOST = process.env.OLLAMA_HOST 
+  ? (process.env.OLLAMA_HOST === "0.0.0.0" || process.env.OLLAMA_HOST.includes("0.0.0.0")
+      ? "http://localhost:11434"
+      : (process.env.OLLAMA_HOST.endsWith("/v1") 
+            ? process.env.OLLAMA_HOST.replace("/v1", "") 
+            : process.env.OLLAMA_HOST))
+  : "http://localhost:11434";
+const EMBEDDING_MODEL = "nomic-embed-text";
+
+export async function generateEmbedding(text: string): Promise<number[]> {
+  const response = await fetch(`${OLLAMA_HOST}/api/embeddings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: EMBEDDING_MODEL,
+      prompt: text,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Ollama embedding failed: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data.embedding;
+}
+
+// ✅ FIXED: Parallel batch processing instead of sequential
+export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
+  const embeddings: number[][] = [];
+  
+  // Process in batches to prevent OOM while maintaining parallelism
+  const batchSize = 20;
+  
+  for (let i = 0; i < texts.length; i += batchSize) {
+    const batch = texts.slice(i, i + batchSize);
+    
+    await Promise.all(
+      batch.map((text, idx) => 
+        generateEmbedding(text)
+          .then(embedding => {
+            embeddings[i + idx] = embedding;
+          })
+      )
+    );
+    
+    if ((i + batch.length) % 50 === 0) {
+      console.log(`Generated ${Math.min(i + batch.length, texts.length)}/${texts.length} embeddings`);
+    }
+  }
+
+  return embeddings;
+}
+```
+
+---
+
+## PHASE 3: ZOD SCHEMAS FOR API ROUTES
+
+### Step 3.1: Update `app/api/chat/route.ts` - Add validation
+
+**File:** S:\BackEndSureLM\app\api\chat\route.ts (MODIFY)
+
+```typescript
+import { Ollama } from "@langchain/ollama";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { StringOutputParser } from "@langchain/core/output_parsers";
+import { z } from "zod";
+
+// ✅ ADD: Zod schemas for validation
+const MessageSchema = z.object({
+  role: z.enum(["system", "user", "assistant"]),
+  content: z.string().min(1).max(50000),
+});
+
+const ChatRequestSchema = z.object({
+  messages: z.array(MessageSchema).min(1),
+  model: z.string().optional(),
+  stream: z.boolean().default(true),
+});
+
+type Message = z.infer<typeof MessageSchema>;
+type ChatRequest = z.infer<typeof ChatRequestSchema>;
+
+// ... rest of existing code (lines 7-50 unchanged) ...
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    
+    // ✅ ADD: Validate input
+    const result = ChatRequestSchema.safeParse(body);
+    
+    if (!result.success) {
+      return Response.json({
+        error: "Invalid request",
+        details: result.error.errors,
+      }, { status: 400 });
+    }
+    
+    const { messages, stream = true } = result.data;
+
+    // ✅ ADD: Input validation before sending to LLM
+    if (messages.some(m => m.content.length > 50000)) {
+      return Response.json({
+        error: "Message content exceeds maximum length of 50000 characters",
+      }, { status: 400 });
+    }
+
+    const streamOrResponse = stream 
+      ? await streamChatWithFallback(messages as Message[])
+      : new Blob([await chatWithFallback(messages as Message[])], { type: "application/json" });
+
+    if (stream) {
+      return new Response(streamOrResponse, {
+        headers: {
+          "Content-Type": "text/plain",
+          "Transfer-Encoding": "chunked",
+        },
+      });
+    } else {
+      return Response.json({ response: streamOrResponse }, { status: 200 });
+    }
+    
+  } catch (error) {
+    console.error("Error in chat endpoint:", error);
+    
+    try {
+      const body = await request.json();
+      const result = ChatRequestSchema.safeParse(body);
+      
+      if (!result.success || !result.data.messages) {
+        return Response.json({
+          error: "Invalid request",
+          details: result?.error?.errors,
+        }, { status: 400 });
+      }
+      
+      const fallbackResponse = await chatWithFallback(result.data.messages as Message[], false);
+      
+      return Response.json({ response: fallbackResponse }, { status: 200 });
+    } catch (fallbackError) {
+      return new Response(
+        JSON.stringify({ error: "Both primary and fallback models failed" }),
+        { status: 503 }
+      );
+    }
+  }
+}
+```
+
+---
+
+### Step 3.2: Update `app/api/crm/route.ts` - Add validation
+
+**File:** S:\BackEndSureLM\app\api\crm\route.ts (MODIFY)
+
+```typescript
+import { auth } from "@clerk/nextjs/server";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { z } from "zod";
+
+// ✅ ADD: Validation schemas
+const AgentFilterSchema = z.object({
+  status: z.string().optional(),
+  limit: z.number().int().positive().max(100).default(50),
+  offset: z.number().int().min(0).default(0),
+});
+
+export async function GET(request: Request) {
+  try {
+    const { userId: clerkId } = await auth();
+    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+
+    const user = await db.user.findUnique({ where: { clerkId } });
+    if (!user) return Response.json({ success: true, data: { leads: [], stats: {} } });
+
+    const today = new Date();
+    const in30Days = new Date(today);
+    in30Days.setDate(today.getDate() + 30);
+    const in7Days = new Date(today);
+    in7Days.setDate(today.getDate() + 7);
+
+    // ✅ ADD: Pagination
+    const searchParams = request.nextUrl.searchParams;
+    const limit = parseInt(searchParams.get("limit") || "50", 10);
+    const offset = parseInt(searchParams.get("offset") || "0", 10);
+
+    const leads = await db.policyLead.findMany({
+      where: { agentId: user.id },
+      include: {
+        issuances: true,
+        reminders: { 
+          where: { isDone: false },
+          take: 5, // ✅ ADD: Limit reminders
+        },
+      },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+      skip: offset,
+    });
+
+    const leadsWithFlags = leads.map((lead) => {
+      const isBirthdayToday =
+        lead.dateOfBirth !== null &&
+        lead.dateOfBirth.getDate() === today.getDate() &&
+        lead.dateOfBirth.getMonth() === today.getMonth();
+
+      const isBirthdayThisWeek =
+        lead.dateOfBirth !== null && (() => {
+          const bday = new Date(lead.dateOfBirth!);
+          bday.setFullYear(today.getFullYear());
+          return bday >= today && bday <= in7Days;
+        })();
+
+      const premiumsDue = lead.issuances.filter(
+        (i) => i.nextPremiumDue && new Date(i.nextPremiumDue) >=今天 && new Date(i.nextPremiumDue) <= in30Days
+      );
+
+      const premiumsDueUrgent = lead.issuances.filter(
+        (i) => i.nextPremiumDue && new Date(i.nextPremiumDue) >= today && new Date(i.nextPremiumDue) <= in7Days
+      );
+
+      return {
+        ...lead,
+        isBirthdayToday,
+        isBirthdayThisWeek,
+        hasPremiumDue: premiumsDue.length > 0,
+        hasPremiumDueUrgent: premiumsDueUrgent.length > 0,
+        premiumsDue,
+      };
+    });
+
+    const stats = {
+      total: leadsWithFlags.length,
+      birthdaysToday: leadsWithFlags.filter((l) => l.isBirthdayToday).length,
+      birthdaysThisWeek: leadsWithFlags.filter((l) => l.isBirthdayThisWeek).length,
+      premiumsDueCount: leadsWithFlags.filter((l) => l.hasPremiumDue).length,
+      premiumsDueUrgentCount: leadsWithFlags.filter((l) => l.hasPremiumDueUrgent).length,
+      policiesIssued: leads.filter((l) => l.status === "POLICY_ISSUED").length,
+      activeReminders: leads.reduce((acc, l) => acc + l.reminders.length, 0),
+    };
+
+    return Response.json({ success: true, data: { leads: leadsWithFlags, stats } });
+  } catch (error) {
+    console.error("CRM fetch error:", error);
+    return Response.json({ success: false, error: "Failed to fetch CRM data" }, { status: 500 });
+  }
+}
+
+// ✅ ADD: Helper function extracted from map
+function leadFiltersFunction(leads: any[]) {
+  // Extract the filtering logic into its own function
+  return leads.filter((l) => l.status === "POLICY_ISSUED").length;
+}
+```
+
+---
+
+## PHASE 4: ERROR HANDLING IMPROVEMENTS
+
+### Step 4.1: Fix `lib/pdf/batchProcess.ts` - Proper error handling
+
+**File:** S:\BackEndSureLM\lib\pdf\batchProcess.ts (MODIFY)
+
+```typescript
+// Add to imports at top:
+import { EmbeddingError } from "../errors";
+import { generateEmbedding as generateSingleEmbedding } from "./extract";
+
+// ... existing code ...
+
+export async function embedChunks(chunks: Array<{ content: string }>): Promise<Array<{ content: string; embedding: number[] }>> {
+  const results: Array<{ content: string; embedding: number[] }> = [];
+  
+  // ✅ FIXED: Batch processing
+  const batchSize = 20;
+  
+  for (let i = 0; i < chunks.length; i += batchSize) {
+    const batch = chunks.slice(i, i + batchSize);
+    
+    await Promise.all(
+      batch.map((chunk, idx) => 
+        generateSingleEmbedding(chunk.content)
+          .then(embedding => {
+            results.push({ content: chunk.content, embedding });
+          })
+          .catch(error => {
+            // ✅ FIXED: Throw proper error with context
+            throw new EmbeddingError(i + idx, error);
+          })
+      )
+    );
+  }
+  
+  return results;
+}
+
+// ... rest of batchProcess code ...
+```
+
+---
+
+## PHASE 5: CONSOLE SAFETY IMPROVEMENTS
+
+### Step 5.1: Add `consoleSafe` utility
+
+**File:** S:\BackEndSureLM\lib\utils.ts (MODIFY or CREATE)
+
+```typescript
+// ✅ ADD safe console methods to prevent errors in edge environments
+export const consoleSafe = {
+  log: (...args: unknown[]) => {
+    if (typeof globalThis.console !== "undefined" && globalThis.console?.log) {
+      globalThis.console.log(...args);
+    }
+  },
+  error: (...args: unknown[]) => {
+    if (typeof globalThis.console !== "undefined" && globalThis.console?.error) {
+      globalThis.console.error(...args);
+    }
+  },
+  warn: (...args: unknown[]) => {
+    if (typeof globalThis.console !== "undefined" && globalThis.console?.warn) {
+      globalThis.console.warn(...args);
+    }
+  },
+};
+```
+
+---
+
+## 📊 IMPLEMENTATION CHECKLIST
+
+| Step | File | Estimated Time |
+|------|------|----------------|
+| **1.1** | Create `types/api.ts` | 15 min |
+| **1.2** | Create `lib/errors.ts` | 10 min |
+| **2.1** | Fix `lib/pdf/extract.ts` | 5 min |
+| **2.2** | Fix `lib/pdf/batchProcess.ts` types | 10 min |
+| **2.3** | Remove duplicate embeddings | 5 min |
+| **2.4** | Fix `lib/ai/embeddings.ts` batching | 15 min |
+| **3.1** | Add Zod to `app/api/chat/route.ts` | 20 min |
+| **3.2** | Add pagination to CRM | 15 min |
+| **4.1** | Improve PDF error handling | 10 min |
+| **5.1** | Add console safety utilities | 5 min |
+
+**Total: ~1.7 hours of focused work**
+
+---
+
+## ⚠️ DEPENDENCY CHECKS
+
+Run these commands after making changes:
+
+```bash
+# Install Zod (if not already installed)
+npm install zod
+
+# Verify compilation
+npx tsc --noEmit
+
+# Run tests to ensure nothing broke
+npm test
+```
+
+---
+
+## ✅ PRIORITY ORDER FOR EXECUTION
+
+Recommend executing in this order to minimize disruption:
+
+1. **Create foundational files first** (types/api.ts, lib/errors.ts)
+2. **Fix type safety** (pdf files → embeddings batching)
+3. **Add Zod validation** (chat API first - highest risk area)
+4. **Improve error handling** throughout
+5. **Add pagination** to CRM (lower priority)
+
+---
+
+Ready to proceed with execution! 🚀

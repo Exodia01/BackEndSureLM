@@ -1,0 +1,284 @@
+# SureLM - Detailed Architecture Document
+
+**Version:** 0.1  
+**Date:** July 2026  
+**Project:** Indian Rural Insurance Ecosystem Platform
+
+---
+
+## **1. SYSTEM OVERVIEW**
+
+### **Mission**
+SureLM is an AI-powered hybrid retrieval system enabling grassroots insurance agents to serve rural/semi-urban Indian communities through:
+- Intelligent policy recommendations
+- Multilingual AI assistance (regional language support)
+- Automated OCR document processing (Aadhaar, PAN, KYC)
+- Agent CRM with lead management & reminders
+
+### **Architecture Pattern**
+Monorepo Next.js 16 application with modular microservice-style components integrated via shared primitives.
+
+---
+
+## **2. TECHNOLOGY STACK**
+
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| Framework | Next.js (App Router) | 16.1.6 |
+| UI | React, Shadcn/UI, Tailwind CSS | 19, 4 |
+| Database | PostgreSQL (Neon Serverless) | Prisma 7.4.1 |
+| Vector DB | Qdrant | v1.12.0 |
+| LLM | Ollama | qwen2.5-coder:1.5b + llama3 fallback |
+| Embeddings | nomic-embed-text (768-dim) | via Ollama API |
+| Vision OCR | minicpm-v + llava:7b | multimodal models |
+| Auth | Clerk | v6.38.3 |
+| PDF Processing | pdfjs-dist, pdf-lib | 4.10.38 |
+
+---
+
+## **3. HIGH-LEVEL ARCHITECTURE**
+
+```
+CLIENT LAYER (React 19)
+├── Dashboard (Agents)
+├── CRM UI (Breadcrumbs)
+└── Landing Page (Marketing)
+
+API ROUTE LAYER (/app/api/)
+├── /chat (AI Chat)
+├── /ocr (OCR)
+├── /crm (Leads)
+├── /brochures (PDF Mgmt)
+└── /birthdays (Reminders)
+
+BUSINESS LOGIC LAYER
+├── lib/ai/
+│   - orchestrator (EMPTY)
+│   - embeddings
+│   - retrieval
+│   └── recommendations
+├── lib/retrieval/
+│   - postgres (FTS)
+│   └── vector (Qdrant)
+└── lib/pdf/
+    - extract
+    - chunk
+    └── batchProcess
+
+DATA LAYER
+├── PostgreSQL (Prisma ORM)
+├── Qdrant (Vector DB)
+└── File System (PDFs, Documents)
+```
+
+---
+
+## **4. DATABASE SCHEMA (PRISMA)**
+
+### Core Entities:
+
+**User & AgentProfile**
+- clerkId: Clerk auth ID
+- role: AGENT | ADMIN
+- agentProfile with location, language fields
+
+**PolicyLead (Household)**
+- agentId, householdName, phone
+- income, familySize
+- status: NEW | CONTACTED | POLICY_ISSUED | REJECTED
+- dateOfBirth for birthday tracking
+- followUpAt for visit scheduling
+
+**PolicyIssuance**
+- leadId, policyName, premiumAmount
+- issuedAt, expiresAt
+- nextPremiumDue (auto-calculate renewal)
+- status: ACTIVE | EXPIRED | CLAIMED
+
+**Document & Chunk System**
+- Document: filename, chunks[] (text chunks for FTS)
+- Brochure: basename (deduplication), pdfData (binary), versionHash (MD5)
+- Chunk: content, chunkOrder, pageNumber, category (header detection)
+
+**Reminder System**
+- Reminder: leadId, type (FOLLOWUP | BIRTHDAY), scheduledAt
+- BirthdayReminder: daysUntil, wishSent flags
+
+**Observability Models**
+- AuditLog: action, entityType, entityId, requestTraceId
+- AIRequestLog: endpoint, modelUsed, tokens, latency, confidenceScore
+
+---
+
+## **5. RETRIEVAL ARCHITECTURE**
+
+### Hybrid Search System (3 parallel channels):
+
+1. **PostgreSQL Full-Text Search (Lexical)**
+   - Target: Policy names in PolicyIssuance
+   - Method: ts_rank() + plainto_tsquery()
+   - Use case: Exact term matching
+
+2. **Qdrant Vector Search (Semantic)**
+   - Target: content_chunks collection
+   - Method: Cosine similarity on 768-dim embeddings
+   - Use case: Natural language queries
+
+3. **User History Lookup (Personalization)**
+   - Target: Agent's past PolicyIssuance records
+   - Method: JOIN on agent relationships
+   - Use case: Personalized context
+
+### Scoring:
+- High: score >= 0.7 (strong match)
+- Medium: score >= 0.4 (acceptable)
+- Low: score < 0.4 (weak)
+
+---
+
+## **6. AI ORCHESTRATION LAYER**
+
+### Embeddings Pipeline
+- Endpoint: http://localhost:11434/api/embeddings
+- Model: nomic-embed-text (768-dim)
+- Batching: Sequential for VRAM protection
+
+### LLM Pipeline
+**Primary:** Ollama qwen2.5-coder:1.5b  
+**Fallback:** Ollama llama3:latest
+
+**Failover Logic:**
+- Try primary model for streaming
+- If fails, fallback to text response
+
+⚠️ **CRITICAL GAPS:**
+- lib/ai/orchestrator.ts (0 lines - empty)
+- lib/ai/retrievePolicies.ts (empty)
+- lib/ai/generateRecommendations.ts (empty)
+- lib/ai/extractRequirements.ts (empty)
+
+---
+
+## **7. PDF PROCESSING WORKFLOW**
+
+**Steps:**
+1. Extract Text via pdfjs-dist
+2. Chunk: 1200 words with 200-word overlap
+3. Detect Category via header regex patterns
+4. Generate Embeddings sequentially (VRAM-safe)
+5. Store Chunks: Prisma transaction (DB + Qdrant)
+
+**Deduplication:** MD5 hash on file content
+
+---
+
+## **8. API ENDPOINTS**
+
+- /api/chat - Streaming conversational agent
+- /api/ocr - Base64 image → extracted text
+- /api/crm - Leads with birthday flags + premiums due
+- /api/birthdays - Upcoming birthdays
+- /api/reminders - Create/mark follow-up reminders
+- /api/brochures - Upload & auto-process
+
+---
+
+## **9. VECTOR DATABASE CONFIGURATION**
+
+**Collections:**
+1. policies - Document-level metadata
+2. content_chunks (primary) - Chunk embeddings with category filtering
+
+**Filtering:** SearchFilter object for brochure_id constraints
+
+---
+
+## **10. CONCURRENCY & PERFORMANCE**
+
+- Parallel retrieval (FTS + Vector + History via Promise.all)
+- Batch Qdrant upserts (100 points/batch with retry)
+- Sequential embeddings (VRAM protection)
+
+---
+
+## **11. AUTHENTICATION & SECURITY**
+
+**Clerk Integration:**
+- Protected routes redirect to sign-in
+- Agent role verification in API endpoints
+
+**Environment Variables:**
+DATABASE_URL, QDRANT_URL, OLLAMA_HOST, model names
+
+---
+
+## **12. OBSERVABILITY & LOGGING**
+
+- Every API request logged with traceId
+- Failure details captured in AIRequestLog
+- Agent actions tracked in AuditLog
+
+---
+
+## **13. DEPLOYMENT INFRASTRUCTURE**
+
+**Docker Compose Stack:**
+```yaml
+postgres: PostgreSQL 16-alpine
+qdrant: Qdrant v1.12.0
+```
+
+**Start Sequence:**
+```bash
+docker-compose up -d                    # Database + Vector DB
+npm install                             # Dependencies
+npx prisma generate && migrate dev      # Schema sync
+next dev                                # App server (port 3000)
+```
+
+---
+
+## **14. RECOMMENDATIONS FOR OPENCODE INTEGRATION**
+
+To configure this codebase to manage another opencode instance:
+
+**Required Steps:**
+1. Create `.opencode/` directory:
+   - agents/ - Agent configurations
+   - tools/ - Custom tools for DB/Qdrant operations
+   
+2. Implement orchestrator to coordinate:
+   - Requirement extraction from user query
+   - Route to appropriate sub-agents
+   - Aggregate and rank results
+
+3. Add opencode configuration with instance IDs and tool definitions
+
+**Suggested Agents:**
+- RequirementExtractor (parse user query → structured profile)
+- PolicySearcher (execute hybrid retrieval)
+- RecommendationGenerator (rank & explain policies)
+
+---
+
+## **15. KEY FINDINGS SUMMARY**
+
+### Strengths:
+- Well-designed hybrid retrieval system
+- Comprehensive database schema with observability
+- Proper error handling with fallbacks
+- Dockerized infrastructure ready
+
+### Gaps:
+- Orchestrator (lib/ai/orchestrator.ts) is empty
+- Policy retrieval logic incomplete
+- No reranking/deduplication implementation
+- Missing user feedback collection
+
+### Opencode Status:
+❌ NO opencode configuration found:
+- No .opencode/ directory
+- No opencode.json file
+- No agent configuration files
+
+Ready for opencode integration once requirements are clarified.

@@ -216,3 +216,32 @@ enum BrochureAction {
   PROCESS_COMPLETE
   FAILED
 }
+
+model OrchestrationLog {
+  id               String   @id @default(cuid())
+  workflowId       String   @unique
+  type             String
+  status           String
+  input            Json
+  intermediateResults Json? @map("intermediate_results")
+  finalOutput      Json?    @map("final_output")
+  agentsExecuted   Json     @map("agents_executed")
+  errors           Json?
+  createdAt        DateTime @default(now())
+  completedAt      DateTime?
+
+  AgentLogs OrchestrationAgentLog[]
+}
+
+model OrchestrationAgentLog {
+  id          String   @id @default(cuid())
+  workflowId  String
+  agent       String
+  status      String
+  input       Json?    @map("input_data")
+  output      Json?    @map("output_data")
+  latencyMs   Int?
+  createdAt   DateTime @default(now())
+
+  orchestrationLog OrchestrationLog @relation(fields: [workflowId], references: [workflowId], onDelete: Cascade)
+}
