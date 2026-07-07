@@ -95,8 +95,6 @@ export default function CRMPage() {
   const [sortBy, setSortBy] = useState<"name" | "date" | "status">("date");
   const [premiumTab, setPremiumTab] = useState<"urgent" | "soon">("urgent");
 
-  useEffect(() => { fetchData(); }, []);
-
   const fetchData = async () => {
     try {
       const res = await fetch("/api/crm");
@@ -340,7 +338,7 @@ export default function CRMPage() {
                       position: "relative", overflow: "hidden",
                     }}>
                       <p style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", color: "#4ade80", marginBottom: 8 }}>
-                        Today's Brief
+                        Today&apos;s Brief
                       </p>
                       <h2 style={{ fontFamily: "'Instrument Serif',serif", fontWeight: 400, fontSize: 28, letterSpacing: "-0.02em", color: "#fff", marginBottom: 6 }}>
                         {greeting()}, {user?.firstName ?? "Agent"}

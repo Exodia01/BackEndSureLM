@@ -35,8 +35,6 @@ export function BirthdaySection() {
   const [refreshing, setRefreshing] = useState(false);
   const [tab, setTab]               = useState<"today" | "week" | "upcoming">("today");
 
-  useEffect(() => { fetchBirthdays(); }, []);
-
   const fetchBirthdays = async () => {
     try {
       const res  = await fetch("/api/birthdays");
@@ -45,6 +43,8 @@ export function BirthdaySection() {
     } catch { console.error("Failed to fetch birthdays"); }
     finally { setLoading(false); }
   };
+
+  useEffect(() => { fetchBirthdays(); }, []);
 
   const refresh = async () => {
     setRefreshing(true);

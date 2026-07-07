@@ -177,6 +177,7 @@ export default function ChatArea({ lead }: ChatAreaProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+
   useEffect(() => {
     setMessages([]);
     setInput("");
@@ -185,18 +186,6 @@ export default function ChatArea({ lead }: ChatAreaProps) {
     setStreamingId(null);
     loadAll();
   }, [lead.id]);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  useEffect(() => {
-    const ta = textareaRef.current;
-    if (!ta) return;
-    ta.style.height = "auto";
-    ta.style.height = Math.min(ta.scrollHeight, 120) + "px";
-  }, [input]);
-
   const loadAll = async () => {
     try {
       const [mRes, iRes] = await Promise.all([

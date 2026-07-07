@@ -17,6 +17,10 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     "__mocks__/**",
     "test_e2e_simple.mjs",
+    "logs/temp/*",
+    "scripts/*-test.cjs",
+    "test-extract.js",
+    "test/**/*.js",
   ]),
 ]);
 
