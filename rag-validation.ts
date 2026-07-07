@@ -22,7 +22,7 @@ interface TraceStage {
   details: any[];
 }
 
-let traceStages: TraceStage[] = [];
+const traceStages: TraceStage[] = [];
 
 function startTraceStage(name: string): TraceStage {
   const stage: TraceStage = { name, startTime: Date.now(), passed: false, details: [] };

@@ -14,7 +14,7 @@ export function applyRRFS(results: RetrievalResult[]): RerankResult[] {
   const rrfsResults = results.map((result) => {
     const k = 60;
     
-    let score = 1 / (result.rank! + k);
+    const score = 1 / (result.rank! + k);
     
     return {
       ...result,

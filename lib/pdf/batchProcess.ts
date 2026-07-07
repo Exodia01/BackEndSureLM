@@ -294,7 +294,7 @@ export async function uploadBrochure(
   
   console.log(`[uploadBrochure] Filename: ${filename}, Basename: ${basename}`);
 
-  let existingBrochure = await db.brochure.findFirst({
+  const existingBrochure = await db.brochure.findFirst({
     where: { basename, versionHash: fileHash },
     orderBy: { versionNum: "desc" },
   });
