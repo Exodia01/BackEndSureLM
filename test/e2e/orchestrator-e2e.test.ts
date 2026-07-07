@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 
 describe("AgentOrchestrator - E2E Tests", () => {
-  it.skip("should handle multi-turn conversation context", async () => {
+  it("should handle multi-turn conversation context", async () => {
     const { AgentOrchestrator } = await import("../../lib/ai/orchestrator");
     const orchestrator = new AgentOrchestrator();
 
@@ -29,7 +29,7 @@ describe("AgentOrchestrator - E2E Tests", () => {
     expect(result2.content).toBeDefined();
   });
 
-  it.skip("should handle long queries with context window", async () => {
+  it("should handle long queries with context window", async () => {
     const { AgentOrchestrator } = await import("../../lib/ai/orchestrator");
     const orchestrator = new AgentOrchestrator();
 
@@ -43,7 +43,7 @@ describe("AgentOrchestrator - E2E Tests", () => {
     expect(result.context.length).toBeGreaterThanOrEqual(0);
   });
 
-  it.skip("should deduplicate results from multiple sources", async () => {
+  it("should deduplicate results from multiple sources", async () => {
     const { AgentOrchestrator } = await import("../../lib/ai/orchestrator");
     const orchestrator = new AgentOrchestrator();
 

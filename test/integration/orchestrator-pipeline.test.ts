@@ -11,7 +11,7 @@ afterAll(() => {
 });
 
 describe("AgentOrchestrator - Integration Tests", () => {
-  it.skip("should run full query workflow with real retrieval", async () => {
+  it("should run full query workflow with real retrieval", async () => {
     const { AgentOrchestrator } = await import("../../lib/ai/orchestrator");
     const orchestrator = new AgentOrchestrator();
 
@@ -28,7 +28,7 @@ describe("AgentOrchestrator - Integration Tests", () => {
     console.log("Context sources:", result.context.map(c => c.source));
   });
 
-  it.skip("should handle streaming query workflow", async () => {
+  it("should handle streaming query workflow", async () => {
     const { AgentOrchestrator } = await import("../../lib/ai/orchestrator");
     const orchestrator = new AgentOrchestrator();
 
@@ -40,15 +40,15 @@ describe("AgentOrchestrator - Integration Tests", () => {
     expect(stream).toBeDefined();
   });
 
-  it.skip("should verify Ollama health before running tests", async () => {
-    const response = await fetch(process.env.OLLAMA_HOST || "http://localhost:11434/api/tags");
+  it("should verify Ollama health before running tests", async () => {
+    const response = await fetch(process.env.OLLAMA_HOST || "http://localhost:11434");
     expect(response.ok).toBe(true);
     
-    const data = await response.json();
-    expect(data.models).toBeDefined();
+    const data = await response.text();
+    expect(data).toContain("running");
   });
 
-  it.skip("should handle empty retrieval results gracefully", async () => {
+  it("should handle empty retrieval results gracefully", async () => {
     const { AgentOrchestrator } = await import("../../lib/ai/orchestrator");
     const orchestrator = new AgentOrchestrator();
 
