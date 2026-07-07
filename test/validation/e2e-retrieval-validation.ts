@@ -25,7 +25,7 @@ interface QueryResult {
 const QDRANT_COLLECTION = "content_chunks";
 const VALIDATION_REPORT_PATH = "S:\\BackEndSureLM\\test\\validation\\e2e-retrieval-validation.md";
 
-let report = {
+const report = {
   stages: [] as ValidationStage[],
   queryResults: [] as QueryResult[],
 };

@@ -1,9 +1,18 @@
-jest.mock('@prisma/client', () => ({
-  PrismaClient: class MockPrismaClient {
-    \ = jest.fn();
-    document = { create: jest.fn(), deleteMany: jest.fn() };
-    chunk = { create: jest.fn(), deleteMany: jest.fn() };
+import { PrismaClient as ActualPrismaClient, Prisma } from '@prisma/client';
+
+const MockPrismaClient = jest.fn().mockImplementation(() => ({
+  $connect: jest.fn(),
+  document: {
+    create: jest.fn(),
+    deleteMany: jest.fn(),
   },
-  PrismaNeon: class MockPrismaNeon {},
-  version: '7.4.1'
+  chunk: {
+    create: jest.fn(),
+    deleteMany: jest.fn(),
+  },
 }));
+
+export const PrismaNeon = jest.fn();
+
+export default MockPrismaClient;
+export { ActualPrismaClient as PrismaClient, Prisma };

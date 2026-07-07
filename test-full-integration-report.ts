@@ -31,8 +31,8 @@ interface RerankResult {
 }
 
 const TEST_CHUNK_ID = "test_full_integration_" + Date.now();
-let createdChunks: string[] = [];
-let createdDocs: string[] = [];
+const createdChunks: string[] = [];
+const createdDocs: string[] = [];
 
 async function cleanUp() {
   try {

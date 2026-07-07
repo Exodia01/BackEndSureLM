@@ -46,7 +46,7 @@ interface TraceStage {
   error?: string;
 }
 
-let traceLog: TraceStage[] = [];
+const traceLog: TraceStage[] = [];
 
 function startTraceStage(name: string): number {
   const stage = { name, startTime: Date.now(), passed: false };

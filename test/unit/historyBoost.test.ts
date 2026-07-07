@@ -132,7 +132,7 @@ const runAllTests = async (): Promise<void> => {
 
       const results = applyHistoryBoostManual(testCase.input, testCase.agentId as any);
 
-      let passed = true;
+      const passed = true;
       for (let j = 0; j < testCase.expectedResults.length; j++) {
         const result = results[j];
         const expected = testCase.expectedResults[j];

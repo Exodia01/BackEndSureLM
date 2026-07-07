@@ -39,7 +39,7 @@ interface ValidationReport {
   };
 }
 
-let report: ValidationReport = { stages: [], results: { services: {} }, summary: { totalStages: 0, passedStages: 0, failedStages: 0, durationMs: 0 } };
+const report: ValidationReport = { stages: [], results: { services: {} }, summary: { totalStages: 0, passedStages: 0, failedStages: 0, durationMs: 0 } };
 
 function startStage(name: string): TestStage {
   const stage: TestStage = { name, passed: false, startTime: Date.now() };
