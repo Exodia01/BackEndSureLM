@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "name": "surelm-backend",
+  "description": "BackEndSureLM - AI-powered document processing and retrieval system",
+  "agents": [
+    {
+      "name": "testing",
+      "role": "Test Orchestrator",
+      "tasks": ["unit", "integration", "e2e", "validate"],
+      "default": true
+    },
+    {
+      "name": "orchestrator",
+      "role": "Orchestration Pipeline Tester",
+      "tasks": ["pipeline", "workflow", "rag-validation"]
+    }
+  ],
+  "commands": {
+    "test:unit": "npx vitest run test/unit/*.test.ts --reporter=verbose",
+    "test:integration": "npx vitest run test/integration/*.test.ts --reporter=verbose",
+    "test:e2e": "npx vitest run test/e2e/*.test.ts --reporter=verbose",
+    "test:orchestrator": "npx vitest run test/unit/orchestrator.test.ts test/integration/orchestrator-pipeline.test.ts test/e2e/orchestrator-e2e.test.ts",
+    "test:all": "npx vitest run --reporter=verbose",
+    "validate:rag": "tsx scripts/validate-rag.mts"
+  },
+  "validation": {
+    "enabled": true,
+    "files": ["**/*.ts", "**/*.js"],
+    "exclude": ["node_modules/**"]
+  }
+}
