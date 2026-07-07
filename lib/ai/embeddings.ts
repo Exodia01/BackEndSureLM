@@ -41,3 +41,18 @@ export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
 
   return embeddings;
 }
+
+export async function generateOllamaEmbedding(text: string, model: string = "bge-m3"): Promise<number[]> {
+  const response = await fetch(`${OLLAMA_HOST}/api/embeddings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ model, prompt: text }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Ollama embedding failed: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data.embedding;
+}

@@ -1,0 +1,1 @@
+﻿import { PrismaClient } from "@prisma/client"; import { PrismaPg } from "@prisma/adapter-pg"; const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL }); const db = new PrismaClient({ adapter }); try { await db.$connect(); console.log("Database OK"); } catch (e) { console.error(e.message); }
