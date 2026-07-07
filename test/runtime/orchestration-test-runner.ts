@@ -1,8 +1,9 @@
 import "dotenv/config";
+import fs from "fs";
 import { writeFileSync } from "fs";
 import path from "path";
 
-const LOG_DIR = "S:\\BackEndSureLM\\logs\\orchestration-test-2026-07-07";
+const LOG_DIR = "S:\\\\BackEndSureLM\\\\logs\\\\orchestration-test-2026-07-07";
 
 interface TestResult {
   testName: string;
@@ -19,8 +20,8 @@ class OrchestrationTestRunner {
   constructor() {
     this.logFile = path.join(LOG_DIR, `orchestrator-test-${Date.now()}.json`);
     
-    if (!require("fs").existsSync(LOG_DIR)) {
-      require("fs").mkdirSync(LOG_DIR, { recursive: true });
+    if (!fs.existsSync(LOG_DIR)) {
+      fs.mkdirSync(LOG_DIR, { recursive: true });
     }
     
     console.log("=".repeat(60));
@@ -121,7 +122,7 @@ class OrchestrationTestRunner {
   private async runE2ETests(): Promise<void> {
     this.log("\n--- E2E Tests ---");
     
-    const hasOllama = await checkService("Ollama", process.env.OLLAMA_HOST || "http://localhost:11434");
+    const hasOllama = await this.checkService("Ollama", process.env.OLLAMA_HOST || "http://localhost:11434");
     
     const e2eTests = [
       { name: "Multi-turn Conversation", enabled: hasOllama },
@@ -192,4 +193,3 @@ runner.run().catch((error) => {
   console.error("Fatal error:", error);
   process.exit(1);
 });
-

@@ -1,16 +1,18 @@
 import { trace, SpanKind } from "@opentelemetry/api";
-import { PhoenixSpanExporter } from "./exporter";
+import { initPhoenixExporter } from "./exporter";
 
 const phoenixEndpoint = process.env.PHOENIX_ENDPOINT || "http://localhost:6007";
 const projectName = process.env.PHOENIX_PROJECT_NAME || "surelm-platform";
 
-export const tracer = trace.getTracer(projectName);
+let exporterInitialized = false;
 
-export async function initPhoenixExporter() {
-  return new PhoenixSpanExporter({
-    endpoint: phoenixEndpoint,
-    serviceName: projectName,
-  });
+export async function getTracer() {
+  if (!exporterInitialized) {
+    await initPhoenixExporter();
+    exporterInitialized = true;
+  }
+
+  return trace.getTracer(projectName);
 }
 
 export type TraceOptions = {
@@ -28,6 +30,7 @@ export async function traceOperation<T>(
   const finalSpanName = spanName || name;
 
   try {
+    const tracer = await getTracer();
     const span = tracer.startSpan(finalSpanName, {
       kind,
       attributes,
@@ -40,6 +43,7 @@ export async function traceOperation<T>(
 
     return result;
   } catch (error) {
+    const tracer = await getTracer();
     const span = tracer.startActiveSpan(finalSpanName, { kind, attributes }, (span) => {
       span.setStatus({ 
         code: 2, 
