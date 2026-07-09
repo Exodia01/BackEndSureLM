@@ -109,6 +109,9 @@ async function streamOllama(
         }
       }
     },
+    cancel() {
+      response.body?.cancel().catch(() => {});
+    },
   });
 
   return readableStream;

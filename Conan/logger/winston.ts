@@ -1,7 +1,10 @@
 import winston from 'winston';
 import path from 'path';
 
-const logsDir = path.join(__dirname, '../../logs');
+const getLogPath = (filename: string): string => {
+  const logsDir = process.env.LOGS_DIR || path.join(__dirname, '..', '..', 'logs', 'application');
+  return path.join(logsDir, filename);
+};
 
 export const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
@@ -10,16 +13,16 @@ export const logger = winston.createLogger({
     winston.format.errors({ stack: true }),
     winston.format.json()
   ),
-  defaultMeta: { service: 'banking-audit' },
+  defaultMeta: { service: 'surelm' },
   transports: [
     new winston.transports.File({
-      filename: path.join(logsDir, 'error.log'),
+      filename: getLogPath('error.log'),
       level: 'error',
       maxsize: 10485760,
       maxFiles: 5,
     }),
     new winston.transports.File({
-      filename: path.join(logsDir, 'audit.log'),
+      filename: getLogPath('combined.log'),
       level: 'info',
       maxsize: 10485760,
       maxFiles: 5,

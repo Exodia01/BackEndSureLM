@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">सर्यूएलएम</string>
+    <string name="slogan">भारतीय बीमा प्रणाली मंच</string>
+    
+    <!-- Auth Screens -->
+    <string name="login_title">प्रवेश करें</string>
+    <string name="email_hint">ईमेल पता</string>
+    <string name="password_hint">पासवर्ड</string>
+    <string name="sign_in">प्रवेश करें</string>
+    <string name="forgot_password">पासवर्ड भूल गए?</string>
+    
+    <!-- Home/Leads Screen -->
+    <string name="nav_home">मुख्य</string>
+    <string name="nav_leads">होल्डहोल्ड</string>
+    <string name="nav_chat">AI सहायक</string>
+    <string name="nav_documents">दस्तावेज़</string>
+    
+    <!-- Lead List -->
+    <string name="lead_list_title">परिवार</string>
+    <string name="add_lead">नया परिवार जोड़ें</string>
+    <string name="search_leads">खोजें...</string>
+    
+    <!-- Lead Details -->
+    <string name="household_name">परिवार का नाम</string>
+    <string name="phone_number">फ़ोन नंबर</string>
+    <string name="monthly_income">मासिक आय (₹)</string>
+    <string name="family_size">परिवार का साइज़</string>
+    
+    <!-- Status -->
+    <string name="status_new">नया</string>
+    <string name="status_contacted">संपर्क किया</string>
+    <string name="status_policy_issued">बीमा जारी</string>
+    
+    <!-- Buttons -->
+    <string name="save">सहेजें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="delete">हटाएं</string>
+    <string name="edit">संपादित करें</string>
+    
+    <!-- Language Names -->
+    <string name="language_hindi" />
+</resources>

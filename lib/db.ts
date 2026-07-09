@@ -6,8 +6,9 @@ dotenv.config();
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
-console.log("[db.ts] DATABASE_URL from env:", DATABASE_URL);
-console.log("[db.ts] DATABASE_URL type:", typeof DATABASE_URL);
+if (!DATABASE_URL) {
+  throw new Error("DATABASE_URL is not set");
+}
 
 function createPrismaClient() {
   const adapter = new PrismaPg({

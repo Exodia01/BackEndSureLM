@@ -114,7 +114,7 @@ export default function Problem() {
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: 15,
                   color: "#64748b", lineHeight: 1.75, margin: 0,
                 }}>
-                  Insurance benefits aren't immediate, making the concept feel irrelevant to rural
+                   Insurance benefits aren&apos;t immediate, making the concept feel irrelevant to rural
                   households with no sustained awareness campaigns reaching them.
                 </p>
               </div>
@@ -150,8 +150,8 @@ export default function Problem() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: 14,
                 color: "#64748b", lineHeight: 1.7, margin: 0,
               }}>
-                Insurance companies are concentrated in urban centers. Rural communities simply
-                don't have reliable access to products or representatives.
+                 Insurance companies are concentrated in urban centers. Rural communities simply
+                 don&apos;t have reliable access to products or representatives.
               </p>
             </div>
           </div>

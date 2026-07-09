@@ -1,50 +1,38 @@
-// Relevance score tests - runs with tsx or node
+import { describe, it, expect } from "vitest";
 import { scoreToRelevance } from "../../lib/ai/hybridRetrieval";
 
-type TestCase = {
-  name: string;
-  input: number;
-  expected: "high" | "medium" | "low";
-};
+describe("scoreToRelevance - Unit Tests", () => {
+  it("should return 'high' for scores >= 0.7", () => {
+    expect(scoreToRelevance(0.7)).toBe("high");
+    expect(scoreToRelevance(1.0)).toBe("high");
+    expect(scoreToRelevance(0.95)).toBe("high");
+  });
 
-const testCases: TestCase[] = [
-  { name: "returns 'high' for scores >= 0.7", input: 0.7, expected: "high" },
-  { name: "returns 'medium' for scores >= 0.4 and < 0.7", input: 0.5, expected: "medium" },
-  { name: "returns 'low' for scores < 0.4", input: 0.2, expected: "low" },
-  { name: "returns 'high' at boundary 0.70", input: 0.70, expected: "high" },
-  { name: "returns 'medium' just below 0.70 (0.69)", input: 0.69, expected: "medium" },
-  { name: "returns 'medium' at boundary 0.40", input: 0.40, expected: "medium" },
-  { name: "returns 'low' just below 0.40 (0.39)", input: 0.39, expected: "low" },
-];
+  it("should return 'medium' for scores >= 0.4 and < 0.7", () => {
+    expect(scoreToRelevance(0.4)).toBe("medium");
+    expect(scoreToRelevance(0.69)).toBe("medium");
+    expect(scoreToRelevance(0.55)).toBe("medium");
+  });
 
-let passedTests = 0;
-let failedTests = 0;
+  it("should return 'low' for scores < 0.4", () => {
+    expect(scoreToRelevance(0.39)).toBe("low");
+    expect(scoreToRelevance(0.0)).toBe("low");
+    expect(scoreToRelevance(0.1)).toBe("low");
+  });
 
-testCases.forEach((tc) => {
-  try {
-    const result = scoreToRelevance(tc.input);
-    if (result === tc.expected) {
-      console.log(`✅ ${tc.name}`);
-      passedTests++;
-    } else {
-      console.log(`❌ ${tc.name} - Expected '${tc.expected}', got '${result}'`);
-      failedTests++;
-    }
-  } catch (error: any) {
-    console.log(`❌ ${tc.name} - Error: ${error.message}`);
-    failedTests++;
-  }
+  it("should return 'high' at boundary 0.70", () => {
+    expect(scoreToRelevance(0.70)).toBe("high");
+  });
+
+  it("should return 'medium' just below 0.70 (0.69)", () => {
+    expect(scoreToRelevance(0.69)).toBe("medium");
+  });
+
+  it("should return 'medium' at boundary 0.40", () => {
+    expect(scoreToRelevance(0.40)).toBe("medium");
+  });
+
+  it("should return 'low' just below 0.40 (0.39)", () => {
+    expect(scoreToRelevance(0.39)).toBe("low");
+  });
 });
-
-const total = passedTests + failedTests;
-console.log("\n" + "=".repeat(50));
-console.log("Test Summary");
-console.log("=".repeat(50));
-console.log(`Total Tests: ${total}`);
-console.log(`✅ Passed: ${passedTests}`);
-console.log(`❌ Failed: ${failedTests}`);
-console.log(`Success Rate: ${(passedTests / total * 100).toFixed(1)}%`);
-
-if (failedTests > 0) {
-  process.exit(1);
-}

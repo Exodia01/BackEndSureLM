@@ -1,0 +1,76 @@
+﻿# SureLM Android App - API Testing Guide
+
+## Backend API Endpoints Tested
+
+### 1. Chat/Recommendations Endpoint
+`
+POST /api/chat
+Headers: Content-Type: application/json
+Body: {
+  "messages": [{"role": "user", "content": "Your query"}],
+  "stream": false,
+  "sessionId": "test-session"
+}
+`
+
+### 2. Lead Management Endpoints
+`
+GET    /api/crm           - Fetch leads
+POST   /api/leads         - Create new lead
+PATCH  /api/leads/{id}    - Update lead
+`
+
+## Manual Testing Steps
+
+### Step 1: Start Backend Services
+`ash
+cd S:\BackEndSureLM
+docker-compose up -d       # Start PostgreSQL, Qdrant, Ollama
+npm run dev                # Start Next.js backend on port 3000
+`
+
+### Step 2: Test Backend directly (curl)
+`ash
+curl -X POST http://localhost:3000/api/chat 
+  -H "Content-Type: application/json" 
+  -d '{"messages":[{"role":"user","content":"Health insurance for farmers"}],"stream":false}'
+`
+
+### Step 3: Configure Android App
+1. Open S:\BackEndSureLM\SureLMFrontEnd in Android Studio
+2. Edit local.properties: 
+   `
+   API_BASE_URL=http://YOUR_IP:3000
+   CLERK_JWT_SECRET=your-secret
+   `
+
+### Step 4: Build and Run App
+`ash
+cd S:\BackEndSureLM\SureLMFrontEnd
+.\gradlew.bat assembleDebug
+`
+
+## Detailed Test Logs
+
+| Log File | Purpose |
+|----------|---------|
+| test_results.txt | Build completion summary |
+| error.log | Critical errors only |
+| chat_test_output.log | API test results |
+| backend_api_test_results.txt | Endpoint validation |
+
+## Expected Test Results
+
+### Success Indicators:
+✓ All build files present
+✓ Kotlin source compiles (39 files)
+✓ Resources properly defined (19 XML files)
+✓ Gradle wrapper functional
+
+### Backend Integration:
+TODO: Once Java is installed and Android Studio available
+
+=================================================
+ Generated: 2026-07-08
+ Project Path: S:\BackEndSureLM\SureLMFrontEnd
+=================================================

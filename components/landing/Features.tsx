@@ -136,8 +136,8 @@ export default function Features() {
                   </div>
                   <h3 style={title("#fff")}>Multilingual</h3>
                   <p style={body("rgba(255,255,255,0.45)")}>
-                    Hindi, Tamil, Telugu, Marathi and more — every interaction delivered
-                    in the user's mother tongue, naturally.
+                     Hindi, Tamil, Telugu, Marathi and more — every interaction delivered
+                     in the user&apos;s mother tongue, naturally.
                   </p>
                 </div>
                 <div style={{ marginTop: 24, display: "flex", gap: 6, flexWrap: "wrap" }}>

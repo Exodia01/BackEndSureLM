@@ -1,0 +1,604 @@
+﻿
+> surelm@0.1.0 lint
+> eslint
+
+
+S:\BackEndSureLM\Conan\logger\traceId.ts
+  1:7  warning  'TRACE_ID_HEADER' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\app\(dashboard)\crm\page.tsx
+    3:20  warning  'useEffect' is defined but never used     @typescript-eslint/no-unused-vars
+    9:23  warning  'Bell' is defined but never used          @typescript-eslint/no-unused-vars
+  746:87  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  763:76  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\app\api\brochures\[id]\route.ts
+  1:0  error  Parsing error: Unexpected keyword or identifier
+
+S:\BackEndSureLM\app\api\brochures\batch\route.ts
+  61:17  warning  'result' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  81:24  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\app\api\chat\route.ts
+  48:14  warning  'fallbackError' is defined but never used  @typescript-eslint/no-unused-vars
+  57:27  warning  'request' is defined but never used        @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\app\api\orchestrate\query\route.ts
+  2:28  warning  'orchestrateQueryStreaming' is defined but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\app\api\webhooks\clerk\route.ts
+  38:12  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\app\layout.tsx
+   8:7   warning  'inter' is assigned a value but never used                                                                                                                       @typescript-eslint/no-unused-vars
+  26:11  warning  Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+
+S:\BackEndSureLM\components\SplashScreen.tsx
+  57:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+S:\BackEndSureLM\components\SplashScreen.tsx:57:5
+  55 |     document.head.appendChild(el);
+  56 |     styleRef.current = el;
+> 57 |     setReady(true);
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  58 |
+  59 |     return () => {
+  60 |       if (styleRef.current) {  react-hooks/set-state-in-effect
+
+S:\BackEndSureLM\components\dashboard\BirthdaySection.tsx
+  47:21  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+S:\BackEndSureLM\components\dashboard\BirthdaySection.tsx:47:21
+  45 |   };
+  46 |
+> 47 |   useEffect(() => { fetchBirthdays(); }, []);
+     |                     ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  48 |
+  49 |   const refresh = async () => {
+  50 |     setRefreshing(true);  react-hooks/set-state-in-effect
+
+S:\BackEndSureLM\components\dashboard\ChatArea.tsx
+  182:5  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+S:\BackEndSureLM\components\dashboard\ChatArea.tsx:182:5
+  180 |
+  181 |   useEffect(() => {
+> 182 |     setMessages([]);
+      |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  183 |     setInput("");
+  184 |     setLoadingHistory(true);
+  185 |     setIssuedPolicies(new Set());        react-hooks/set-state-in-effect
+  187:5  error    Error: Cannot access variable before it is declared
+
+`loadAll` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+S:\BackEndSureLM\components\dashboard\ChatArea.tsx:187:5
+  185 |     setIssuedPolicies(new Set());
+  186 |     setStreamingId(null);
+> 187 |     loadAll();
+      |     ^^^^^^^ `loadAll` accessed before it is declared
+  188 |   }, [lead.id]);
+  189 |   const loadAll = async () => {
+  190 |     try {
+
+S:\BackEndSureLM\components\dashboard\ChatArea.tsx:189:3
+  187 |     loadAll();
+  188 |   }, [lead.id]);
+> 189 |   const loadAll = async () => {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 190 |     try {
+      | ^^^^^^^^^
+> 191 |       const [mRes, iRes] = await Promise.all([
+      ΓÇª
+      | ^^^^^^^^^
+> 216 |     }
+      | ^^^^^^^^^
+> 217 |   };
+      | ^^^^^ `loadAll` is declared here
+  218 |
+  219 |   const saveMessage = async (role: "agent" | "ai", content: string, policies?: Policy[]) => {
+  220 |     try {  react-hooks/immutability
+  188:6  warning  React Hook useEffect has a missing dependency: 'loadAll'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/exhaustive-deps
+
+S:\BackEndSureLM\components\dashboard\Sidebar.tsx
+  66:21  error    Error: Cannot access variable before it is declared
+
+`fetchLeads` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+S:\BackEndSureLM\components\dashboard\Sidebar.tsx:66:21
+  64 |   const menuRef = useRef<HTMLDivElement>(null);
+  65 |
+> 66 |   useEffect(() => { fetchLeads(); }, []);
+     |                     ^^^^^^^^^^ `fetchLeads` accessed before it is declared
+  67 |
+  68 |   useEffect(() => {
+  69 |     const handleClick = (e: MouseEvent) => {
+
+S:\BackEndSureLM\components\dashboard\Sidebar.tsx:77:3
+   75 |   }, []);
+   76 |
+>  77 |   const fetchLeads = async () => {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  78 |     try {
+      | ^^^^^^^^^
+>  79 |       const res = await fetch("/api/leads");
+      ΓÇª
+      | ^^^^^^^^^
+>  96 |     finally { setLoading(false); }
+      | ^^^^^^^^^
+>  97 |   };
+      | ^^^^^ `fetchLeads` is declared here
+   98 |
+   99 |   const handleCreate = async () => {
+  100 |     if (!householdName.trim() || creating) return;  react-hooks/immutability
+  83:29  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\components\landing\Solution.tsx
+  6:7  warning  'steps' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\db.ts
+  5:9  warning  'connectionString' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\jest.config.mjs
+  1:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+S:\BackEndSureLM\jest.setup.js
+  1:0  error  Parsing error: File appears to be binary
+
+S:\BackEndSureLM\lib\ai\agents\documentProcessor.ts
+    2:52  warning  'semanticSearch' is defined but never used  @typescript-eslint/no-unused-vars
+   79:3   warning  'filename' is defined but never used        @typescript-eslint/no-unused-vars
+  159:51  warning  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  172:51  warning  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\ai\agents\llm.ts
+   1:31  warning  'generateOllamaEmbedding' is defined but never used  @typescript-eslint/no-unused-vars
+  16:14  warning  'fallbackError' is defined but never used            @typescript-eslint/no-unused-vars
+  35:14  warning  'fallbackError' is defined but never used            @typescript-eslint/no-unused-vars
+  92:50  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\ai\agents\reranker.ts
+   22:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   96:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  137:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  138:12  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  143:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\ai\agents\retriever.ts
+  37:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  85:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\ai\hybridRetrieval.ts
+  19:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  48:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  61:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\ai\hybridRetrieval_backup.ts
+  30:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  59:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  83:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\ai\orchestrator.ts
+   42:11  warning  'startTime' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   93:14  warning  'error' is defined but never used               @typescript-eslint/no-unused-vars
+  117:5   warning  'signal' is defined but never used              @typescript-eslint/no-unused-vars
+  119:11  warning  'startTime' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  170:14  warning  'error' is defined but never used               @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\lib\ai\rerank\reranker.ts
+  2:29  warning  'rerankInput' is defined but never used           @typescript-eslint/no-unused-vars
+  5:7   warning  'OLLAMA_HOST' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\lib\documents\batchProcess.ts
+   48:49  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  177:3   warning  'filename' is defined but never used             @typescript-eslint/no-unused-vars
+  194:9   warning  'embeddings' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  255:25  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  256:57  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  403:25  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  404:16  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  440:60  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\documents\extract.ts
+  20:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\documents\loader.ts
+   27:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  182:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  195:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  196:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\orchestrator\context.ts
+   33:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  111:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  112:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  136:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  137:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\pdf\batchProcess.ts
+   48:49  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  177:3   warning  'filename' is defined but never used             @typescript-eslint/no-unused-vars
+  194:9   warning  'embeddings' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  255:25  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  256:57  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  403:25  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  404:16  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  440:60  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\pdf\extract.ts
+  20:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\pdf\progressLogger.ts
+  22:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\qdrant.ts
+   38:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   83:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  105:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\retrieval\hybrid.ts
+  36:3  warning  'sessionId' is defined but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\lib\retrieval\postgres.ts
+  25:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\retrieval\vector\qdrantStorage.ts
+   51:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   52:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   80:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  106:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  107:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  132:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\lib\tracing\config.ts
+  1:0  error  Parsing error: File appears to be binary
+
+S:\BackEndSureLM\lib\tracing\phoenix.ts
+   4:7   warning  'phoenixEndpoint' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  47:11  warning  'span' is assigned a value but never used             @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\lib\vector\qdrant.ts
+  2:28  warning  'VectorSearchOptions' is defined but never used  @typescript-eslint/no-unused-vars
+  6:7   warning  'QDRANT_URL' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\lib\vector\qdrantStorage.ts
+   44:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   45:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   73:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   99:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  100:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  125:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\libpdfqdrantStorage.ts
+  13:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  14:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\logs\temp\test-pdf-parse.cjs
+  1:22  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+S:\BackEndSureLM\rag-validation.ts
+    7:10   warning  'generateEmbedding' is defined but never used        @typescript-eslint/no-unused-vars
+   22:12   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+   42:68   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  107:19   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  137:19   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  143:131  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  159:84   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  175:98   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  204:21   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  212:21   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  221:97   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  222:21   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  250:28   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  259:15   warning  'embedStartTime' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  272:52   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  288:49   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  301:43   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  307:40   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  319:58   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  331:48   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  343:43   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  386:23   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  404:51   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  429:19   warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\scripts\pdf-test.cjs
+  2:22  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+S:\BackEndSureLM\scripts\test-pdf-parse.cjs
+  1:34   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  1:62   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  1:104  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+S:\BackEndSureLM\test-extract.js
+  1:34   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  1:62   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  1:104  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+S:\BackEndSureLM\test-full-integration-report.ts
+    5:10  warning  'hybridRerank' is defined but never used        @typescript-eslint/no-unused-vars
+    5:24  warning  'rerank' is defined but never used              @typescript-eslint/no-unused-vars
+    7:11  warning  'QueryResult' is defined but never used         @typescript-eslint/no-unused-vars
+   10:21  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  107:10  warning  'escapeMarkdown' is defined but never used      @typescript-eslint/no-unused-vars
+  113:9   warning  'timestamp' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  255:21  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  263:21  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  270:19  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  390:17  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test-rerank-validation.ts
+    6:10  warning  'readFileSync' is defined but never used           @typescript-eslint/no-unused-vars
+   26:13  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+   27:17  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+   75:49  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  116:19  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  130:15  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  132:12  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  161:15  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  162:12  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  163:9   warning  'startTime' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  173:19  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  182:56  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  186:11  warning  'dbModule' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  194:14  warning  'dbError' is defined but never used                @typescript-eslint/no-unused-vars
+  224:12  warning  'error' is defined but never used                  @typescript-eslint/no-unused-vars
+  224:19  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  262:54  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  282:62  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  290:54  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  296:44  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  297:52  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  307:40  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  307:75  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  315:51  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  348:19  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  354:37  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  354:58  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  355:44  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  356:34  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  406:33  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  412:37  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  505:23  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  539:19  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  540:11  warning  'totalLatency' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\test-short.ts
+  1:0  error  Parsing error: File appears to be binary
+
+S:\BackEndSureLM\test\e2e-full-validation.ts
+   22:10  warning  'orchestrateQuery' is defined but never used        @typescript-eslint/no-unused-vars
+  105:12  warning  'error' is defined but never used                   @typescript-eslint/no-unused-vars
+  112:53  warning  'text' is defined but never used                    @typescript-eslint/no-unused-vars
+  204:52  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  256:16  warning  'generateGenerateReport' is defined but never used  @typescript-eslint/no-unused-vars
+  328:12  warning  'error' is defined but never used                   @typescript-eslint/no-unused-vars
+  338:12  warning  'error' is defined but never used                   @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\test\full-integration-test.ts
+   56:17  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   78:9   warning  'timestamp' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  230:19  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  352:17  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\integration\db-integration.test.ts
+  6:13  warning  'dbModule' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  8:14  warning  'error' is defined but never used              @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\test\integration\end-to-end-validation.ts
+   21:26   error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+   24:12   warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+   30:60   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   58:52   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   77:96   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   77:118  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   77:140  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   83:63   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   90:14   warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  124:69   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  140:61   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  150:49   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\integration\full-rerank-pipeline.test.ts
+  84:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\integration\full-test.ts
+  209:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  217:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  224:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  341:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\integration\ollama-health.test.ts
+  18:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\integration\orchestrator-pipeline.test.ts
+  2:15  warning  'AgentMessage' is defined but never used            @typescript-eslint/no-unused-vars
+  4:7   warning  'TEST_CHUNK_ID' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\test\integration\setup.ts
+  53:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\integration\utils.ts
+   2:15  warning  'RerankResult' is defined but never used  @typescript-eslint/no-unused-vars
+  28:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\load\concurrent-load-test.ts
+   87:56  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  105:3   warning  'collectionName' is defined but never used         @typescript-eslint/no-unused-vars
+  128:12  warning  'err' is defined but never used                    @typescript-eslint/no-unused-vars
+  128:17  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  129:11  warning  'latencyMs' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  204:9   warning  'totalResults' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  277:26  warning  'vectors' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  294:17  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\scripts\direct-test.js
+  5:28  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  6:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+S:\BackEndSureLM\test\scripts\fts-debug-test.ts
+  44:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\scripts\fts-test.ts
+  35:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\scripts\hybrid-retrieval-test.ts
+  24:11  warning  'chunk' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\test\scripts\ingestion-retrieval-test.mjs
+  1:10  warning  'execSync' is defined but never used  @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\test\scripts\minimal-test.mjs
+  1:0  error  Parsing error: File appears to be binary
+
+S:\BackEndSureLM\test\scripts\pdf-parse-test.js
+  1:13  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+S:\BackEndSureLM\test\scripts\pipeline-test.ts
+    8:13  warning  'postgresRetrieval' is defined but never used  @typescript-eslint/no-unused-vars
+   52:17  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   67:14  warning  'err' is defined but never used                @typescript-eslint/no-unused-vars
+  125:12  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  129:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  165:21  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  180:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\scripts\postgres-test.js
+  1:0  error  Parsing error: File appears to be binary
+
+S:\BackEndSureLM\test\scripts\simple-test.ts
+  1:110  error  Parsing error: ';' expected
+
+S:\BackEndSureLM\test\scripts\simple-test2.js
+  1:99  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+S:\BackEndSureLM\test\scripts\vector-test.ts
+  23:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\unit\historyBoost.test.ts
+  133:83  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  135:13  warning  'passed' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  150:21  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\unit\orchestrator.test.ts
+   1:32  warning  'vi' is defined but never used            @typescript-eslint/no-unused-vars
+  49:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\unit\relevance.test.ts
+  33:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\unit\rrfs.test.ts
+   98:13  warning  'expectedScoreVector' is assigned a value but never used   @typescript-eslint/no-unused-vars
+   99:13  warning  'expectedScoreHistory' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  118:13  warning  'k' is assigned a value but never used                     @typescript-eslint/no-unused-vars
+
+S:\BackEndSureLM\test\validation\e2e-retrieval-validation.ts
+    6:10  warning  'readFileSync' is defined but never used          @typescript-eslint/no-unused-vars
+   20:15  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+   21:18  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+   64:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+   85:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+   96:11  warning  'fileContent' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  105:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  138:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  152:14  warning  'error' is defined but never used                 @typescript-eslint/no-unused-vars
+  152:21  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  195:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  208:21  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  209:63  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  211:14  warning  'err' is defined but never used                   @typescript-eslint/no-unused-vars
+  239:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  244:70  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  248:20  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  264:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  270:81  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  282:17  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  284:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  290:40  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  290:56  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  296:39  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  304:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  332:31  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  333:34  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  353:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  358:16  warning  'fetchChunksText' is defined but never used       @typescript-eslint/no-unused-vars
+  369:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  391:14  warning  'err' is defined but never used                   @typescript-eslint/no-unused-vars
+  392:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  416:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  422:10  warning  'formatQueryResults' is defined but never used    @typescript-eslint/no-unused-vars
+  431:50  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  442:53  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  453:55  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  504:52  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  515:55  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  526:57  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  566:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  603:23  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  628:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\validation\embeddings-test.ts
+  1:0  error  Parsing error: File appears to be binary
+
+S:\BackEndSureLM\test\validation\full-retrieval-validation.js
+  39:0  error  Parsing error: Property or signature expected
+
+S:\BackEndSureLM\test\validation\full-retrieval-validation.ts
+   15:10  warning  'hybridSearch' is defined but never used         @typescript-eslint/no-unused-vars
+   33:12  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+   87:7   warning  'ollamaUrl' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  102:23  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  108:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  113:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  124:11  warning  'fs' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  129:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  153:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  181:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  223:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  252:66  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  255:53  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  256:57  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  260:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  276:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  293:20  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  306:41  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  312:47  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  319:23  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  331:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  337:16  warning  'cleanup' is defined but never used              @typescript-eslint/no-unused-vars
+  347:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  354:11  warning  'fs' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  467:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  486:11  warning  'embeddings' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  514:19  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+S:\BackEndSureLM\test\validation\pipeline.ts
+   22:12  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+   47:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  148:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 334 problems (28 errors, 306 warnings)
+

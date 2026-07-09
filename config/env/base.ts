@@ -1,0 +1,31 @@
+import { config } from 'dotenv';
+config();
+
+export default {
+  app: {
+    name: process.env.APP_NAME || 'SureLM',
+    version: process.env.VERSION || '0.1.0',
+    environment: process.env.NODE_ENV || 'development',
+  },
+  database: {
+    url: process.env.DATABASE_URL || 'postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm',
+  },
+  vectorStore: {
+    url: process.env.QDRANT_URL || 'http://localhost:6333',
+  },
+  ollama: {
+    host: process.env.OLLAMA_HOST || 'http://127.0.0.1:11434',
+  },
+  models: {
+    primary: process.env.PRIMARY_MODEL_NAME || 'qwen2.5-coder:1.5b',
+    fallback: process.env.FALLBACK_MODEL_NAME || 'llama3:latest',
+  },
+  observability: {
+    phoenixProjectName: process.env.PHOENIX_PROJECT_NAME || 'surelm-platform',
+    phoenixEndpoint: process.env.PHOENIX_ENDPOINT || 'http://localhost:6007',
+  },
+  logging: {
+    level: process.env.LOG_LEVEL || 'info',
+    format: process.env.LOG_FORMAT || 'json',
+  },
+};
