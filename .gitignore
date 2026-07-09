@@ -1,37 +1,8 @@
-**/*.log
-logs/**/*.json
+git:
+  ignored:
+    - logs/application/*.log
+    - logs/traces/*.json
+    - temp/
+    - node_modules/
+    - .env.local
 node_modules
-
-# Next.js
-.next/
-next-env.d.ts
-tsconfig.tsbuildinfo
-out/
-build/
-
-# Build artifacts
-*.tsbuildinfo
-.DS_Store
-Thumbs.db
-
-# IDE/Editor
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Logs and temp files
-logs/temp/
-*.log.tmp
-temp/
-tmp/
-
-# Testing
-coverage/
-.nyc_output/
-
-# Clerk
-.clerk/
-
-# Docker
-docker-compose.override.yml

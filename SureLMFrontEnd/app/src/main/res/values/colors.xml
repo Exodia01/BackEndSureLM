@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Brand Colors -->
+    <color name="surelm_primary">#6200EE</color>
+    <color name="surelm_secondary">#03DAC5</color>
+    <color name="surelm_background">#F5F5F5</color>
+    <color name="surelm_surface">#FFFFFF</color>
+    <color name="surelm_error">#B00020</color>
+    
+    <!-- Status Colors -->
+    <color name="status_new">#FF9800</color>
+    <color name="status_contacted">#2196F3</color>
+    <color name="status_policy_issued">#4CAF50</color>
+    <color name="status_rejected">#F44336</color>
+    
+    <!-- Traffic Light Colors -->
+    <color name="traffic_light_green">#4CAF50</color>
+    <color name="traffic_light_amber">#FF9800</color>
+    <color name="traffic_light_red">#F44336</color>
+</resources>

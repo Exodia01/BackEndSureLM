@@ -67,8 +67,13 @@ export async function upsertPoints(
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(`Failed to upsert points: ${error.status}`);
+    let errorBody;
+    try {
+      errorBody = await response.json();
+    } catch {
+      errorBody = await response.text();
+    }
+    throw new Error(`Failed to upsert points: ${response.status} - ${JSON.stringify(errorBody)}`);
   }
 }
 

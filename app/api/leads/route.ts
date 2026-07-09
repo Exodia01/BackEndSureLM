@@ -37,10 +37,23 @@ export async function POST(req: NextRequest) {
       return Response.json({ success: false, error: "householdName is required" }, { status: 400 });
     }
 
-    // Get or create user in DB
-    const clerkUser = await fetch(`https://api.clerk.com/v1/users/${clerkId}`, {
-      headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` },
-    }).then((r) => r.json());
+    // Get or create user in DB with timeout
+    let clerkUser: any;
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      clerkUser = await fetch(`https://api.clerk.com/v1/users/${clerkId}`, {
+        headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` },
+        signal: controller.signal,
+      }).then((r) => r.json());
+    } catch (error) {
+      console.warn("[leads] Clerk API failed, using DB user:", error);
+      const existingUser = await db.user.findUnique({ where: { clerkId } });
+      if (!existingUser) {
+        throw new Error("Clerk API unavailable and user not found in DB");
+      }
+      clerkUser = existingUser;
+    }
 
     const user = await db.user.upsert({
       where: { clerkId },

@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "next dev -H 127.0.0.1",
-    "build": "prisma generate && next build",
+    "build": "ts-node scripts/cleanup.ts && prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "test-db": "tsx test-db.ts"
+    "test-db": "tsx test-db.ts",
+    "test:all": "tsx test-full-integration-report.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.38.3",

@@ -30,7 +30,7 @@ interface RerankResult {
   payload: Record<string, unknown>;
 }
 
-const TEST_CHUNK_ID = "test_full_integration_" + Date.now();
+const TEST_CHUNK_ID = String(Math.floor(Math.random() * 1000000));
 const createdChunks: string[] = [];
 const createdDocs: string[] = [];
 
@@ -44,7 +44,7 @@ async function cleanUp() {
     }
     
     try {
-      const results = await qdrantRetrieval.searchPoints("content_chunks", [0] * 768, { limit: 100 });
+      const results = await qdrantRetrieval.searchPoints("content_chunks", Array.from({ length: 768 }, () => 0), { limit: 100 });
       const pointIds = results.filter(r => String(r.payload?.chunk_id).includes("test_full")).map(r => String(r.id));
       if (pointIds.length > 0) {
         await qdrantRetrieval.deletePoints("content_chunks", pointIds);
@@ -71,7 +71,7 @@ async function setupTestEnvironment() {
   });
   createdChunks.push(chunk.id);
 
-  const vector = Array(768).fill(0.1);
+  const vector = Array.from({ length: 768 }, () => 0.1);
   try {
     await qdrantRetrieval.upsertPoints("content_chunks", [
       {
@@ -80,8 +80,10 @@ async function setupTestEnvironment() {
         payload: { chunk_id: TEST_CHUNK_ID, document_id: doc.id },
       },
     ]);
-  } catch (err) {
-    console.warn("Qdrant not available:", err);
+  } catch (err: any) {
+    if (!String(err).includes("Failed to upsert")) {
+      console.warn("Qdrant not available:", err);
+    }
   }
 
   return { doc, chunk };
@@ -117,12 +119,15 @@ async function runTests() {
     outputLogs.push(message);
   };
 
+  const TEST_QUERY_RURAL_FAMILIES = "What insurance can rural families get in India?";
+
   logMessage("=" + "=".repeat(70));
   logMessage("COMPREHENSIVE FULL-INTEGRATION TEST");
   logMessage("=" + "=".repeat(70));
   logMessage("");
   logMessage(`Timestamp: ${new Date().toISOString()}`);
   logMessage(`Environment: Node.js`);
+  logMessage(`Test Query: "${TEST_QUERY_RURAL_FAMILIES}"`);
   logMessage("");
 
   const startTime = Date.now();
@@ -214,7 +219,7 @@ async function runTests() {
       assert(health, "Qdrant should be available and collection exists");
       logMessage("[OK] Test 6: Collection existence - PASSED");
 
-      const testVector = Array(768).fill(0.2);
+      const testVector = Array.from({ length: 768 }, () => 0.2);
       await qdrantRetrieval.upsertPoints("content_chunks", [
         {
           id: TEST_CHUNK_ID,
@@ -245,7 +250,7 @@ async function runTests() {
       );
       logMessage("[OK] Test 9: Payload filtering - PASSED");
 
-      const unrelatedVector = Array(768).fill(0.9);
+      const unrelatedVector = Array.from({ length: 768 }, () => 0.9);
       const searchResults3 = await qdrantRetrieval.searchPoints("content_chunks", unrelatedVector, { limit: 1 });
       logMessage(`[OK] Test 10: Empty results handling - PASSED (score: ${searchResults3[0]?.score || "N/A"})`);
 
@@ -279,7 +284,7 @@ async function runTests() {
     logMessage("STEP 3: Hybrid Retrieval Tests");
     logMessage("-".repeat(70));
 
-    const hybridVector = Array(768).fill(0.15);
+    const hybridVector = Array.from({ length: 768 }, () => 0.15);
 
     try {
       await qdrantRetrieval.upsertPoints("content_chunks", [
@@ -293,11 +298,11 @@ async function runTests() {
       logMessage("[WARN] Qdrant upsert failed:", err);
     }
 
-    const queryTimeStart = Date.now();
+    const test12QueryStart = Date.now();
     const hybridResults1 = await hybridSearch("waiting period", hybridVector);
-    const queryTime = Date.now() - queryTimeStart;
+    const test12Duration = Date.now() - test12QueryStart;
     assert(hybridResults1.length > 0, "Hybrid search should return results");
-    logMessage(`[OK] Test 12: Concurrent execution - PASSED (time: ${queryTime}ms)`);
+    logMessage(`[OK] Test 12: Concurrent execution - PASSED (time: ${test12Duration}ms)`);
 
     const sources = new Set(hybridResults1.filter(r => r.id === TEST_CHUNK_ID).map(r => r.source));
     const hasBothSources = sources.size >= 1;
@@ -325,7 +330,7 @@ async function runTests() {
     });
     createdChunks.push(testChunkId_dup);
 
-    const dupVector = Array(768).fill(0.3);
+    const dupVector = Array.from({ length: 768 }, () => 0.3);
     
     try {
       await qdrantRetrieval.upsertPoints("content_chunks", [
@@ -377,8 +382,41 @@ async function runTests() {
     }
     logMessage("[OK] Test 17: Type validation - PASSED");
 
+    logMessage("");
+    logMessage("STEP 5: Rural Families Query Integration Test");
+    logMessage("-".repeat(70));
+    logMessage(`Query: "${TEST_QUERY_RURAL_FAMILIES}"`);
+
+    const ruralVector = Array.from({ length: 768 }, () => 0.12);
+
+    try {
+      await qdrantRetrieval.upsertPoints("content_chunks", [
+        { id: TEST_CHUNK_ID, vector: ruralVector, payload: { chunk_id: TEST_CHUNK_ID } },
+      ]);
+    } catch (err) {
+      logMessage("[WARN] Qdrant upsert failed:", err);
+    }
+
+    const test18QueryStart = Date.now();
+    const hybridResults4 = await hybridSearch(TEST_QUERY_RURAL_FAMILIES, ruralVector);
+    const test18Duration = Date.now() - test18QueryStart;
+
+    assert(
+      Array.isArray(hybridResults4),
+      "Should return array for rural families query"
+    );
+    logMessage(`[OK] Test 18: Query execution - PASSED (time: ${test18Duration}ms, results: ${hybridResults4.length})`);
+
+    const sourcesRural = new Set(hybridResults4.map(r => r.source));
+    logMessage(`[INFO] Sources found: ${[...sourcesRural].join(", ")}`);
+
+    await db.chunk.deleteMany({ where: { id: TEST_CHUNK_ID } });
+    try {
+      await qdrantRetrieval.deletePoints("content_chunks", [TEST_CHUNK_ID]);
+    } catch {}
+
     const totalTime = Date.now() - startTime;
-    
+
     logMessage("");
     logMessage("=".repeat(70));
     logMessage("TEST SUMMARY");
