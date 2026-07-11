@@ -2,7 +2,7 @@
 
 > AI-powered hybrid retrieval system for insurance policy recommendations, document processing, and agent assistance across India
 
-[![Status](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/Exodia01/BackEndSureLM) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/Exodia01/BackEndSureLM)
 
 ## 🎯 Overview
 
