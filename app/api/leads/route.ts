@@ -1,15 +1,14 @@
-import { auth } from "@clerk/nextjs/server";
-import { NextRequest } from "next/server";
+import { keycloakAuth } from "@/lib/auth/middleware";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) {
-      return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
-    }
+    const result = await keycloakAuth(req);
+    if (!result.authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
+    const keycloakId = result.keycloakId;
 
-    const user = await db.user.findUnique({ where: { clerkId } });
+    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return Response.json({ success: true, data: [] });
 
     const leads = await db.policyLead.findMany({
@@ -26,10 +25,9 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) {
-      return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
-    }
+    const result = await keycloakAuth(req);
+    if (!result.authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
+    const keycloakId = result.keycloakId;
 
     const { householdName, notes } = await req.json();
 
@@ -37,32 +35,17 @@ export async function POST(req: NextRequest) {
       return Response.json({ success: false, error: "householdName is required" }, { status: 400 });
     }
 
-    // Get or create user in DB with timeout
-    let clerkUser: any;
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-      clerkUser = await fetch(`https://api.clerk.com/v1/users/${clerkId}`, {
-        headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` },
-        signal: controller.signal,
-      }).then((r) => r.json());
-    } catch (error) {
-      console.warn("[leads] Clerk API failed, using DB user:", error);
-      const existingUser = await db.user.findUnique({ where: { clerkId } });
-      if (!existingUser) {
-        throw new Error("Clerk API unavailable and user not found in DB");
-      }
-      clerkUser = existingUser;
-    }
+    const payload = result.payload;
+    const email = Array.isArray(payload.email) ? payload.email[0] : (payload.email as string);
+    const name = `${payload.given_name ?? ""} ${payload.family_name ?? ""}`.trim() || "Agent";
 
     const user = await db.user.upsert({
-      where: { clerkId },
+      where: { keycloakId },
       update: {},
       create: {
-        clerkId,
-        email: clerkUser.email_addresses?.[0]?.email_address ?? "",
-        name: `${clerkUser.first_name ?? ""} ${clerkUser.last_name ?? ""}`.trim() || "Agent",
-        avatar: clerkUser.image_url ?? null,
+        keycloakId,
+        email: email ?? "",
+        name: name,
         role: "AGENT",
       },
     });

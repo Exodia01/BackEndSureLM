@@ -1,0 +1,3 @@
+module.exports=[44420,a=>{"use strict";var b=a.i(87924),c=a.i(72131),d=a.i(85727);function e(){let{login:a,isLoading:e}=(0,d.useAuth)();return(0,c.useEffect)(()=>{e||a()},[a,e]),(0,b.jsx)("div",{className:"min-h-screen flex items-center justify-center bg-slate-50",children:(0,b.jsx)("div",{style:{padding:"24px",fontSize:"16px",color:"#64748b"},children:"Redirecting to Keycloak..."})})}a.s(["default",()=>e])}];
+
+//# sourceMappingURL=app_%28auth%29_sign-in_page_tsx_d8daf431._.js.map

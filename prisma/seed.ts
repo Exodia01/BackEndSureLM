@@ -30,7 +30,7 @@ async function main() {
 
   const agent = await db.user.create({
     data: {
-      clerkId: "user_3AGF1eebZ3755pk4y0OWQYcw4rm",
+      keycloakId: "user_3AGF1eebZ3755pk4y0OWQYcw4rm",
       email: "agent@sureim.com",
       name: "Rajesh Kumar",
       role: "AGENT",

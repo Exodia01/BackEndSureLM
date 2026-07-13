@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { UserButton } from "@clerk/nextjs";
+import { useAuth } from "@/lib/auth/context";
 import { Plus, Search, X, Loader2, Trash2, MoreVertical, MessageSquare } from "lucide-react";
 import Link from "next/link";
 
@@ -53,6 +53,7 @@ function Avatar({ name, size = 36 }: { name: string; size?: number }) {
 }
 
 export default function Sidebar({ user, onSelectLead, activeLead }: SidebarProps) {
+  const { logout } = useAuth();
   const [search, setSearch] = useState("");
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -299,7 +300,9 @@ export default function Sidebar({ user, onSelectLead, activeLead }: SidebarProps
 
           <div style={S.headerRow}>
             <div style={S.userInfo}>
-              <UserButton afterSignOutUrl="/" />
+              <button onClick={() => logout()} style={{width:36,height:36,borderRadius:99,background:'#059669',border:'none',cursor:'pointer'}}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/></svg>
+              </button>
               <div>
                 <p style={S.userName}>{user.name}</p>
                 <p style={S.userRole}>Agent</p>

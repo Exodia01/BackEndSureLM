@@ -1,5 +1,5 @@
-import { auth } from "@clerk/nextjs/server";
-import { NextRequest } from "next/server";
+import { keycloakAuth } from "@/lib/auth/middleware";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
 export async function DELETE(
@@ -8,10 +8,11 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const result = await keycloakAuth(req);
+    if (!result.authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
+    const keycloakId = result.keycloakId;
 
-    const user = await db.user.findUnique({ where: { clerkId } });
+    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const lead = await db.policyLead.findFirst({

@@ -1,19 +1,19 @@
-import { auth } from "@clerk/nextjs/server";
-import { NextRequest } from "next/server";
+import { keycloakAuth } from "@/lib/auth/middleware";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
-// POST /api/reminders — create a reminder
 export async function POST(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const result = await keycloakAuth(req);
+    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const keycloakId = result.keycloakId;
 
     const { leadId, type, scheduledAt, note } = await req.json();
     if (!leadId || !type || !scheduledAt) {
       return Response.json({ success: false, error: "Missing fields" }, { status: 400 });
     }
 
-    const user = await db.user.findUnique({ where: { clerkId } });
+    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const lead = await db.policyLead.findFirst({ where: { id: leadId, agentId: user.id } });
@@ -30,16 +30,16 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// PATCH /api/reminders — mark reminder as done
 export async function PATCH(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const result = await keycloakAuth(req);
+    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const keycloakId = result.keycloakId;
 
     const { reminderId } = await req.json();
     if (!reminderId) return Response.json({ success: false, error: "reminderId required" }, { status: 400 });
 
-    const user = await db.user.findUnique({ where: { clerkId } });
+    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const reminder = await db.reminder.findFirst({

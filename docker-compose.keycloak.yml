@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  # ───────── PostgreSQL (Keycloak Database) ──────────
+  postgres-keycloak:
+    image: postgres:16-alpine
+    container_name: surelm-postgres-keycloak
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: ${KEYCLOAK_DB_USER:-keycloak_admin}
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-localpg2024kc}
+    command: ["postgres", "-c", "listen_addresses=*"]
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_keycloak_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # ───────── Keycloak Identity Provider ──────
+  keycloak:
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile
+    container_name: surelm-keycloak
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres-keycloak:5432/keycloak
+      KC_DB_USERNAME: ${KEYCLOAK_DB_USER:-keycloak_admin}
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-localpg2024kc}
+      
+      # Admin credentials
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-kcadmin123}
+      
+      # URL configuration (development)
+      KC_HOSTNAME: localhost
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_PORT: 8443
+      
+      # Realm import (disabled - will be imported manually)
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./keycloak/imports:/opt/keycloak/data:ro
+    depends_on:
+      - postgres-keycloak
+    restart: unless-stopped
+
+volumes:
+  postgres_keycloak_data:

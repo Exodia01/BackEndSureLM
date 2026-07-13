@@ -2,7 +2,7 @@
 
 > AI-powered hybrid retrieval system for insurance policy recommendations, document processing, and agent assistance across India
 
-[![Status](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/Exodia01/BackEndSureLM) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/Exodia01/BackEndSureLM)
 
 ## 🎯 Overview
 
@@ -427,7 +427,14 @@ npx prisma db push
 
 ## 📝 License
 
-MIT License - See `LICENSE` file for details.
+This project is proprietary software owned by Osira Tech Private Limited.
+
+No part of this repository may be copied, modified, distributed, or used
+without prior written permission from Osira Tech Private Limited.
+
+© 2026 Osira Tech Private Limited. All Rights Reserved.
+
+ See `LICENSE` file for details.
 
 ---
 
@@ -443,4 +450,4 @@ MIT License - See `LICENSE` file for details.
 
 ## 📞 Support
 
-For inquiries, contact the development team or open an issue in the repository.
+For inquiries, contact the development team at contact@surelm.com or open an issue in the repository.

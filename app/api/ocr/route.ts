@@ -40,10 +40,40 @@ Return ONLY the extracted text. If no text is visible, return empty string.
   throw new Error("Empty or invalid response from model");
 }
 
+async function extractStructuredData(
+  model: Ollama,
+  ocrText: string
+): Promise<Record<string, unknown>> {
+  const prompt = `
+Extract structured JSON data from this OCR text.
+Return ONLY valid JSON.
+
+OCR Text:
+${ocrText.substring(0, 2000)}
+
+Return fields based on document type (or extract what you can):
+- name, dob, gender, father/husband name
+- address, aadhaar_number, pan_number
+
+If field not found, use null.
+`;
+
+  try {
+    const response = await model.invoke(prompt);
+    if (!response) return {};
+
+    const jsonStr = (response as string).replace(/```json|```\n?/g, "").trim();
+    return JSON.parse(jsonStr);
+  } catch (error) {
+    console.error("Structured extraction failed:", error);
+    return { raw_text: ocrText };
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { image } = body;
+    const { image, docType } = body;
 
     if (!image || typeof image !== "string") {
       return NextResponse.json(
@@ -65,10 +95,14 @@ export async function POST(req: NextRequest) {
       result = await extractTextWithModel(fallbackModel, image);
     }
 
+    // Extract structured data
+    const structuredData = await extractStructuredData(primaryModel, result.text);
+
     return NextResponse.json({
       success: true,
       text: result.text,
       confidence: result.confidence,
+      structuredData,
       valid: true,
     });
   } catch (error) {
@@ -80,25 +114,25 @@ export async function POST(req: NextRequest) {
         (await req.json()).image
       );
 
+      const structuredData = await extractStructuredData(fallbackModel, fallbackResult.text);
+
       return NextResponse.json({
         success: true,
         text: fallbackResult.text,
         confidence: fallbackResult.confidence,
+        structuredData,
         valid: fallbackResult.confidence >= 0.5,
       });
     } catch (fallbackError) {
-      console.error(
-        "Fallback model also failed:",
-        fallbackError
-      );
+      console.error("Fallback model also failed:", fallbackError);
 
       return NextResponse.json({
         success: true,
         text: "",
         confidence: 0,
+        structuredData: {},
         valid: false,
-        reason:
-          "Both vision models failed to extract text from image",
+        reason: "Both vision models failed to extract text from image",
       });
     }
   }

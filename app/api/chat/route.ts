@@ -14,9 +14,22 @@ export async function POST(request: Request) {
     }
 
     if (stream) {
-      const responseStream = await orchestrateQueryStreaming({ messages, sessionId });
+      const generator = await orchestrateQueryStreaming({ messages, sessionId });
       
-      return new Response(responseStream, {
+      const stream = new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const chunk of generator) {
+              controller.enqueue(chunk);
+            }
+            controller.close();
+          } catch (error) {
+            controller.error(error);
+          }
+        },
+      });
+      
+      return new Response(stream, {
         headers: {
           "Content-Type": "text/plain",
           "Transfer-Encoding": "chunked",
@@ -34,9 +47,22 @@ export async function POST(request: Request) {
       const body = await request.json();
       const { messages, sessionId } = body;
 
-      const fallbackStream = await orchestrateQueryStreaming({
+      const fallbackGenerator = await orchestrateQueryStreaming({
         messages,
         sessionId,
+      });
+
+      const fallbackStream = new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const chunk of fallbackGenerator) {
+              controller.enqueue(chunk);
+            }
+            controller.close();
+          } catch (error) {
+            controller.error(error);
+          }
+        },
       });
 
       return new Response(fallbackStream, {

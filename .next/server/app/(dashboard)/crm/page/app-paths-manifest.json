@@ -1,0 +1,3 @@
+{
+  "/(dashboard)/crm/page": "app/(dashboard)/crm/page.js"
+}

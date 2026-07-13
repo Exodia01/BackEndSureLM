@@ -1,21 +1,17 @@
 ﻿import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
 if (!DATABASE_URL) {
-  console.warn("[db] DATABASE_URL not set");
+  throw new Error("DATABASE_URL is not set");
 }
 
-console.log("[db] Creating Prisma client...");
+const adapter = new PrismaPg({
+  connectionString: DATABASE_URL,
+});
 
 function createPrismaClient() {
-  const adapter = new PrismaPg({
-    connectionString: DATABASE_URL,
-  });
   return new PrismaClient({ adapter });
 }
 

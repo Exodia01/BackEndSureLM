@@ -1,0 +1,157 @@
+// ── Product-Based Requirement Templates System ─────────────────────────────
+
+model Product {
+  id            String   @id @default(cuid())
+  code          String   @unique // e.g., "kotak_term_v1", "lic_endowment_2024"
+  name          String   // Display name: "Kotak Term Plan Plus"
+  insurer       String   // "kotak", "lic", etc.
+  type          ProductType // term_insurance, endowment, health, etc.
+
+  version       Int      @default(1)
+  isActive      Boolean  @default(true)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  requirementTemplates RequirementTemplate[]
+  checklistInstances ChecklistInstance[]
+
+  @@index([insurer, type])
+}
+
+model RequirementTemplate {
+  id            String   @id @default(cuid())
+
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+
+  version       Int      // Increment on template update
+
+  sourceFile    String?  // "kotak/documents_complete.txt"
+  compiledAt    DateTime @default(now())
+  compilerVersion String // "1.0.0" - tracks compiler version used
+
+  items         RequirementItem[]
+  checklistInstances ChecklistInstance[]
+
+  @@unique([productId, version])
+  @@index([productId, createdAt])
+}
+
+model RequirementItem {
+  id            String   @id @default(cuid())
+  templateId    String
+  template      RequirementTemplate @relation(fields: [templateId], references: [id])
+
+  // GROUPING STRUCTURE - PRESERVE NON-FLATTENED
+  groupId       String     // e.g., "IDENTITY_PROOF"
+  groupLabel    String     // "Identity Proof" (display name)
+  groupOrder    Int        // Order of groups: 1, 2, 3...
+
+  itemId        String     // Unique per-item ID
+  docType       DocumentType
+  label         String     // "Aadhaar Card (Front)"
+  isPreferred   Boolean?   @default(false) // priority in alternatives
+  itemOrder     Int        // Order within group: 1, 2, 3...
+
+  // RULESET - JSON DSL (EMBEDDED IN ITEM)
+  ruleSet       Json?      // If present, evaluate to determine if item applies
+
+  // Group-level constraints
+  selectionPolicy String   @default("ONE_OF") 
+  // "ONE_OF" = any one from group, "ALL" = need all items
+
+  minRequired   Int      @default(1) // Minimum from group to complete
+  maxAllowed    Int?     // Optional upper limit
+
+  scanRecords   DocumentScan[]
+
+  @@index([templateId, groupId])
+  @@index([docType])
+}
+
+model RequirementCompilerReport {
+  id            String   @id @default(cuid())
+  templateId    String
+  template      RequirementTemplate @relation(fields: [templateId], references: [id])
+
+  sourceFile    String           // Original .txt file path
+  parseWarnings Json?            // [{ type, message, line, confidence }]
+  confidence    Float            // Confidence score (0.0-1.0)
+  reviewRequired Boolean         @default(false) // Manual verification needed?
+
+  unknownDocumentTypes String[]   // Document types found but not in our enum
+  itemsExtracted  Int             // Total items parsed
+  groupsFound     Int             // Number of requirement groups
+
+  compilerVersion String          // Version used
+  compiledAt      DateTime        @default(now())
+
+  @@index([templateId, compiledAt])
+}
+
+model ChecklistInstance {
+  id            String   @id @default(cuid())
+  leadId        String
+  lead          PolicyLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  templateId    String
+  template      RequirementTemplate @relation(fields: [templateId], references: [id])
+
+  // VERSION LOCKING - Copy at instantiation time (IMMUTABLE)
+  templateVersion Int        // Same as template.version when created
+
+  appliedAt     DateTime @default(now())
+  completedAt   DateTime?
+
+  overallStatus String   @default("IN_PROGRESS")
+  // "IN_PROGRESS", "COMPLETED", "SKIPPED"
+
+  skippedReason String?
+
+  items         ChecklistItemInstance[]
+
+  @@index([leadId, appliedAt])
+}
+
+model ChecklistItemInstance {
+  id            String   @id @default(cuid())
+  instanceId    String
+  instance      ChecklistInstance @relation(fields: [instanceId], references: [id])
+
+  itemId        String
+  requirement   RequirementItem @relation(fields: [itemId], references: [id])
+
+  status        ChecklistStatus @default("PENDING")
+  // PENDING, UPLOADED, PROCESSING, VALIDATED, SKIPPED, FAILED
+
+  uploadedDocId String?    // Links to Document/DocumentScan via OCR validation
+  validatedAt   DateTime?
+  validatedBy   String?
+  completionNotes String?
+
+  skipped       Boolean   @default(false)
+  skipReason    String?
+
+  @@index([instanceId, status])
+}
+
+enum ProductType {
+  TERM_INSURANCE
+  ENDOWMENT_PLANS
+  MONEYBACK_PLANS
+  ULIP
+  PENSION_PLANS
+  HEALTH_INSURANCE
+  MICRO_INSURANCE
+  SINGLE_PREMIUM
+}
+
+enum ChecklistStatus {
+  PENDING      // Not uploaded yet
+  UPLOADED     // File uploaded, OCR in progress
+  PROCESSING   // Validation running
+  VALIDATED    // Agent confirmed + saved to batch
+  SKIPPED      // Agent skipped (optional item)
+  FAILED       // Failed validation (re-upload allowed)
+}

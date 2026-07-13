@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/lib/auth/context";
 import { BirthdaySection } from "@/components/dashboard/BirthdaySection";
 import Link from "next/link";
 import {
@@ -73,7 +73,7 @@ function StatusPill({ status }: { status: LeadStatus }) {
 }
 
 export default function CRMPage() {
-  const { user } = useUser();
+  const { user, isAuthenticated } = useAuth();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -310,9 +310,9 @@ export default function CRMPage() {
               background: "#f8faf9", borderRadius: 12,
               padding: "8px 14px", border: "1px solid rgba(0,0,0,0.06)",
             }}>
-              <Avatar name={user?.firstName ?? "Agent"} size={30} />
+              <Avatar name={user?.name ?? "Agent"} size={30} />
               <div>
-                <p style={{ fontSize: 12, fontWeight: 500, color: "#0c1a12" }}>{user?.firstName ?? "Agent"}</p>
+                <p style={{ fontSize: 12, fontWeight: 500, color: "#0c1a12" }}>{user?.name ?? "Agent"}</p>
                 <p style={{ fontSize: 10, fontWeight: 300, color: "#94a3b8" }}>Field Agent</p>
               </div>
             </div>
@@ -341,7 +341,7 @@ export default function CRMPage() {
                         Today&apos;s Brief
                       </p>
                       <h2 style={{ fontFamily: "'Instrument Serif',serif", fontWeight: 400, fontSize: 28, letterSpacing: "-0.02em", color: "#fff", marginBottom: 6 }}>
-                        {greeting()}, {user?.firstName ?? "Agent"}
+                        {greeting()}, {user?.name ?? "Agent"}
                       </h2>
                       <p style={{ fontSize: 13, fontWeight: 300, color: "rgba(255,255,255,0.5)", lineHeight: 1.7 }}>
                         {stats.birthdaysToday} birthday{stats.birthdaysToday !== 1 ? "s" : ""} · {stats.premiumsDueCount} premium{stats.premiumsDueCount !== 1 ? "s" : ""} due · {stats.activeReminders} reminder{stats.activeReminders !== 1 ? "s" : ""}

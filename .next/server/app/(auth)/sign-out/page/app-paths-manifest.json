@@ -1,0 +1,3 @@
+{
+  "/(auth)/sign-out/page": "app/(auth)/sign-out/page.js"
+}

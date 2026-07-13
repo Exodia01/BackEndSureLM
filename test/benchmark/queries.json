@@ -1,0 +1,1067 @@
+{
+  "queries": [
+    {
+      "query": "What is term life insurance?",
+      "answer": "Term life insurance is a pure risk protection plan that provides a death benefit to beneficiaries if the insured dies during the policy term. It has no savings or investment component and expires at the end of the term without any maturity benefit.",
+      "source_brochures": ["TL-101", "LC-202"],
+      "category": "basic-concepts",
+      "difficulty": "easy"
+    },
+    {
+      "query": "How does whole life insurance differ from term insurance?",
+      "answer": "Whole life insurance provides lifetime coverage with a guaranteed death benefit and builds cash value over time, unlike term insurance which is temporary and has no maturity benefit. Premiums for whole life are significantly higher but remain level throughout the insured's lifetime.",
+      "source_brochures": ["WL-301", "LC-202"],
+      "category": "basic-concepts",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is an endowment policy?",
+      "answer": "An endowment policy combines insurance coverage with savings, paying a lump sum either upon the death of the insured or at the end of a specified term if the insured survives. It's designed for individuals seeking both protection and forced savings discipline.",
+      "source_brochures": ["ED-401", "LC-202"],
+      "category": "basic-concepts",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Explain what ULIPs are.",
+      "answer": "ULIPs (Unit Linked Insurance Plans) are market-linked investment products that combine life insurance with investment in equity, debt, or balanced funds. A portion of premiums covers insurance costs while the rest is invested, with returns depending on market performance.",
+      "source_brochures": ["U-501", "INV-702"],
+      "category": "basic-concepts",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What are annuities in insurance?",
+      "answer": "Annuities are financial products that provide a series of payments at regular intervals, either immediately or deferred, designed to create income during retirement. They can be immediate (payments start soon after purchase) or deferred (grow tax-deferred until payout begins).",
+      "source_brochures": ["AN-601", "RET-803"],
+      "category": "basic-concepts",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the difference between renewable and convertible term insurance?",
+      "answer": "Renewable term insurance allows policy renewal at the end of the term without medical evidence, typically at increased premiums. Convertible term insurance permits conversion to permanent insurance (whole or universal life) without proof of insurability.",
+      "source_brochures": ["TL-101", "LC-202"],
+      "category": "basic-concepts",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What is group insurance?",
+      "answer": "Group insurance provides coverage to members of a group, such as employees of a company or association, under a single master policy. Premiums are typically lower than individual policies due to shared risk and administrative efficiency.",
+      "source_brochures": ["GR-901", "CB-204"],
+      "category": "basic-concepts",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is a whole life universal plan?",
+      "answer": "A whole life universal plan offers flexible premiums and death benefits within permanent life insurance, allowing policyholders to adjust payments and coverage based on financial circumstances. It builds cash value that can be accessed through loans or withdrawals.",
+      "source_brochures": ["UW-302", "WL-301"],
+      "category": "basic-concepts",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is money-back insurance?",
+      "answer": "Money-back insurance pays a percentage of the sum assured at regular intervals during the policy term while providing death coverage throughout. These periodic payouts serve as partial maturity benefits, offering liquidity benefits earlier than endowment plans.",
+      "source_brochures": ["MS-402", "ED-401"],
+      "category": "basic-concepts",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is final expense insurance?",
+      "answer": "Final expense insurance, also called funeral insurance, provides a small death benefit specifically designed to cover end-of-life costs such as funeral expenses and medical bills. It typically has simplified underwriting and is aimed at older applicants.",
+      "source_brochures": ["FE-801", "SN-902"],
+      "category": "basic-concepts",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is the in-force count?",
+      "answer": "In-force count refers to the number of active insurance policies that have paid all required premiums and are currently providing coverage. It's a key metric for insurers representing their ongoing risk exposure and premium income stream.",
+      "source_brochures": ["OP-102", "UL-304"],
+      "category": "basic-concepts",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What is the difference between guaranteed and non-guaranteed benefits?",
+      "answer": "Guaranteed benefits are contractually promised and cannot be changed, while non-guaranteed benefits such as bonuses or dividends depend on company performance and may vary annually. Policyholders should understand which components are secure versus potentially variable.",
+      "source_brochures": ["GL-203", "LC-202"],
+      "category": "basic-concepts",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is a paid-up policy?",
+      "answer": "A paid-up policy results when premiums stop being paid but the insurance coverage continues with a reduced sum assured based on accumulated bonuses and reserves. The policy remains active without further premium obligations.",
+      "source_brochures": ["PP-501", "UL-304"],
+      "category": "basic-concepts",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is a single premium policy?",
+      "answer": "A single premium policy requires one lump-sum payment upfront to fund the entire insurance coverage for the policy term. It's suitable for individuals with available capital seeking simplified premium payments.",
+      "source_brochures": ["SP-601", "LC-202"],
+      "category": "basic-concepts",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is participating vs non-participating insurance?",
+      "answer": "Participating policies share insurers' profits with policyholders through bonuses or dividends, while non-participating policies have fixed benefits with no profit-sharing. Participating policies typically have higher initial premiums but potential for additional returns.",
+      "source_brochures": ["PP-501", "GL-203"],
+      "category": "basic-concepts",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What is credit life insurance?",
+      "answer": "Credit life insurance pays off outstanding loan balances if the borrower dies or becomes disabled, protecting lenders and relieving families from debt obligations. It's commonly offered with mortgages, auto loans, and personal loans.",
+      "source_brochures": ["CL-701", "GR-901"],
+      "category": "basic-concepts",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is a decreasing term insurance policy?",
+      "answer": "A decreasing term insurance policy provides coverage with a death benefit that progressively decreases over time, typically aligned with mortgage or loan balances. Premiums remain constant while coverage amounts decline according to the scheduled reduction.",
+      "source_brochures": ["DT-102", "TL-101"],
+      "category": "basic-concepts",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is universal life insurance?",
+      "answer": "Universal life insurance combines permanent coverage with flexible premiums and a cash value account that earns interest, allowing policyholders to adjust payments within specified limits. It offers more customization than whole life but requires careful management.",
+      "source_brochures": ["UL-304", "WL-301"],
+      "category": "basic-concepts",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is variable universal life insurance?",
+      "answer": "Variable universal life Insurance allows policyholders to invest cash value in sub-accounts similar to mutual funds, with potential for higher returns but also market risk. Premiums and death benefits are flexible within policy limits.",
+      "source_brochures": ["VU-502", "INV-702"],
+      "category": "basic-concepts",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What is a second-to-die life insurance policy?",
+      "answer": "Second-to-die (survivorship) insurance pays the death benefit only after both insured individuals have passed away, commonly used for estate planning and business succession. Premiums are typically lower than two separate policies.",
+      "source_brochures": ["SD-802", "WL-301"],
+      "category": "basic-concepts",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What does accidental death benefit mean?",
+      "answer": "An accidental death benefit provides an additional payout to beneficiaries if the insured dies due to an accident, often doubling or multiplying the base death benefit. Standard term and whole life policies typically exclude accidental deaths unless specifically endorsed.",
+      "source_brochures": ["ADB-301", "EX-405"],
+      "category": "coverage",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Are suicide deaths covered by life insurance?",
+      "answer": "Suicide deaths are typically excluded within the first one to two years of policy issue, after which they become covered under most policies. The specific exclusion period and conditions are clearly stated in the policy exclusions section.",
+      "source_brochures": ["EX-405", "LC-202"],
+      "category": "coverage",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is critical illness coverage?",
+      "answer": "Critical illness coverage provides a lump sum payment upon diagnosis of specified serious conditions such as cancer, heart attack, or stroke, regardless of whether hospitalization occurs. It's typically offered as a rider or separate policy.",
+      "source_brochures": ["CI-601", "RD-203"],
+      "category": "coverage",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What does disability income rider do?",
+      "answer": "A disability income rider provides monthly income if the insured becomes disabled and unable to work, helping maintain financial stability during long-term disability periods. Benefits typically begin after a waiting period and continue for a specified duration.",
+      "source_brochures": ["DI-701", "RD-203"],
+      "category": "coverage",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the guaranteed insurability option?",
+      "answer": "The guaranteed insurability option allows policyholders to purchase additional coverage at specified future dates without medical evidence, typically at life events like marriage or childbirth. It helps accommodate future insurance needs as circumstances change.",
+      "source_brochures": ["GIO-302", "RD-203"],
+      "category": "coverage",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What coverage limits apply to accidental death benefits?",
+      "source_brochures": ["ADB-301", "LC-202"],
+      "category": "coverage",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Are pandemic-related deaths covered by life insurance?",
+      "answer": "Yes, pandemic-related deaths are generally covered by standard life insurance policies unless specifically excluded as a known risk at policy inception. Most modern policies do not exclude epidemic or pandemic events.",
+      "source_brochures": ["LC-202", "EX-405"],
+      "category": "coverage",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is a waiver of premium rider?",
+      "answer": "A waiver of premium rider forgives premium payments if the insured becomes disabled before a specified age, keeping the policy in force without further payments during disability. It typically requires the disablement to be continuous for 6 months.",
+      "source_brochures": ["WPR-702", "RD-203"],
+      "category": "coverage",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What does hospital cash benefit cover?",
+      "answer": "Hospital cash benefit provides a fixed daily payment for each day the insured is hospitalized, helping offset non-covered medical expenses and income loss during recovery. Payments continue for specified maximum periods per hospitalization.",
+      "source_brochures": ["HCB-602", "RD-203"],
+      "category": "coverage",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Is travel insurance included in health policies?",
+      "answer": "Travel insurance is typically a separate product, though some comprehensive health plans may offer limited emergency coverage for travelers. Standalone travel insurance usually covers trip cancellation, medical emergencies abroad, and baggage loss.",
+      "source_brochures": ["TR-901", "HP-502"],
+      "category": "coverage",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is the waiting period for critical illness coverage?",
+      "answer": "Critical illness coverage typically has a 90-day waiting period from policy inception before claims for newly diagnosed conditions become payable. Pre-existing conditions may have longer waiting periods or exclusions.",
+      "source_brochures": ["CI-601", "WP-402"],
+      "category": "waiting-period",
+      "difficulty": "medium"
+    },
+    {
+      "query": "How long is the typical waiting period for health insurance?",
+      "answer": "Health insurance policies commonly have a 30-day waiting period for non-accidental illnesses, while accidents are usually covered from day one. Pre-existing conditions may have extended waiting periods of up to 4 years.",
+      "source_brochourses": ["HP-502", "WP-402"],
+      "category": "waiting-period",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is the waiting period for maternity coverage?",
+      "answer": "Maternity coverage typically has a 9-month to 3-year waiting period depending on the policy, designed to prevent adverse selection by individuals expecting imminent childbirth. Some employer plans may have shorter or no waiting periods.",
+      "source_brochures": ["MC-603", "HP-502"],
+      "category": "waiting-period",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Are pre-existing diseases covered immediately?",
+      "answer": "No, pre-existing diseases usually have extended waiting periods ranging from 2 to 4 years before coverage becomes effective. Full disclosure during application is essential for future claim eligibility.",
+      "source_brochures": ["PD-801", "WP-402"],
+      "category": "waiting-period",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What waiting period applies to dental treatments?",
+      "answer": "Dental coverage in health policies typically has a 30-day waiting period for basic procedures and up to 12 months for major treatments like crowns or implants. Orthodontic services may have separate longer waiting periods.",
+      "source_brochures": ["DP-902", "HP-502"],
+      "category": "waiting-period",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Is there a waiting period for critical surgery coverage?",
+      "answer": "Critical surgery coverage usually has no waiting period when included in the initial policy issuance, but adding it as a rider may trigger standard underwriting and potential waiting periods depending on vendor policies.",
+      "source_brochures": ["CS-703", "RD-203"],
+      "category": "waiting-period",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What is the waiting period for mental health coverage?",
+      "answer": "Mental health coverage typically has a 30-day waiting period, though some insurers require longer periods of 6 months to 1 year for existing conditions. Emergency psychiatric care may be exempt from waiting periods.",
+      "source_brochures": ["MH-802", "HP-502"],
+      "category": "waiting-period",
+      "difficulty": "hard"
+    },
+    {
+      "query": "How long is the grace period for premium payments?",
+      "answer": "The standard grace period for premium payments is 15 days for monthly policies and 30 days for annual, semi-annual, or quarterly payments. During this period, coverage remains active even if payment is overdue.",
+      "source_brochures": ["PP-501", "PM-904"],
+      "category": "policy-management",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Can I change my policy nominee?",
+      "answer": "Yes, policy nominees can be changed at any time by submitting a nomination change form with the insurer. Multiple nominees can be appointed with percentage splits specified according to current wishes.",
+      "source_brochures": ["NM-201", "PM-904"],
+      "category": "policy-management",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is the process for surrendering a policy?",
+      "answer": "Policy surrender involves submitting a surrender request form, with the insurer calculating and paying the surrender value based on premiums paid, bonuses accumulated, and charges applicable. Surrender values are typically zero in the first 3 years.",
+      "source_brochures": ["SS-502", "PM-904"],
+      "category": "policy-management",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Can I get a loan against my insurance policy?",
+      "answer": "Yes, most permanent policies with cash value allow policyholders to borrow up to 85-90% of the surrender value at preferential interest rates. The policy remains in force as collateral for the loan.",
+      "source_brochures": ["LN-602", "PM-904"],
+      "category": "policy-management",
+      "difficulty": "medium"
+    },
+    {
+      "query": "How do I update my policy address?",
+      "answer": "Policy address updates require completing a service request form and providing proof of new address. Changes can typically be requested online, by phone, or through branch offices with confirmation sent within 7-10 days.",
+      "source_brochures": ["AD-202", "PM-904"],
+      "category": "policy-management",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What happens if I miss a premium payment?",
+      "answer": "Missing a premium triggers a grace period during which coverage remains active. If payment isn't received by the end of the grace period, the policy lapses unless it has sufficient cash value to cover the premium.",
+      "source_brochures": ["PP-501", "PM-904"],
+      "category": "policy-management",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Can I revive a lapsed policy?",
+      "answer": "Yes, lapsed policies can often be revived within 2-3 years by paying overdue premiums with interest and providing proof of insurability if required. The specific revival window depends on the policy terms.",
+      "source_brochures": ["RV-503", "PM-904"],
+      "category": "policy-management",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is policy reinstatement?",
+      "answer": "Policy reinstatement is the formal process of restoring a lapsed or surrendered policy to active status, requiring payment of arrears, interest, and sometimes new underwriting. It's異なる from revival for policies still within grace period.",
+      "source_brochures": ["RV-503", "PM-904"],
+      "category": "policy-management",
+      "difficulty": "hard"
+    },
+    {
+      "query": "How do I add or remove riders?",
+      "answer": "Adding or removing riders requires submitting a policy endorsement form and may require additional underwriting for new coverage. Premium adjustments are processed retroactively to the change date.",
+      "source_brochures": ["RD-203", "PM-904"],
+      "category": "policy-management",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Can I change the premium payment frequency?",
+      "answer": "Yes, premium payment frequency can typically be changed between annual, semi-annual, quarterly, and monthly at renewal time or by paying a small administrative fee. Annual payments usually offer the best discount.",
+      "source_brochures": ["PP-501", "PM-904"],
+      "category": "policy-management",
+      "difficulty": "medium"
+    },
+    {
+      "query": "How long doesclaims settlement take?",
+      "answer": "Life insurance claims are typically settled within 7-14 days for complete documentation, though complex cases may take 30 days. Regulatory timelines require insurers to investigate and communicate within specified periods.",
+      "source_brochures": ["CL-701", "CM-802"],
+      "category": "claims",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What documents are required for life insurance claims?",
+      "answer": "Life insurance claims require the claim form, death certificate, original policy document, nominee ID proof, and bank details For accidental deaths, additional police and medical reports may be needed.",
+      "source_brochures": ["CL-701", "DC-602"],
+      "category": "claims",
+      "difficulty": "easy"
+    },
+    {
+      "query": "How do I file a health insurance claim?",
+      "answer": "Health insurance claims can be filed either through cashless network hospitals (direct settlement) or by paying upfront and submitting reimbursement claims with medical bills, discharge summaries, and diagnostic reports.",
+      "source_brochures": ["HP-502", "CL-701"],
+      "category": "claims",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is the deadline for filing insurance claims?",
+      "answer": "Life insurance claims should be filed promptly after the insured event, typically within 30 days for death claims and up to 90 days for health claims. Most policies allow extensions with explanation.",
+      "source_brochures": ["CL-701", "CM-802"],
+      "category": "claims",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Why might claims be delayed or denied?",
+      "answer": "Claims may be delayed due to incomplete documentation, investigation needs, or disputed causes of death. Denials commonly occur for non-disclosure of material facts, policy exclusions, or lapsed coverage at time of event.",
+      "source_brochures": ["CL-701", "EX-405"],
+      "category": "claims",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Can claims be made outside India?",
+      "answer": "Yes, Indian insurance policies generally cover global events including death and medical emergencies abroad. Documentation may require apostille certification for foreign documents in some cases.",
+      "source_brochures": ["IN-901", "CL-701"],
+      "category": "claims",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the partial disability claim process?",
+      "answer": "Partial disability claims require medical certification of reduced working capacity, income proof showing loss of earnings, and employer verification. Benefits are typically a percentage of full disability benefits.",
+      "source_brochures": ["PD-801", "DI-701"],
+      "category": "claims",
+      "difficulty": "hard"
+    },
+    {
+      "query": "How are claim disputes resolved?",
+      "answer": "Claim disputes follow a formal grievance redressal process beginning with insurer complaints departments, then escalating to the Insurance Ombudsman, and finally regulatory authorities if unresolved.",
+      "source_brochures": ["GR-902", "CM-802"],
+      "category": "claims",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What happens to claims in the first year?",
+      "answer": "First-year death claims receive heightened scrutiny due to suicide and misrepresentation exclusions. Medical underwriting records are thoroughly reviewed, potentially extending investigation time.",
+      "source_brochures": ["CL-701", "LC-202"],
+      "category": "claims",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Are natural disaster deaths covered?",
+      "answer": "Yes, deaths resulting from natural disasters such as earthquakes, floods, and cyclones are generally covered under standard life insurance policies unless specifically excluded for high-risk geographic areas.",
+      "source_brochures": ["LC-202", "EX-405"],
+      "category": "coverage",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is co-payment in health insurance?",
+      "answer": "Co-payment requires policyholders to pay a specified percentage of covered medical expenses out-of-pocket, typically 10-20%, while the insurer covers the remainder. It's used to reduce premiums and prevent overutilization.",
+      "source_brochures": ["HP-502", "PP-501"],
+      "category": "coverage",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is sub-limits coverage?",
+      "answer": "Sub-limits are maximum amounts allocated to specific treatments or categories within a health policy, such as room rent caps or surgical procedure limits, regardless of totals.",
+      "source_brochures": ["HP-502", "CL-701"],
+      "category": "coverage",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What documents are needed for health insurance claims?",
+      "source_brochures": ["DC-602", "HP-502"],
+      "category": "documentation",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Is a medical examination always required for life insurance?",
+      "answer": "No, medical exams are typically required for applicants over 35-40 years old or for high sum assured amounts. Younger applicants with standard health may qualify for simplified issue policies.",
+      "source_brochures": ["ME-601", "KD-702"],
+      "category": "documentation",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What KYC documents are accepted?",
+      "answer": "Acceptable KYC documents include Aadhaar, PAN, passport, driving license, and voter ID for identity and address verification. Originals or self-attested copies are required depending on submission method.",
+      "source_brochures": ["KY-101", "KD-702"],
+      "category": "documentation",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Are photographs required for insurance policies?",
+      "source_brochures": ["KD-702", "DC-602"],
+      "category": "documentation",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What medical tests are commonly required?",
+      "answer": "Common medical tests include hemoglobin, blood sugar, cholesterol, urine analysis, ECG, and basic physical examination. Additional tests like stress tests or imaging may be needed for older applicants or high coverage amounts.",
+      "source_brochures": ["ME-601", "HP-502"],
+      "category": "documentation",
+      "difficulty": "medium"
+    },
+    {
+      "query": "How do I obtain a duplicate policy document?",
+      "answer": "Duplicate policy documents can be requested by submitting a declaration of loss form, paying applicable fees, and providing identification proof. Digital copies are typically available immediately online.",
+      "source_brochures": ["PD-801", "PM-904"],
+      "category": "documentation",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is a health declaration form?",
+      "source_brochures": ["KD-702", "HP-502"],
+      "category": "documentation",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Are foreign nationals required to submit additional documents?",
+      "answer": "Yes, foreign nationals typically need passport copies, visa documentation, and proof of residence in India. Some insurers require additional medical certifications for non-residents.",
+      "source_brochures": ["IN-901", "KD-702"],
+      "category": "documentation",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What documentation proves premium payments?",
+      "answer": "Premium payment proof includes receipts, policy statements, bank Standing Instruction slips, and digital transaction confirmations. Annual statements provide comprehensive payment history summaries.",
+      "source_brochures": ["PP-501", "PM-904"],
+      "category": "documentation",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Can claim forms be submitted electronically?",
+      "answer": "Yes, most insurers accept electronic submission of claim forms through online portals and mobile apps. Original supporting documents may still need physical submission or secure digital upload.",
+      "source_brochures": ["CL-701", "CM-802"],
+      "category": "documentation",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Can I pay insurance premiums using credit cards?",
+      "source_brochures": ["PP-501", "PY-603"],
+      "category": "payments",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What payment frequencies are available?",
+      "answer": "Premiums can be paid annually, semi-annually, quarterly, or monthly. Annual payments typically offer a 5-10% discount compared to monthly installments.",
+      "source_brochures": ["PP-501", "PY-603"],
+      "category": "payments",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What happens if I stop paying premiums?",
+      "answer": "Stopping premium payments triggers the grace period, after which the policy lapses. Permanent policies may use cash value to maintain coverage for a limited time before lapsing entirely.",
+      "source_brochures": ["PP-501", "PM-904"],
+      "category": "payments",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Are there premiums discounts for healthy lifestyles?",
+      "answer": "Yes, many insurers offer wellness discounts of 5-15% for non-smokers, individuals with healthy BMI, and those participating in fitness programs. Discounts are typically applied at policy renewal.",
+      "source_brochures": ["WL-301", "PP-501"],
+      "category": "payments",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Can premiums be paid in foreign currency?",
+      "answer": "Indian insurance policies require premium payments in Indian Rupees, though NRIs can use NRE/NRO accounts or international payment methods converted to INR. Foreign currency direct payments are generally not accepted.",
+      "source_brochures": ["IN-901", "PY-603"],
+      "category": "payments",
+      "difficulty": "hard"
+    },
+    {
+      "query": "How do payment defaults affect policy status?",
+      "answer": "Payment defaults trigger grace periods; failure to pay within this period causes policy lapse. For permanent policies, cash value may be used automatically if automatic premium loan provision is elected.",
+      "source_brochures": ["PP-501", "PM-904"],
+      "category": "payments",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the automatic premium loan provision?",
+      "answer": "The automatic premium loan provision allows insurers to use policy cash value to pay overdue premiums, preventing lapse. Interest accrues on these loans at specified rates.",
+      "source_brochures": ["APL-502", "PM-904"],
+      "category": "payments",
+      "difficulty": "hard"
+    },
+    {
+      "query": "How do I set up premium auto-payment?",
+      "answer": "Premium auto-payment is established by authorizing Standing Instructions to banks, providing ECS mandates, or linking payment methods in online policy portals. Confirmation emails are sent after setup completion.",
+      "source_brochures": ["PP-501", "PY-603"],
+      "category": "payments",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Are there penalties for early surrender?",
+      "answer": "Yes, early surrender (within first 3 years) typically results in minimal or zero surrender value recovery. The policy may also require reimbursement of acquisition costs in some cases.",
+      "source_brochures": ["SS-502", "PP-501"],
+      "category": "payments",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Can I change my payment method during the policy term?",
+      "answer": "Yes, payment methods can be changed at any time by updating payment credentials in online portals or submitting new authorization forms. Premium amounts may adjust based on frequency changes.",
+      "source_brochures": ["PP-501", "PY-603"],
+      "category": "payments",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the premium payment term?",
+      "answer": "The premium payment term is the duration over which premiums must be paid, which may be shorter than the policy term. For example, a 20-year policy with a 10-year payment term requires payments for only the first decade.",
+      "source_brochures": ["PP-501", "LC-202"],
+      "category": "policy-features",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What does sum assured mean?",
+      "answer": "Sum assured is the guaranteed death benefit amount payable to beneficiaries upon the insured's demise. It's the core coverage amount for which premiums are calculated based on risk factors.",
+      "source_brochures": ["LC-202", "GL-203"],
+      "category": "policy-features",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is the policy term?",
+      "source_brochures": ["LC-202", "PP-501"],
+      "category": "policy-features",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What are guaranteed additions?",
+      "answer": "Guaranteed additions are fixed monetary amounts or percentages added to the sum assured annually, as contractually specified. They accumulate guaranteed value beyond base coverage.",
+      "source_brochures": ["GL-203", "ED-401"],
+      "category": "policy-features",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is a loyalty addition?",
+      "answer": "A loyalty addition is a non-guaranteed bonus paid at maturity or death for long-policy hold periods, rewarding customer retention. Amounts vary based on company performance and policy duration.",
+      "source_brochures": ["LA-602", "GL-203"],
+      "category": "policy-features",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What is a maturity benefit?",
+      "source_brochures": ["ED-401", "GL-203"],
+      "category": "policy-features",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What are exclusions in insurance policies?",
+      "answer": "Exclusions are specific circumstances, conditions, or activities not covered by the policy, such as war, intentional self-harm, or illegal activities. They're clearly listed in policy documents.",
+      "source_brochures": ["EX-405", "LC-202"],
+      "category": "exclusions",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Are war-related deaths covered?",
+      "answer": "Most standard policies exclude deaths resulting from war, invasion, or acts of terrorism. Some specialized policies may offer coverage with additional premiums.",
+      "source_brochures": ["EX-405", "LC-202"],
+      "category": "exclusions",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What expenses are not covered by health insurance?",
+      "answer": "Health insurance typically excludes elective procedures, cosmetic surgery, fitness expenses, alternative medicine without medical supervision, and treatments for substance abuse.",
+      "source_brochures": ["HP-502", "EX-405"],
+      "category": "exclusions",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Are pre-existing conditions excluded permanently?",
+      "answer": "Pre-existing conditions have extended waiting periods but are not permanently excluded. After the specified waiting period (typically 2-4 years), coverage becomes effective.",
+      "source_brochures": ["PD-801", "WP-402"],
+      "category": "exclusions",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What dental procedures are excluded?",
+      "answer": "Dental exclusions typically include cosmetic dentistry, orthodontics (braces), teeth whitening, and most preventive services unless specifically included as benefits.",
+      "source_brochures": ["DP-902", "HP-502"],
+      "category": "exclusions",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Are sports injuries covered?",
+      "answer": "Injuries from amateur sports are generally covered, but high-risk activities like skydiving, bungee jumping, and professional sports are typically excluded unless specifically endorsed.",
+      "source_brochures": ["EX-405", "HP-502"],
+      "category": "exclusions",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What mental health conditions are excluded?",
+      "answer": "Exclusions may include self-inflicted injuries, constitutional disorders, and conditions arising from substance abuse. Many modern policies now include limited mental health coverage.",
+      "source_brochures": ["MH-802", "EX-405"],
+      "category": "exclusions",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Is nuclear risk excluded?",
+      "answer": "Yes, deaths and damages resulting from nuclear irradiation or contamination are typically excluded as uninsurable risks under standard insurance policies.",
+      "source_brochures": ["EX-405", "LC-202"],
+      "category": "exclusions",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What riders can be added to life insurance?",
+      "answer": "Common riders include accidental death benefit, critical illness, waiver of premium, disability income, and term addition. Availability depends on policy type and insurer offerings.",
+      "source_brochures": ["RD-203", "LC-202"],
+      "category": "riders",
+      "difficulty": "easy"
+    },
+    {
+      "query": "How much do riders cost?",
+      "answer": "Rider costs vary based on coverage type, sum assured, age, and health. Accidental death riders are typically low-cost (1-2% of base premium) while critical illness can be 10-25%.",
+      "source_brochures": ["RD-203", "PP-501"],
+      "category": "riders",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Can riders be removed from a policy?",
+      "answer": "Riders cannot typically be removed once added; they remain until policy lapse or termination. New riders can be added at renewal or endorsement time.",
+      "source_brochures": ["RD-203", "PM-904"],
+      "category": "riders",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the maximum number of riders allowed?",
+      "answer": "Most insurers allow 5-7 additional riders per policy, subject to underwriting limits and regulatory restrictions. High-risk riders may require separate approval.",
+      "source_brochures": ["RD-203", "LC-202"],
+      "category": "riders",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Do all riders provide lifelong coverage?",
+      "answer": "No, rider terms typically match or are shorter than the base policy term. Some riders like critical illness end upon diagnosis and payout rather than continuing for policy duration.",
+      "source_brochures": ["RD-203", "CI-601"],
+      "category": "riders",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Are term riders renewable?",
+      "answer": "Term rider renewability depends on policy terms. Many term add-ons can be renewed at specified intervals without new medical exams, typically up to age 65-70.",
+      "source_brochures": ["RD-203", "TL-101"],
+      "category": "riders",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the payout sequence for multiple riders?",
+      "answer": "When multiple applicable benefits trigger simultaneously, insurers typically pay the highest single benefit rather than aggregating, unless specifically stated otherwise. Critical illness payouts may reduce death benefits.",
+      "source_brochures": ["RD-203", "CI-601"],
+      "category": "riders",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Can critical illness rider be reinstated after payout?",
+      "answer": "No, most critical illness riders terminate upon payout of the benefit. Some policies offer limited return of premium options for unused coverage.",
+      "source_brochures": ["CI-601", "RD-203"],
+      "category": "riders",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What tax benefits are available under life insurance?",
+      "answer": "Premium payments up to ₹1.5 lakh annually qualify for deduction under Section 80C, and death benefits are tax-exempt under Section 10(10D) of the Income Tax Act. Maturity proceeds are also typically exempt.",
+      "source_brochures": ["TX-701", "TL-101"],
+      "category": "taxation",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Are ULIP maturity proceeds taxable?",
+      "answer": "ULIP maturity proceeds are tax-exempt under Section 10(10D) if premium-to-death-benefit ratio remains within 10:1 limits. Excess amounts may be subject to capital gains tax.",
+      "source_brochures": ["U-501", "TX-701"],
+      "category": "taxation",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Can insurance premiums be claimed as business expenses?",
+      "answer": "Yes, businesses can claim premium payments for employee group insurance as deductible business expenses. Premiums for owner-director coverage follow individual tax rules.",
+      "source_brochures": ["TX-701", "GR-901"],
+      "category": "taxation",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What is TDS on insurance payouts?",
+      "answer": "TDS at 5% applies to certain insurance payouts exceeding ₹1 lakh annually, except for policies meeting tax exemption criteria. No TDS applies to tax-exempt death benefits.",
+      "source_brochures": ["TX-701", "CL-701"],
+      "category": "taxation",
+      "difficulty": "medium"
+    },
+    {
+      "query": "How do I claim tax deductions on premiums?",
+      "answer": "Premium deductions are claimed under Section 80C in annual income tax returns, requiring policy details and payment proof. Deduction is limited to ₹1.5 lakh across all 80C-eligible investments.",
+      "source_brochures": ["TX-701", "PP-501"],
+      "category": "taxation",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Who is eligible for life insurance policies?",
+      "answer": "Eligibility typically requires being between 18-65 years old (varies by product) with insurable interest, health meeting underwriting criteria, and ability to pay premiums. Minors can be insured with parental consent.",
+      "source_brochures": ["EL-201", "LC-202"],
+      "category": "eligibility",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Can elderly individuals get life insurance?",
+      "answer": "Yes, many insurers offer senior citizen plans up to age 75 or 80 with simplified underwriting. Premiums increase significantly with age due to higher mortality risk.",
+      "source_brochures": ["SN-902", "EL-201"],
+      "category": "eligibility",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What health conditions affect eligibility?",
+      "answer": "Conditions like diabetes, hypertension, heart disease, cancer history, and obesity may require higher premiums or result in exclusions. Some insurers offer specialized plans for chronic conditions.",
+      "source_brochures": ["EL-201", "PD-801"],
+      "category": "eligibility",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Are smokers eligible for insurance?",
+      "answer": "Smokers are insurable but pay 20-50% higher premiums than non-smokers due to increased health risks. Full disclosure of tobacco use is essential to avoid claim rejections.",
+      "source_brochures": ["SM-801", "EL-201"],
+      "category": "eligibility",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Can NRIs purchase Indian insurance policies?",
+      "answer": "Yes, NRIs can buy Indian insurance policies using NRE/NRO accounts. Premium payments must comply with RBI regulations, and documentation includes passport and overseas address proof.",
+      "source_brochures": ["IN-901", "EL-201"],
+      "category": "eligibility",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the minimum sum assured requirement?",
+      "answer": "Minimum sum assured varies by policy type: ₹5 lakh for term plans, ₹1-3 lakh for savings plans. High-value products may require amounts of ₹10 lakh or more.",
+      "source_brochures": ["LC-202", "EL-201"],
+      "category": "eligibility",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Can individuals with disabilities get insurance?",
+      "answer": "Yes, insurers evaluate based on disability type and severity. Physical disabilities often don't affect eligibility, while cognitive impairments may require guardianship documentation.",
+      "source_brochures": ["DI-701", "EL-201"],
+      "category": "eligibility",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Are there occupation-based eligibility restrictions?",
+      "answer": "Yes, high-risk occupations like mining, flying, deep-sea fishing, and combat military service may be excluded or require additional risk loading. Office workers and professionals typically face no restrictions.",
+      "source_brochures": ["EL-201", "EX-405"],
+      "category": "eligibility",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Can I get insurance if I have a pre-existing medical condition?",
+      "answer": "Yes, though with potential exclusions or waiting periods for the condition. Disclosure during application is crucial to avoid future claim disputes and may lead to tailored coverage options.",
+      "source_brochures": ["PD-801", "EL-201"],
+      "category": "eligibility",
+      "difficulty": "easy"
+    },
+    {
+      "query": "How do I compare different insurance plans?",
+      "answer": "Compare based on premium cost, coverage amount, policy term, waiting periods, exclusions, rider options, claim settlement ratio, and insurer reputation. Use online comparison tools for side-by-side evaluation.",
+      "source_brochures": ["CP-103", "LC-202"],
+      "category": "comparisons",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Term vs whole life insurance - which is better?",
+      "answer": "Term insurance provides affordable pure protection for specific needs like mortgage coverage. Whole life offers lifelong coverage with cash value accumulation at higher cost, suitable for estate planning.",
+      "source_brochures": ["TL-101", "WL-301"],
+      "category": "comparisons",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Health insurance vs critical illness coverage?",
+      "answer": "Health insurance reimburses actual medical expenses for hospitalization. Critical illness provides lump-sum payout upon diagnosis of specified conditions, regardless of treatment costs.",
+      "source_brochures": ["HP-502", "CI-601"],
+      "category": "comparisons",
+      "difficulty": "medium"
+    },
+    {
+      "query": "ULIPs vs mutual funds - investment comparison?",
+      "answer": "ULIPs combine insurance and investment with higher fees, while mutual funds offer pure investment exposure with lower costs. ULIP returns may be lower due to mortality charges, but provide life coverage.",
+      "source_brochures": ["U-501", "INV-702"],
+      "category": "comparisons",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Single premium vs regular premium policies?",
+      "answer": "Single premium requires upfront lump sum but saves on administrative costs and ensures no future payment defaults. Regular premiums spread cost over time but total payments exceed single-premium equivalent.",
+      "source_brochures": ["SP-601", "PP-501"],
+      "category": "comparisons",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Group insurance vs individual policies?",
+      "answer": "Group insurance offers lower premiums and simplified underwriting through employers or associations. Individual policies provide portability, customization, and coverage continuity regardless of employment status.",
+      "source_brochures": ["GR-901", "LC-202"],
+      "category": "comparisons",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Online vs offline insurance purchases?",
+      "answer": "Online policies typically cost 15-30% less with streamlined processes and no agent commissions. Offline purchases offer personalized guidance but involve higher costs and longer processing times.",
+      "source_brochures": ["ON-902", "PP-501"],
+      "category": "comparisons",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is the difference between surrender value and maturity value?",
+      "answer": "Surrender value is the amount received when terminating a policy before term, typically less than total premiums paid in early years. Maturity value is the payout at policy end, including bonuses and guaranteed additions.",
+      "source_brochures": ["SS-502", "ED-401"],
+      "category": "comparisons",
+      "difficulty": "medium"
+    },
+    {
+      "query": "How do claim settlement ratios compare across insurers?",
+      "answer": "Claim settlement ratio indicates the percentage of claims paid versus total claims filed. Higher ratios (above 98%) suggest better claim handling, but must be considered alongside claim amounts and policy types.",
+      "source_brochures": ["CM-802", "CL-701"],
+      "category": "comparisons",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Traditional plans vs Unit Linked Plans?",
+      "answer": "Traditional plans offer guaranteed returns and bonuses, while ULIPs provide market-linked returns with transparency in fund allocation. Traditional plans have higher guarantees but lower potential returns.",
+      "source_brochures": ["ED-401", "U-501"],
+      "category": "comparisons",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What is the claim settlement process step by step?",
+      "answer": "Step 1: Notify insurer of event. Step 2: Submit claim form with required documents. Step 3: Insurer investigates if needed. Step 4: Settlement within regulatory timelines typically 7-30 days.",
+      "source_brochures": ["CL-701", "CM-802"],
+      "category": "claims",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What happens if the insured survives the policy term?",
+      "answer": "For term life policies, no payout occurs and coverage ends. For endowment, money-back, or whole life policies, maturity benefits including sum assured plus bonuses are paid to the policyholder.",
+      "source_brochures": ["ED-401", "TL-101"],
+      "category": "plan-types",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is a money-back policy?",
+      "answer": "A money-back policy pays predetermined survival benefits at regular intervals during the term while providing death coverage. These partial payouts reduce the sum assured but provide liquidity.",
+      "source_brochures": ["MS-402", "ED-401"],
+      "category": "plan-types",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is a unit-linked insurance plan?",
+      "source_brochures": ["U-501", "INV-702"],
+      "category": "plan-types",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What are the types of endowment plans?",
+      "answer": "Standard endowment pays maturity benefit on survival or sum assured on death. Money-back endowment pays partial amounts during term. Single premium endowment requires one initial payment.",
+      "source_brochures": ["ED-401", "LC-202"],
+      "category": "plan-types",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is a pension or annuity plan?",
+      "answer": "Pension plans accumulate corpus during the working phase and provide regular income post-retirement. They can be immediate (purchase at retirement) or deferred (gradual accumulation).",
+      "source_brochures": ["AN-601", "RET-803"],
+      "category": "plan-types",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is a child plans?",
+      "answer": "Child plans ensure financial support for children's education and marriage milestones, with premium waivers if the parent dies. Benefits are paid at key educational stages.",
+      "source_brochures": ["CH-802", "ED-401"],
+      "category": "plan-types",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is an investing-focused insurance plan?",
+      "answer": "Investing-focused plans like ULIPs allocate substantial premium portions to market-linked investments while providing life coverage. Returns depend on fund performance and investment choices.",
+      "source_brochures": ["U-501", "INV-702"],
+      "category": "plan-types",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What is a microinsurance plan?",
+      "answer": "Microinsurance provides low-sum-assured coverage (typically under ₹1 lakh) at affordable premiums for low-income individuals, often sold through community-based organizations.",
+      "source_brochures": ["MI-903", "GR-901"],
+      "category": "plan-types",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What makes a plan tax-efficient?",
+      "answer": "Tax efficiency comes from premium deductions under 80C, tax-exempt proceeds under 10(10D), and long-term capital gains treatment. ULIPs meet these criteria when premium ratios comply with regulations.",
+      "source_brochures": ["TX-701", "U-501"],
+      "category": "taxation",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the maximum tax deduction allowed?",
+      "answer": "Section 80C allows a total deduction of ₹1.5 lakh across ELSS, PPF, NSC, life insurance premiums, and other eligible investments combined.",
+      "source_brochures": ["TX-701", "PP-501"],
+      "category": "taxation",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Are pension annuity payouts taxable?",
+      "answer": "Annuity payments from pension plans are fully taxable as income in the recipient's hands, unlike lump-sum retirement benefits which may have partial exemption.",
+      "source_brochures": ["TX-701", "AN-601"],
+      "category": "taxation",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What legal protections do policyholders have?",
+      "answer": "Policyholders are protected by the Insurance Act, IRDAI regulations, and consumer protection laws. Key protections include fair claim settlement, disclosure requirements, and grievance redressal mechanisms.",
+      "source_brochures": ["LG-103", "CM-802"],
+      "category": "legal",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the incontestability clause?",
+      "answer": "The incontestability clause prevents insurers from contesting a policy after 3 years based on misrepresentation, except for non-payment of premiums or fraudulent claims.",
+      "source_brochures": ["LC-202", "LG-103"],
+      "category": "legal",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What happens to policies during divorce?",
+      "answer": "Policies remain with the policyholder unless court order designates ownership. Insured parties may need to change beneficiaries and update policy terms according to settlement agreements.",
+      "source_brochures": ["LG-103", "NM-201"],
+      "category": "legal",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Can policies be attached by creditors?",
+      "answer": "In most cases, life insurance proceeds are protected from creditors if a nominee is properly designated. Without a nominee or with estate nomination, proceeds may form part of the deceased's estate.",
+      "source_brochures": ["LG-103", "NM-201"],
+      "category": "legal",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What is insurable interest?",
+      "answer": "Insurable interest means having a legal and financial stake in the continued life of the insured individual. It must exist at policy inception for life insurance validity.",
+      "source_brochures": ["LC-202", "LG-103"],
+      "category": "legal",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Can a minor be a nominee?",
+      "answer": "Yes, minors can be nominees with a guardian appointee designated to manage proceeds until majority. Guardianship documentation is required at claim time.",
+      "source_brochures": ["NM-201", "LG-103"],
+      "category": "legal",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What are the irrevocable beneficiary rights?",
+      "answer": "Irrevocable beneficiaries have ownership rights including ability to change nominees, take loans, and must consent to policy surrender or changes. They're typically spouses or dependents.",
+      "source_brochures": ["NM-201", "LG-103"],
+      "category": "legal",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What happens if a beneficiary predeceases the insured?",
+      "answer": "If a beneficiary dies before the insured, their share typically passes to alternate nominees or to the estate if none are designated. Regular nominee updates prevent disputes.",
+      "source_brochures": ["NM-201", "CL-701"],
+      "category": "legal",
+      "difficulty": "medium"
+    },
+    {
+      "query": "Are insurance proceeds subject to attachment orders?",
+      "answer": "Insurance proceeds are generally protected from attachment by court orders for debts, unless fraud is involved in policy acquisition or claims.",
+      "source_brochures": ["LG-103", "CL-701"],
+      "category": "legal",
+      "difficulty": "hard"
+    },
+    {
+      "query": "What consumer rights do policyholders have?",
+      "answer": "Policyholders have rights to clear disclosures, fair claim settlement, privacy of personal information, grievance redressal within timelines, and transparency in policy terms.",
+      "source_brochures": ["LG-103", "CM-802"],
+      "category": "legal",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is a return of premium term plan?",
+      "answer": "A return of premium term plan returns all or part of the premiums paid if the insured survives the policy term, combining term protection with a maturity benefit. Premiums are higher than standard term plans but offer some savings.",
+      "source_brochures": ["RPR-103", "TL-101"],
+      "category": "basic-concepts",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the difference between revocable and irrevocable beneficiary designations?",
+      "answer": "Revocable beneficiaries can be changed by the policyholder without consent, while irrevocable beneficiaries must approve any changes. Irrevocable designation creates legal ownership rights in the beneficiary.",
+      "source_brochures": ["NM-201", "LG-103"],
+      "category": "legal",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is critical surgery coverage?",
+      "answer": "Critical surgery coverage provides a lump sum payment upon diagnosis and hospitalization for specified major surgeries, helping cover out-of-pocket costs and income loss. It's often offered as a critical illness rider.",
+      "source_brochures": ["CS-703", "CI-601"],
+      "category": "coverage",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What is the waiting period for pre-existing conditions?",
+      "answer": "Waiting periods for pre-existing conditions typically range from 2 to 4 years, after which coverage becomes effective. Disclosing all conditions during application ensures eligibility.",
+      "source_brochures": ["PD-801", "WP-402"],
+      "category": "waiting-period",
+      "difficulty": "easy"
+    },
+    {
+      "query": "How long is the waiting period for pre-natal care coverage?",
+      "answer": "Pre-natal care typically has a 9-month waiting period from policy inception before maternity-related benefits become payable. Continuous policy membership during this period is often required.",
+      "source_brochures": ["MC-603", "HP-502"],
+      "category": "waiting-period",
+      "difficulty": "medium"
+    },
+    {
+      "query": "What waiting period applies to lab tests and diagnostic procedures?",
+      "answer": "Most diagnostic procedures have no separate waiting period but may be subject to overall policy waiting periods. Pre-authorizations are often required for expensive tests.",
+      "source_brochures": ["HP-502", "WP-402"],
+      "category": "waiting-period",
+      "difficulty": "medium"
+    }
+  ]
+}

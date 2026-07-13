@@ -18,6 +18,7 @@ interface Policy {
   premium: string;
   coverage: string;
   tag: string;
+  checklist?: any[];
 }
 
 interface Lead {
@@ -242,7 +243,11 @@ export default function ChatArea({ lead }: ChatAreaProps) {
         }),
       });
       const json = await res.json();
-      if (json.success) setIssuedPolicies((p) => new Set(p).add(policy.name));
+      if (json.success) {
+        const checklistItems = json.data.checklist?.items ?? [];
+        setOcrPolicy({ ...policy, checklist: checklistItems });
+        setIssuedPolicies((p) => new Set(p).add(policy.name));
+      }
     } catch { console.error("Failed to issue policy"); }
     finally { setIssuingPolicy(null); }
   };
@@ -393,6 +398,7 @@ export default function ChatArea({ lead }: ChatAreaProps) {
         {/* OCR Modal */}
         {ocrPolicy && (
           <PolicyOCRModal
+            leadId={lead.id}
             policy={ocrPolicy}
             householdName={lead.householdName}
             onSuccess={issuePolicy}

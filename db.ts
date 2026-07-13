@@ -1,10 +1,19 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-// Always check at runtime - environment should be set before this module is imported
-const createPrismaClient = () => {
-  const connectionString = process.env.DATABASE_URL || "postgresql://admin:localpg2024@localhost:5432/surelm";
-  return new PrismaClient();
-};
+const DATABASE_URL = process.env.DATABASE_URL;
+
+if (!DATABASE_URL) {
+  throw new Error("DATABASE_URL is not set");
+}
+
+const adapter = new PrismaPg({
+  connectionString: DATABASE_URL,
+});
+
+function createPrismaClient() {
+  return new PrismaClient({ adapter });
+}
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;

@@ -56,19 +56,41 @@ async function cleanUp() {
 }
 
 async function setupTestEnvironment() {
+  const testUserId = "test-user-" + Date.now();
+  const testEmail = "test-" + Date.now() + "@example.com";
+  
+  // First create a user if not exists
+  await db.user.upsert({
+    where: { clerkId: testUserId },
+    update: {},
+    create: {
+      clerkId: testUserId,
+      name: "Test User",
+      email: testEmail
+    }
+  });
+  
   const doc = await db.document.create({
-    data: { filename: "test_integration.pdf", source: "integration_test" },
+    data: {
+      originalHash: "hash-" + Date.now(),
+      filename: "test_integration.pdf",
+      mimetype: "application/pdf",
+      sizeBytes: 1024,
+      uploadedBy: testUserId,
+      documentType: "KYC_PAN"
+    },
   });
   createdDocs.push(doc.id);
 
-  const chunk = await db.chunk.create({
-    data: {
-      id: TEST_CHUNK_ID,
-      documentId: doc.id,
-      content: "Waiting period for pre-existing diseases is 36 months. Term life insurance provides coverage for a specified period.",
-      chunkOrder: 1,
-    },
-  });
+   const chunk = await db.chunk.create({
+     data: {
+       id: TEST_CHUNK_ID,
+       document: { connect: { id: doc.id } },
+       content: "Waiting period for pre-existing diseases is 36 months. Term life insurance provides coverage for a specified period.",
+       chunkOrder: 1,
+       pageNumber: 1
+     },
+   });
   createdChunks.push(chunk.id);
 
   const vector = Array.from({ length: 768 }, () => 0.1);

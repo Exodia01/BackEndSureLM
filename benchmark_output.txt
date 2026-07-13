@@ -1,0 +1,25 @@
+﻿Starting SureLM Benchmark Evaluation Suite...
+
+Running benchmark on 153 queries...
+
+[1/153] Evaluating: "What is term life insurance?..."
+  Failed: API request failed
+[2/153] Evaluating: "How does whole life insurance differ from term ins..."
+  Failed: API request failed
+[3/153] Evaluating: "What is an endowment policy?..."
+  Failed: API request failed
+[4/153] Evaluating: "Explain what ULIPs are...."
+  Failed: API request failed
+[5/153] Evaluating: "What are annuities in insurance?..."
+  Failed: API request failed
+[6/153] Evaluating: "What is the difference between renewable and conve..."
+  Failed: API request failed
+[7/153] Evaluating: "What is group insurance?..."
+  Failed: API request failed
+[8/153] Evaluating: "What is a whole life universal plan?..."
+  Failed: API request failed
+[9/153] Evaluating: "What is money-back insurance?..."
+  Failed: API request failed
+[10/153] Evaluating: "What is final expense insurance?..."
+  Failed: API request failed
+[11/153] Evaluating: "What is the in-force count?..."

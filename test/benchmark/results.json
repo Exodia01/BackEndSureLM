@@ -1,0 +1,4872 @@
+{
+  "summary": {
+    "total_queries": 153,
+    "successful_queries": 0,
+    "failed_queries": 153,
+    "pass_rate": 0,
+    "avg_recall_at_5": 0,
+    "avg_reciprocal_rank": 0,
+    "avg_rerank_improvement": 0,
+    "avg_citation_accuracy": 0,
+    "avg_groundedness": 0,
+    "avg_total_latency_ms": 3.01,
+    "avg_retrieval_latency_ms": 0,
+    "avg_rerank_latency_ms": 0,
+    "avg_llm_latency_ms": 0
+  },
+  "categoryBreakdown": {
+    "basic-concepts": {
+      "count": 21,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "coverage": {
+      "count": 14,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "waiting-period": {
+      "count": 10,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "policy-management": {
+      "count": 10,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "claims": {
+      "count": 10,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "documentation": {
+      "count": 10,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "payments": {
+      "count": 10,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "policy-features": {
+      "count": 6,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "exclusions": {
+      "count": 8,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "riders": {
+      "count": 8,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "taxation": {
+      "count": 8,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "eligibility": {
+      "count": 9,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "comparisons": {
+      "count": 10,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "plan-types": {
+      "count": 8,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    },
+    "legal": {
+      "count": 11,
+      "pass_rate": 0,
+      "avg_recall_at_5": 0,
+      "avg_reciprocal_rank": 0,
+      "avg_citation_accuracy": 0,
+      "avg_groundedness": 0
+    }
+  },
+  "queryResults": [
+    {
+      "queryIndex": 0,
+      "query": "What is term life insurance?",
+      "category": "basic-concepts",
+      "difficulty": "easy",
+      "expectedAnswer": "Term life insurance is a pure risk protection plan that provides a death benefit to beneficiaries if the insured dies during the policy term. It has no savings or investment component and expires at the end of the term without any maturity benefit.",
+      "expectedSources": [
+        "TL-101",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 96,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 1,
+      "query": "How does whole life insurance differ from term insurance?",
+      "category": "basic-concepts",
+      "difficulty": "medium",
+      "expectedAnswer": "Whole life insurance provides lifetime coverage with a guaranteed death benefit and builds cash value over time, unlike term insurance which is temporary and has no maturity benefit. Premiums for whole life are significantly higher but remain level throughout the insured's lifetime.",
+      "expectedSources": [
+        "WL-301",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 5,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 2,
+      "query": "What is an endowment policy?",
+      "category": "basic-concepts",
+      "difficulty": "easy",
+      "expectedAnswer": "An endowment policy combines insurance coverage with savings, paying a lump sum either upon the death of the insured or at the end of a specified term if the insured survives. It's designed for individuals seeking both protection and forced savings discipline.",
+      "expectedSources": [
+        "ED-401",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 3,
+      "query": "Explain what ULIPs are.",
+      "category": "basic-concepts",
+      "difficulty": "medium",
+      "expectedAnswer": "ULIPs (Unit Linked Insurance Plans) are market-linked investment products that combine life insurance with investment in equity, debt, or balanced funds. A portion of premiums covers insurance costs while the rest is invested, with returns depending on market performance.",
+      "expectedSources": [
+        "U-501",
+        "INV-702"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 4,
+      "query": "What are annuities in insurance?",
+      "category": "basic-concepts",
+      "difficulty": "medium",
+      "expectedAnswer": "Annuities are financial products that provide a series of payments at regular intervals, either immediately or deferred, designed to create income during retirement. They can be immediate (payments start soon after purchase) or deferred (grow tax-deferred until payout begins).",
+      "expectedSources": [
+        "AN-601",
+        "RET-803"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 5,
+      "query": "What is the difference between renewable and convertible term insurance?",
+      "category": "basic-concepts",
+      "difficulty": "hard",
+      "expectedAnswer": "Renewable term insurance allows policy renewal at the end of the term without medical evidence, typically at increased premiums. Convertible term insurance permits conversion to permanent insurance (whole or universal life) without proof of insurability.",
+      "expectedSources": [
+        "TL-101",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 6,
+      "query": "What is group insurance?",
+      "category": "basic-concepts",
+      "difficulty": "easy",
+      "expectedAnswer": "Group insurance provides coverage to members of a group, such as employees of a company or association, under a single master policy. Premiums are typically lower than individual policies due to shared risk and administrative efficiency.",
+      "expectedSources": [
+        "GR-901",
+        "CB-204"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 7,
+      "query": "What is a whole life universal plan?",
+      "category": "basic-concepts",
+      "difficulty": "medium",
+      "expectedAnswer": "A whole life universal plan offers flexible premiums and death benefits within permanent life insurance, allowing policyholders to adjust payments and coverage based on financial circumstances. It builds cash value that can be accessed through loans or withdrawals.",
+      "expectedSources": [
+        "UW-302",
+        "WL-301"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 8,
+      "query": "What is money-back insurance?",
+      "category": "basic-concepts",
+      "difficulty": "medium",
+      "expectedAnswer": "Money-back insurance pays a percentage of the sum assured at regular intervals during the policy term while providing death coverage throughout. These periodic payouts serve as partial maturity benefits, offering liquidity benefits earlier than endowment plans.",
+      "expectedSources": [
+        "MS-402",
+        "ED-401"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 9,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 9,
+      "query": "What is final expense insurance?",
+      "category": "basic-concepts",
+      "difficulty": "easy",
+      "expectedAnswer": "Final expense insurance, also called funeral insurance, provides a small death benefit specifically designed to cover end-of-life costs such as funeral expenses and medical bills. It typically has simplified underwriting and is aimed at older applicants.",
+      "expectedSources": [
+        "FE-801",
+        "SN-902"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 5,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 10,
+      "query": "What is the in-force count?",
+      "category": "basic-concepts",
+      "difficulty": "hard",
+      "expectedAnswer": "In-force count refers to the number of active insurance policies that have paid all required premiums and are currently providing coverage. It's a key metric for insurers representing their ongoing risk exposure and premium income stream.",
+      "expectedSources": [
+        "OP-102",
+        "UL-304"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 8,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 11,
+      "query": "What is the difference between guaranteed and non-guaranteed benefits?",
+      "category": "basic-concepts",
+      "difficulty": "medium",
+      "expectedAnswer": "Guaranteed benefits are contractually promised and cannot be changed, while non-guaranteed benefits such as bonuses or dividends depend on company performance and may vary annually. Policyholders should understand which components are secure versus potentially variable.",
+      "expectedSources": [
+        "GL-203",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 12,
+      "query": "What is a paid-up policy?",
+      "category": "basic-concepts",
+      "difficulty": "medium",
+      "expectedAnswer": "A paid-up policy results when premiums stop being paid but the insurance coverage continues with a reduced sum assured based on accumulated bonuses and reserves. The policy remains active without further premium obligations.",
+      "expectedSources": [
+        "PP-501",
+        "UL-304"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 13,
+      "query": "What is a single premium policy?",
+      "category": "basic-concepts",
+      "difficulty": "easy",
+      "expectedAnswer": "A single premium policy requires one lump-sum payment upfront to fund the entire insurance coverage for the policy term. It's suitable for individuals with available capital seeking simplified premium payments.",
+      "expectedSources": [
+        "SP-601",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 14,
+      "query": "What is participating vs non-participating insurance?",
+      "category": "basic-concepts",
+      "difficulty": "hard",
+      "expectedAnswer": "Participating policies share insurers' profits with policyholders through bonuses or dividends, while non-participating policies have fixed benefits with no profit-sharing. Participating policies typically have higher initial premiums but potential for additional returns.",
+      "expectedSources": [
+        "PP-501",
+        "GL-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 15,
+      "query": "What is credit life insurance?",
+      "category": "basic-concepts",
+      "difficulty": "easy",
+      "expectedAnswer": "Credit life insurance pays off outstanding loan balances if the borrower dies or becomes disabled, protecting lenders and relieving families from debt obligations. It's commonly offered with mortgages, auto loans, and personal loans.",
+      "expectedSources": [
+        "CL-701",
+        "GR-901"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 16,
+      "query": "What is a decreasing term insurance policy?",
+      "category": "basic-concepts",
+      "difficulty": "medium",
+      "expectedAnswer": "A decreasing term insurance policy provides coverage with a death benefit that progressively decreases over time, typically aligned with mortgage or loan balances. Premiums remain constant while coverage amounts decline according to the scheduled reduction.",
+      "expectedSources": [
+        "DT-102",
+        "TL-101"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 17,
+      "query": "What is universal life insurance?",
+      "category": "basic-concepts",
+      "difficulty": "medium",
+      "expectedAnswer": "Universal life insurance combines permanent coverage with flexible premiums and a cash value account that earns interest, allowing policyholders to adjust payments within specified limits. It offers more customization than whole life but requires careful management.",
+      "expectedSources": [
+        "UL-304",
+        "WL-301"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 18,
+      "query": "What is variable universal life insurance?",
+      "category": "basic-concepts",
+      "difficulty": "hard",
+      "expectedAnswer": "Variable universal life Insurance allows policyholders to invest cash value in sub-accounts similar to mutual funds, with potential for higher returns but also market risk. Premiums and death benefits are flexible within policy limits.",
+      "expectedSources": [
+        "VU-502",
+        "INV-702"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 19,
+      "query": "What is a second-to-die life insurance policy?",
+      "category": "basic-concepts",
+      "difficulty": "hard",
+      "expectedAnswer": "Second-to-die (survivorship) insurance pays the death benefit only after both insured individuals have passed away, commonly used for estate planning and business succession. Premiums are typically lower than two separate policies.",
+      "expectedSources": [
+        "SD-802",
+        "WL-301"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 20,
+      "query": "What does accidental death benefit mean?",
+      "category": "coverage",
+      "difficulty": "easy",
+      "expectedAnswer": "An accidental death benefit provides an additional payout to beneficiaries if the insured dies due to an accident, often doubling or multiplying the base death benefit. Standard term and whole life policies typically exclude accidental deaths unless specifically endorsed.",
+      "expectedSources": [
+        "ADB-301",
+        "EX-405"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 21,
+      "query": "Are suicide deaths covered by life insurance?",
+      "category": "coverage",
+      "difficulty": "medium",
+      "expectedAnswer": "Suicide deaths are typically excluded within the first one to two years of policy issue, after which they become covered under most policies. The specific exclusion period and conditions are clearly stated in the policy exclusions section.",
+      "expectedSources": [
+        "EX-405",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 22,
+      "query": "What is critical illness coverage?",
+      "category": "coverage",
+      "difficulty": "easy",
+      "expectedAnswer": "Critical illness coverage provides a lump sum payment upon diagnosis of specified serious conditions such as cancer, heart attack, or stroke, regardless of whether hospitalization occurs. It's typically offered as a rider or separate policy.",
+      "expectedSources": [
+        "CI-601",
+        "RD-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 23,
+      "query": "What does disability income rider do?",
+      "category": "coverage",
+      "difficulty": "medium",
+      "expectedAnswer": "A disability income rider provides monthly income if the insured becomes disabled and unable to work, helping maintain financial stability during long-term disability periods. Benefits typically begin after a waiting period and continue for a specified duration.",
+      "expectedSources": [
+        "DI-701",
+        "RD-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 4,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 24,
+      "query": "What is the guaranteed insurability option?",
+      "category": "coverage",
+      "difficulty": "medium",
+      "expectedAnswer": "The guaranteed insurability option allows policyholders to purchase additional coverage at specified future dates without medical evidence, typically at life events like marriage or childbirth. It helps accommodate future insurance needs as circumstances change.",
+      "expectedSources": [
+        "GIO-302",
+        "RD-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 6,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 25,
+      "query": "What coverage limits apply to accidental death benefits?",
+      "category": "coverage",
+      "difficulty": "hard",
+      "expectedSources": [
+        "ADB-301",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 5,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 26,
+      "query": "Are pandemic-related deaths covered by life insurance?",
+      "category": "coverage",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, pandemic-related deaths are generally covered by standard life insurance policies unless specifically excluded as a known risk at policy inception. Most modern policies do not exclude epidemic or pandemic events.",
+      "expectedSources": [
+        "LC-202",
+        "EX-405"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 27,
+      "query": "What is a waiver of premium rider?",
+      "category": "coverage",
+      "difficulty": "medium",
+      "expectedAnswer": "A waiver of premium rider forgives premium payments if the insured becomes disabled before a specified age, keeping the policy in force without further payments during disability. It typically requires the disablement to be continuous for 6 months.",
+      "expectedSources": [
+        "WPR-702",
+        "RD-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 5,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 28,
+      "query": "What does hospital cash benefit cover?",
+      "category": "coverage",
+      "difficulty": "easy",
+      "expectedAnswer": "Hospital cash benefit provides a fixed daily payment for each day the insured is hospitalized, helping offset non-covered medical expenses and income loss during recovery. Payments continue for specified maximum periods per hospitalization.",
+      "expectedSources": [
+        "HCB-602",
+        "RD-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 29,
+      "query": "Is travel insurance included in health policies?",
+      "category": "coverage",
+      "difficulty": "easy",
+      "expectedAnswer": "Travel insurance is typically a separate product, though some comprehensive health plans may offer limited emergency coverage for travelers. Standalone travel insurance usually covers trip cancellation, medical emergencies abroad, and baggage loss.",
+      "expectedSources": [
+        "TR-901",
+        "HP-502"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 30,
+      "query": "What is the waiting period for critical illness coverage?",
+      "category": "waiting-period",
+      "difficulty": "medium",
+      "expectedAnswer": "Critical illness coverage typically has a 90-day waiting period from policy inception before claims for newly diagnosed conditions become payable. Pre-existing conditions may have longer waiting periods or exclusions.",
+      "expectedSources": [
+        "CI-601",
+        "WP-402"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 31,
+      "query": "How long is the typical waiting period for health insurance?",
+      "category": "waiting-period",
+      "difficulty": "easy",
+      "expectedAnswer": "Health insurance policies commonly have a 30-day waiting period for non-accidental illnesses, while accidents are usually covered from day one. Pre-existing conditions may have extended waiting periods of up to 4 years.",
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 32,
+      "query": "What is the waiting period for maternity coverage?",
+      "category": "waiting-period",
+      "difficulty": "medium",
+      "expectedAnswer": "Maternity coverage typically has a 9-month to 3-year waiting period depending on the policy, designed to prevent adverse selection by individuals expecting imminent childbirth. Some employer plans may have shorter or no waiting periods.",
+      "expectedSources": [
+        "MC-603",
+        "HP-502"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 33,
+      "query": "Are pre-existing diseases covered immediately?",
+      "category": "waiting-period",
+      "difficulty": "easy",
+      "expectedAnswer": "No, pre-existing diseases usually have extended waiting periods ranging from 2 to 4 years before coverage becomes effective. Full disclosure during application is essential for future claim eligibility.",
+      "expectedSources": [
+        "PD-801",
+        "WP-402"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 34,
+      "query": "What waiting period applies to dental treatments?",
+      "category": "waiting-period",
+      "difficulty": "medium",
+      "expectedAnswer": "Dental coverage in health policies typically has a 30-day waiting period for basic procedures and up to 12 months for major treatments like crowns or implants. Orthodontic services may have separate longer waiting periods.",
+      "expectedSources": [
+        "DP-902",
+        "HP-502"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 35,
+      "query": "Is there a waiting period for critical surgery coverage?",
+      "category": "waiting-period",
+      "difficulty": "hard",
+      "expectedAnswer": "Critical surgery coverage usually has no waiting period when included in the initial policy issuance, but adding it as a rider may trigger standard underwriting and potential waiting periods depending on vendor policies.",
+      "expectedSources": [
+        "CS-703",
+        "RD-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 36,
+      "query": "What is the waiting period for mental health coverage?",
+      "category": "waiting-period",
+      "difficulty": "hard",
+      "expectedAnswer": "Mental health coverage typically has a 30-day waiting period, though some insurers require longer periods of 6 months to 1 year for existing conditions. Emergency psychiatric care may be exempt from waiting periods.",
+      "expectedSources": [
+        "MH-802",
+        "HP-502"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 37,
+      "query": "How long is the grace period for premium payments?",
+      "category": "policy-management",
+      "difficulty": "easy",
+      "expectedAnswer": "The standard grace period for premium payments is 15 days for monthly policies and 30 days for annual, semi-annual, or quarterly payments. During this period, coverage remains active even if payment is overdue.",
+      "expectedSources": [
+        "PP-501",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 38,
+      "query": "Can I change my policy nominee?",
+      "category": "policy-management",
+      "difficulty": "easy",
+      "expectedAnswer": "Yes, policy nominees can be changed at any time by submitting a nomination change form with the insurer. Multiple nominees can be appointed with percentage splits specified according to current wishes.",
+      "expectedSources": [
+        "NM-201",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 39,
+      "query": "What is the process for surrendering a policy?",
+      "category": "policy-management",
+      "difficulty": "medium",
+      "expectedAnswer": "Policy surrender involves submitting a surrender request form, with the insurer calculating and paying the surrender value based on premiums paid, bonuses accumulated, and charges applicable. Surrender values are typically zero in the first 3 years.",
+      "expectedSources": [
+        "SS-502",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 40,
+      "query": "Can I get a loan against my insurance policy?",
+      "category": "policy-management",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, most permanent policies with cash value allow policyholders to borrow up to 85-90% of the surrender value at preferential interest rates. The policy remains in force as collateral for the loan.",
+      "expectedSources": [
+        "LN-602",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 41,
+      "query": "How do I update my policy address?",
+      "category": "policy-management",
+      "difficulty": "easy",
+      "expectedAnswer": "Policy address updates require completing a service request form and providing proof of new address. Changes can typically be requested online, by phone, or through branch offices with confirmation sent within 7-10 days.",
+      "expectedSources": [
+        "AD-202",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 4,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 42,
+      "query": "What happens if I miss a premium payment?",
+      "category": "policy-management",
+      "difficulty": "easy",
+      "expectedAnswer": "Missing a premium triggers a grace period during which coverage remains active. If payment isn't received by the end of the grace period, the policy lapses unless it has sufficient cash value to cover the premium.",
+      "expectedSources": [
+        "PP-501",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 43,
+      "query": "Can I revive a lapsed policy?",
+      "category": "policy-management",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, lapsed policies can often be revived within 2-3 years by paying overdue premiums with interest and providing proof of insurability if required. The specific revival window depends on the policy terms.",
+      "expectedSources": [
+        "RV-503",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 44,
+      "query": "What is policy reinstatement?",
+      "category": "policy-management",
+      "difficulty": "hard",
+      "expectedAnswer": "Policy reinstatement is the formal process of restoring a lapsed or surrendered policy to active status, requiring payment of arrears, interest, and sometimes new underwriting. It's異なる from revival for policies still within grace period.",
+      "expectedSources": [
+        "RV-503",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 45,
+      "query": "How do I add or remove riders?",
+      "category": "policy-management",
+      "difficulty": "medium",
+      "expectedAnswer": "Adding or removing riders requires submitting a policy endorsement form and may require additional underwriting for new coverage. Premium adjustments are processed retroactively to the change date.",
+      "expectedSources": [
+        "RD-203",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 46,
+      "query": "Can I change the premium payment frequency?",
+      "category": "policy-management",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, premium payment frequency can typically be changed between annual, semi-annual, quarterly, and monthly at renewal time or by paying a small administrative fee. Annual payments usually offer the best discount.",
+      "expectedSources": [
+        "PP-501",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 47,
+      "query": "How long doesclaims settlement take?",
+      "category": "claims",
+      "difficulty": "easy",
+      "expectedAnswer": "Life insurance claims are typically settled within 7-14 days for complete documentation, though complex cases may take 30 days. Regulatory timelines require insurers to investigate and communicate within specified periods.",
+      "expectedSources": [
+        "CL-701",
+        "CM-802"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 48,
+      "query": "What documents are required for life insurance claims?",
+      "category": "claims",
+      "difficulty": "easy",
+      "expectedAnswer": "Life insurance claims require the claim form, death certificate, original policy document, nominee ID proof, and bank details For accidental deaths, additional police and medical reports may be needed.",
+      "expectedSources": [
+        "CL-701",
+        "DC-602"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 49,
+      "query": "How do I file a health insurance claim?",
+      "category": "claims",
+      "difficulty": "easy",
+      "expectedAnswer": "Health insurance claims can be filed either through cashless network hospitals (direct settlement) or by paying upfront and submitting reimbursement claims with medical bills, discharge summaries, and diagnostic reports.",
+      "expectedSources": [
+        "HP-502",
+        "CL-701"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 50,
+      "query": "What is the deadline for filing insurance claims?",
+      "category": "claims",
+      "difficulty": "medium",
+      "expectedAnswer": "Life insurance claims should be filed promptly after the insured event, typically within 30 days for death claims and up to 90 days for health claims. Most policies allow extensions with explanation.",
+      "expectedSources": [
+        "CL-701",
+        "CM-802"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 51,
+      "query": "Why might claims be delayed or denied?",
+      "category": "claims",
+      "difficulty": "hard",
+      "expectedAnswer": "Claims may be delayed due to incomplete documentation, investigation needs, or disputed causes of death. Denials commonly occur for non-disclosure of material facts, policy exclusions, or lapsed coverage at time of event.",
+      "expectedSources": [
+        "CL-701",
+        "EX-405"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 52,
+      "query": "Can claims be made outside India?",
+      "category": "claims",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, Indian insurance policies generally cover global events including death and medical emergencies abroad. Documentation may require apostille certification for foreign documents in some cases.",
+      "expectedSources": [
+        "IN-901",
+        "CL-701"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 53,
+      "query": "What is the partial disability claim process?",
+      "category": "claims",
+      "difficulty": "hard",
+      "expectedAnswer": "Partial disability claims require medical certification of reduced working capacity, income proof showing loss of earnings, and employer verification. Benefits are typically a percentage of full disability benefits.",
+      "expectedSources": [
+        "PD-801",
+        "DI-701"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 5,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 54,
+      "query": "How are claim disputes resolved?",
+      "category": "claims",
+      "difficulty": "hard",
+      "expectedAnswer": "Claim disputes follow a formal grievance redressal process beginning with insurer complaints departments, then escalating to the Insurance Ombudsman, and finally regulatory authorities if unresolved.",
+      "expectedSources": [
+        "GR-902",
+        "CM-802"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 55,
+      "query": "What happens to claims in the first year?",
+      "category": "claims",
+      "difficulty": "medium",
+      "expectedAnswer": "First-year death claims receive heightened scrutiny due to suicide and misrepresentation exclusions. Medical underwriting records are thoroughly reviewed, potentially extending investigation time.",
+      "expectedSources": [
+        "CL-701",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 56,
+      "query": "Are natural disaster deaths covered?",
+      "category": "coverage",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, deaths resulting from natural disasters such as earthquakes, floods, and cyclones are generally covered under standard life insurance policies unless specifically excluded for high-risk geographic areas.",
+      "expectedSources": [
+        "LC-202",
+        "EX-405"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 6,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 57,
+      "query": "What is co-payment in health insurance?",
+      "category": "coverage",
+      "difficulty": "medium",
+      "expectedAnswer": "Co-payment requires policyholders to pay a specified percentage of covered medical expenses out-of-pocket, typically 10-20%, while the insurer covers the remainder. It's used to reduce premiums and prevent overutilization.",
+      "expectedSources": [
+        "HP-502",
+        "PP-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 58,
+      "query": "What is sub-limits coverage?",
+      "category": "coverage",
+      "difficulty": "medium",
+      "expectedAnswer": "Sub-limits are maximum amounts allocated to specific treatments or categories within a health policy, such as room rent caps or surgical procedure limits, regardless of totals.",
+      "expectedSources": [
+        "HP-502",
+        "CL-701"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 59,
+      "query": "What documents are needed for health insurance claims?",
+      "category": "documentation",
+      "difficulty": "easy",
+      "expectedSources": [
+        "DC-602",
+        "HP-502"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 60,
+      "query": "Is a medical examination always required for life insurance?",
+      "category": "documentation",
+      "difficulty": "medium",
+      "expectedAnswer": "No, medical exams are typically required for applicants over 35-40 years old or for high sum assured amounts. Younger applicants with standard health may qualify for simplified issue policies.",
+      "expectedSources": [
+        "ME-601",
+        "KD-702"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 61,
+      "query": "What KYC documents are accepted?",
+      "category": "documentation",
+      "difficulty": "easy",
+      "expectedAnswer": "Acceptable KYC documents include Aadhaar, PAN, passport, driving license, and voter ID for identity and address verification. Originals or self-attested copies are required depending on submission method.",
+      "expectedSources": [
+        "KY-101",
+        "KD-702"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 62,
+      "query": "Are photographs required for insurance policies?",
+      "category": "documentation",
+      "difficulty": "easy",
+      "expectedSources": [
+        "KD-702",
+        "DC-602"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 63,
+      "query": "What medical tests are commonly required?",
+      "category": "documentation",
+      "difficulty": "medium",
+      "expectedAnswer": "Common medical tests include hemoglobin, blood sugar, cholesterol, urine analysis, ECG, and basic physical examination. Additional tests like stress tests or imaging may be needed for older applicants or high coverage amounts.",
+      "expectedSources": [
+        "ME-601",
+        "HP-502"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 64,
+      "query": "How do I obtain a duplicate policy document?",
+      "category": "documentation",
+      "difficulty": "easy",
+      "expectedAnswer": "Duplicate policy documents can be requested by submitting a declaration of loss form, paying applicable fees, and providing identification proof. Digital copies are typically available immediately online.",
+      "expectedSources": [
+        "PD-801",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 65,
+      "query": "What is a health declaration form?",
+      "category": "documentation",
+      "difficulty": "medium",
+      "expectedSources": [
+        "KD-702",
+        "HP-502"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 66,
+      "query": "Are foreign nationals required to submit additional documents?",
+      "category": "documentation",
+      "difficulty": "hard",
+      "expectedAnswer": "Yes, foreign nationals typically need passport copies, visa documentation, and proof of residence in India. Some insurers require additional medical certifications for non-residents.",
+      "expectedSources": [
+        "IN-901",
+        "KD-702"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 67,
+      "query": "What documentation proves premium payments?",
+      "category": "documentation",
+      "difficulty": "medium",
+      "expectedAnswer": "Premium payment proof includes receipts, policy statements, bank Standing Instruction slips, and digital transaction confirmations. Annual statements provide comprehensive payment history summaries.",
+      "expectedSources": [
+        "PP-501",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 68,
+      "query": "Can claim forms be submitted electronically?",
+      "category": "documentation",
+      "difficulty": "easy",
+      "expectedAnswer": "Yes, most insurers accept electronic submission of claim forms through online portals and mobile apps. Original supporting documents may still need physical submission or secure digital upload.",
+      "expectedSources": [
+        "CL-701",
+        "CM-802"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 69,
+      "query": "Can I pay insurance premiums using credit cards?",
+      "category": "payments",
+      "difficulty": "medium",
+      "expectedSources": [
+        "PP-501",
+        "PY-603"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 70,
+      "query": "What payment frequencies are available?",
+      "category": "payments",
+      "difficulty": "easy",
+      "expectedAnswer": "Premiums can be paid annually, semi-annually, quarterly, or monthly. Annual payments typically offer a 5-10% discount compared to monthly installments.",
+      "expectedSources": [
+        "PP-501",
+        "PY-603"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 71,
+      "query": "What happens if I stop paying premiums?",
+      "category": "payments",
+      "difficulty": "easy",
+      "expectedAnswer": "Stopping premium payments triggers the grace period, after which the policy lapses. Permanent policies may use cash value to maintain coverage for a limited time before lapsing entirely.",
+      "expectedSources": [
+        "PP-501",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 72,
+      "query": "Are there premiums discounts for healthy lifestyles?",
+      "category": "payments",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, many insurers offer wellness discounts of 5-15% for non-smokers, individuals with healthy BMI, and those participating in fitness programs. Discounts are typically applied at policy renewal.",
+      "expectedSources": [
+        "WL-301",
+        "PP-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 73,
+      "query": "Can premiums be paid in foreign currency?",
+      "category": "payments",
+      "difficulty": "hard",
+      "expectedAnswer": "Indian insurance policies require premium payments in Indian Rupees, though NRIs can use NRE/NRO accounts or international payment methods converted to INR. Foreign currency direct payments are generally not accepted.",
+      "expectedSources": [
+        "IN-901",
+        "PY-603"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 74,
+      "query": "How do payment defaults affect policy status?",
+      "category": "payments",
+      "difficulty": "medium",
+      "expectedAnswer": "Payment defaults trigger grace periods; failure to pay within this period causes policy lapse. For permanent policies, cash value may be used automatically if automatic premium loan provision is elected.",
+      "expectedSources": [
+        "PP-501",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 6,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 75,
+      "query": "What is the automatic premium loan provision?",
+      "category": "payments",
+      "difficulty": "hard",
+      "expectedAnswer": "The automatic premium loan provision allows insurers to use policy cash value to pay overdue premiums, preventing lapse. Interest accrues on these loans at specified rates.",
+      "expectedSources": [
+        "APL-502",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 6,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 76,
+      "query": "How do I set up premium auto-payment?",
+      "category": "payments",
+      "difficulty": "easy",
+      "expectedAnswer": "Premium auto-payment is established by authorizing Standing Instructions to banks, providing ECS mandates, or linking payment methods in online policy portals. Confirmation emails are sent after setup completion.",
+      "expectedSources": [
+        "PP-501",
+        "PY-603"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 6,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 77,
+      "query": "Are there penalties for early surrender?",
+      "category": "payments",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, early surrender (within first 3 years) typically results in minimal or zero surrender value recovery. The policy may also require reimbursement of acquisition costs in some cases.",
+      "expectedSources": [
+        "SS-502",
+        "PP-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 78,
+      "query": "Can I change my payment method during the policy term?",
+      "category": "payments",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, payment methods can be changed at any time by updating payment credentials in online portals or submitting new authorization forms. Premium amounts may adjust based on frequency changes.",
+      "expectedSources": [
+        "PP-501",
+        "PY-603"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 79,
+      "query": "What is the premium payment term?",
+      "category": "policy-features",
+      "difficulty": "medium",
+      "expectedAnswer": "The premium payment term is the duration over which premiums must be paid, which may be shorter than the policy term. For example, a 20-year policy with a 10-year payment term requires payments for only the first decade.",
+      "expectedSources": [
+        "PP-501",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 80,
+      "query": "What does sum assured mean?",
+      "category": "policy-features",
+      "difficulty": "easy",
+      "expectedAnswer": "Sum assured is the guaranteed death benefit amount payable to beneficiaries upon the insured's demise. It's the core coverage amount for which premiums are calculated based on risk factors.",
+      "expectedSources": [
+        "LC-202",
+        "GL-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 81,
+      "query": "What is the policy term?",
+      "category": "policy-features",
+      "difficulty": "easy",
+      "expectedSources": [
+        "LC-202",
+        "PP-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 4,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 82,
+      "query": "What are guaranteed additions?",
+      "category": "policy-features",
+      "difficulty": "medium",
+      "expectedAnswer": "Guaranteed additions are fixed monetary amounts or percentages added to the sum assured annually, as contractually specified. They accumulate guaranteed value beyond base coverage.",
+      "expectedSources": [
+        "GL-203",
+        "ED-401"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 83,
+      "query": "What is a loyalty addition?",
+      "category": "policy-features",
+      "difficulty": "hard",
+      "expectedAnswer": "A loyalty addition is a non-guaranteed bonus paid at maturity or death for long-policy hold periods, rewarding customer retention. Amounts vary based on company performance and policy duration.",
+      "expectedSources": [
+        "LA-602",
+        "GL-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 84,
+      "query": "What is a maturity benefit?",
+      "category": "policy-features",
+      "difficulty": "easy",
+      "expectedSources": [
+        "ED-401",
+        "GL-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 85,
+      "query": "What are exclusions in insurance policies?",
+      "category": "exclusions",
+      "difficulty": "easy",
+      "expectedAnswer": "Exclusions are specific circumstances, conditions, or activities not covered by the policy, such as war, intentional self-harm, or illegal activities. They're clearly listed in policy documents.",
+      "expectedSources": [
+        "EX-405",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 86,
+      "query": "Are war-related deaths covered?",
+      "category": "exclusions",
+      "difficulty": "medium",
+      "expectedAnswer": "Most standard policies exclude deaths resulting from war, invasion, or acts of terrorism. Some specialized policies may offer coverage with additional premiums.",
+      "expectedSources": [
+        "EX-405",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 87,
+      "query": "What expenses are not covered by health insurance?",
+      "category": "exclusions",
+      "difficulty": "medium",
+      "expectedAnswer": "Health insurance typically excludes elective procedures, cosmetic surgery, fitness expenses, alternative medicine without medical supervision, and treatments for substance abuse.",
+      "expectedSources": [
+        "HP-502",
+        "EX-405"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 88,
+      "query": "Are pre-existing conditions excluded permanently?",
+      "category": "exclusions",
+      "difficulty": "medium",
+      "expectedAnswer": "Pre-existing conditions have extended waiting periods but are not permanently excluded. After the specified waiting period (typically 2-4 years), coverage becomes effective.",
+      "expectedSources": [
+        "PD-801",
+        "WP-402"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 89,
+      "query": "What dental procedures are excluded?",
+      "category": "exclusions",
+      "difficulty": "easy",
+      "expectedAnswer": "Dental exclusions typically include cosmetic dentistry, orthodontics (braces), teeth whitening, and most preventive services unless specifically included as benefits.",
+      "expectedSources": [
+        "DP-902",
+        "HP-502"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 90,
+      "query": "Are sports injuries covered?",
+      "category": "exclusions",
+      "difficulty": "medium",
+      "expectedAnswer": "Injuries from amateur sports are generally covered, but high-risk activities like skydiving, bungee jumping, and professional sports are typically excluded unless specifically endorsed.",
+      "expectedSources": [
+        "EX-405",
+        "HP-502"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 91,
+      "query": "What mental health conditions are excluded?",
+      "category": "exclusions",
+      "difficulty": "hard",
+      "expectedAnswer": "Exclusions may include self-inflicted injuries, constitutional disorders, and conditions arising from substance abuse. Many modern policies now include limited mental health coverage.",
+      "expectedSources": [
+        "MH-802",
+        "EX-405"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 92,
+      "query": "Is nuclear risk excluded?",
+      "category": "exclusions",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, deaths and damages resulting from nuclear irradiation or contamination are typically excluded as uninsurable risks under standard insurance policies.",
+      "expectedSources": [
+        "EX-405",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 93,
+      "query": "What riders can be added to life insurance?",
+      "category": "riders",
+      "difficulty": "easy",
+      "expectedAnswer": "Common riders include accidental death benefit, critical illness, waiver of premium, disability income, and term addition. Availability depends on policy type and insurer offerings.",
+      "expectedSources": [
+        "RD-203",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 94,
+      "query": "How much do riders cost?",
+      "category": "riders",
+      "difficulty": "medium",
+      "expectedAnswer": "Rider costs vary based on coverage type, sum assured, age, and health. Accidental death riders are typically low-cost (1-2% of base premium) while critical illness can be 10-25%.",
+      "expectedSources": [
+        "RD-203",
+        "PP-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 95,
+      "query": "Can riders be removed from a policy?",
+      "category": "riders",
+      "difficulty": "medium",
+      "expectedAnswer": "Riders cannot typically be removed once added; they remain until policy lapse or termination. New riders can be added at renewal or endorsement time.",
+      "expectedSources": [
+        "RD-203",
+        "PM-904"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 96,
+      "query": "What is the maximum number of riders allowed?",
+      "category": "riders",
+      "difficulty": "hard",
+      "expectedAnswer": "Most insurers allow 5-7 additional riders per policy, subject to underwriting limits and regulatory restrictions. High-risk riders may require separate approval.",
+      "expectedSources": [
+        "RD-203",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 97,
+      "query": "Do all riders provide lifelong coverage?",
+      "category": "riders",
+      "difficulty": "hard",
+      "expectedAnswer": "No, rider terms typically match or are shorter than the base policy term. Some riders like critical illness end upon diagnosis and payout rather than continuing for policy duration.",
+      "expectedSources": [
+        "RD-203",
+        "CI-601"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 98,
+      "query": "Are term riders renewable?",
+      "category": "riders",
+      "difficulty": "medium",
+      "expectedAnswer": "Term rider renewability depends on policy terms. Many term add-ons can be renewed at specified intervals without new medical exams, typically up to age 65-70.",
+      "expectedSources": [
+        "RD-203",
+        "TL-101"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 99,
+      "query": "What is the payout sequence for multiple riders?",
+      "category": "riders",
+      "difficulty": "hard",
+      "expectedAnswer": "When multiple applicable benefits trigger simultaneously, insurers typically pay the highest single benefit rather than aggregating, unless specifically stated otherwise. Critical illness payouts may reduce death benefits.",
+      "expectedSources": [
+        "RD-203",
+        "CI-601"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 4,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 100,
+      "query": "Can critical illness rider be reinstated after payout?",
+      "category": "riders",
+      "difficulty": "medium",
+      "expectedAnswer": "No, most critical illness riders terminate upon payout of the benefit. Some policies offer limited return of premium options for unused coverage.",
+      "expectedSources": [
+        "CI-601",
+        "RD-203"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 101,
+      "query": "What tax benefits are available under life insurance?",
+      "category": "taxation",
+      "difficulty": "easy",
+      "expectedAnswer": "Premium payments up to ₹1.5 lakh annually qualify for deduction under Section 80C, and death benefits are tax-exempt under Section 10(10D) of the Income Tax Act. Maturity proceeds are also typically exempt.",
+      "expectedSources": [
+        "TX-701",
+        "TL-101"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 102,
+      "query": "Are ULIP maturity proceeds taxable?",
+      "category": "taxation",
+      "difficulty": "hard",
+      "expectedAnswer": "ULIP maturity proceeds are tax-exempt under Section 10(10D) if premium-to-death-benefit ratio remains within 10:1 limits. Excess amounts may be subject to capital gains tax.",
+      "expectedSources": [
+        "U-501",
+        "TX-701"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 103,
+      "query": "Can insurance premiums be claimed as business expenses?",
+      "category": "taxation",
+      "difficulty": "hard",
+      "expectedAnswer": "Yes, businesses can claim premium payments for employee group insurance as deductible business expenses. Premiums for owner-director coverage follow individual tax rules.",
+      "expectedSources": [
+        "TX-701",
+        "GR-901"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 104,
+      "query": "What is TDS on insurance payouts?",
+      "category": "taxation",
+      "difficulty": "medium",
+      "expectedAnswer": "TDS at 5% applies to certain insurance payouts exceeding ₹1 lakh annually, except for policies meeting tax exemption criteria. No TDS applies to tax-exempt death benefits.",
+      "expectedSources": [
+        "TX-701",
+        "CL-701"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 105,
+      "query": "How do I claim tax deductions on premiums?",
+      "category": "taxation",
+      "difficulty": "easy",
+      "expectedAnswer": "Premium deductions are claimed under Section 80C in annual income tax returns, requiring policy details and payment proof. Deduction is limited to ₹1.5 lakh across all 80C-eligible investments.",
+      "expectedSources": [
+        "TX-701",
+        "PP-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 106,
+      "query": "Who is eligible for life insurance policies?",
+      "category": "eligibility",
+      "difficulty": "easy",
+      "expectedAnswer": "Eligibility typically requires being between 18-65 years old (varies by product) with insurable interest, health meeting underwriting criteria, and ability to pay premiums. Minors can be insured with parental consent.",
+      "expectedSources": [
+        "EL-201",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 107,
+      "query": "Can elderly individuals get life insurance?",
+      "category": "eligibility",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, many insurers offer senior citizen plans up to age 75 or 80 with simplified underwriting. Premiums increase significantly with age due to higher mortality risk.",
+      "expectedSources": [
+        "SN-902",
+        "EL-201"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 108,
+      "query": "What health conditions affect eligibility?",
+      "category": "eligibility",
+      "difficulty": "medium",
+      "expectedAnswer": "Conditions like diabetes, hypertension, heart disease, cancer history, and obesity may require higher premiums or result in exclusions. Some insurers offer specialized plans for chronic conditions.",
+      "expectedSources": [
+        "EL-201",
+        "PD-801"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 109,
+      "query": "Are smokers eligible for insurance?",
+      "category": "eligibility",
+      "difficulty": "easy",
+      "expectedAnswer": "Smokers are insurable but pay 20-50% higher premiums than non-smokers due to increased health risks. Full disclosure of tobacco use is essential to avoid claim rejections.",
+      "expectedSources": [
+        "SM-801",
+        "EL-201"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 110,
+      "query": "Can NRIs purchase Indian insurance policies?",
+      "category": "eligibility",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, NRIs can buy Indian insurance policies using NRE/NRO accounts. Premium payments must comply with RBI regulations, and documentation includes passport and overseas address proof.",
+      "expectedSources": [
+        "IN-901",
+        "EL-201"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 111,
+      "query": "What is the minimum sum assured requirement?",
+      "category": "eligibility",
+      "difficulty": "medium",
+      "expectedAnswer": "Minimum sum assured varies by policy type: ₹5 lakh for term plans, ₹1-3 lakh for savings plans. High-value products may require amounts of ₹10 lakh or more.",
+      "expectedSources": [
+        "LC-202",
+        "EL-201"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 112,
+      "query": "Can individuals with disabilities get insurance?",
+      "category": "eligibility",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, insurers evaluate based on disability type and severity. Physical disabilities often don't affect eligibility, while cognitive impairments may require guardianship documentation.",
+      "expectedSources": [
+        "DI-701",
+        "EL-201"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 4,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 113,
+      "query": "Are there occupation-based eligibility restrictions?",
+      "category": "eligibility",
+      "difficulty": "hard",
+      "expectedAnswer": "Yes, high-risk occupations like mining, flying, deep-sea fishing, and combat military service may be excluded or require additional risk loading. Office workers and professionals typically face no restrictions.",
+      "expectedSources": [
+        "EL-201",
+        "EX-405"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 4,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 114,
+      "query": "Can I get insurance if I have a pre-existing medical condition?",
+      "category": "eligibility",
+      "difficulty": "easy",
+      "expectedAnswer": "Yes, though with potential exclusions or waiting periods for the condition. Disclosure during application is crucial to avoid future claim disputes and may lead to tailored coverage options.",
+      "expectedSources": [
+        "PD-801",
+        "EL-201"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 5,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 115,
+      "query": "How do I compare different insurance plans?",
+      "category": "comparisons",
+      "difficulty": "medium",
+      "expectedAnswer": "Compare based on premium cost, coverage amount, policy term, waiting periods, exclusions, rider options, claim settlement ratio, and insurer reputation. Use online comparison tools for side-by-side evaluation.",
+      "expectedSources": [
+        "CP-103",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 6,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 116,
+      "query": "Term vs whole life insurance - which is better?",
+      "category": "comparisons",
+      "difficulty": "hard",
+      "expectedAnswer": "Term insurance provides affordable pure protection for specific needs like mortgage coverage. Whole life offers lifelong coverage with cash value accumulation at higher cost, suitable for estate planning.",
+      "expectedSources": [
+        "TL-101",
+        "WL-301"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 117,
+      "query": "Health insurance vs critical illness coverage?",
+      "category": "comparisons",
+      "difficulty": "medium",
+      "expectedAnswer": "Health insurance reimburses actual medical expenses for hospitalization. Critical illness provides lump-sum payout upon diagnosis of specified conditions, regardless of treatment costs.",
+      "expectedSources": [
+        "HP-502",
+        "CI-601"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 118,
+      "query": "ULIPs vs mutual funds - investment comparison?",
+      "category": "comparisons",
+      "difficulty": "hard",
+      "expectedAnswer": "ULIPs combine insurance and investment with higher fees, while mutual funds offer pure investment exposure with lower costs. ULIP returns may be lower due to mortality charges, but provide life coverage.",
+      "expectedSources": [
+        "U-501",
+        "INV-702"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 119,
+      "query": "Single premium vs regular premium policies?",
+      "category": "comparisons",
+      "difficulty": "medium",
+      "expectedAnswer": "Single premium requires upfront lump sum but saves on administrative costs and ensures no future payment defaults. Regular premiums spread cost over time but total payments exceed single-premium equivalent.",
+      "expectedSources": [
+        "SP-601",
+        "PP-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 120,
+      "query": "Group insurance vs individual policies?",
+      "category": "comparisons",
+      "difficulty": "medium",
+      "expectedAnswer": "Group insurance offers lower premiums and simplified underwriting through employers or associations. Individual policies provide portability, customization, and coverage continuity regardless of employment status.",
+      "expectedSources": [
+        "GR-901",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 121,
+      "query": "Online vs offline insurance purchases?",
+      "category": "comparisons",
+      "difficulty": "easy",
+      "expectedAnswer": "Online policies typically cost 15-30% less with streamlined processes and no agent commissions. Offline purchases offer personalized guidance but involve higher costs and longer processing times.",
+      "expectedSources": [
+        "ON-902",
+        "PP-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 122,
+      "query": "What is the difference between surrender value and maturity value?",
+      "category": "comparisons",
+      "difficulty": "medium",
+      "expectedAnswer": "Surrender value is the amount received when terminating a policy before term, typically less than total premiums paid in early years. Maturity value is the payout at policy end, including bonuses and guaranteed additions.",
+      "expectedSources": [
+        "SS-502",
+        "ED-401"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 123,
+      "query": "How do claim settlement ratios compare across insurers?",
+      "category": "comparisons",
+      "difficulty": "medium",
+      "expectedAnswer": "Claim settlement ratio indicates the percentage of claims paid versus total claims filed. Higher ratios (above 98%) suggest better claim handling, but must be considered alongside claim amounts and policy types.",
+      "expectedSources": [
+        "CM-802",
+        "CL-701"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 124,
+      "query": "Traditional plans vs Unit Linked Plans?",
+      "category": "comparisons",
+      "difficulty": "hard",
+      "expectedAnswer": "Traditional plans offer guaranteed returns and bonuses, while ULIPs provide market-linked returns with transparency in fund allocation. Traditional plans have higher guarantees but lower potential returns.",
+      "expectedSources": [
+        "ED-401",
+        "U-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 125,
+      "query": "What is the claim settlement process step by step?",
+      "category": "claims",
+      "difficulty": "easy",
+      "expectedAnswer": "Step 1: Notify insurer of event. Step 2: Submit claim form with required documents. Step 3: Insurer investigates if needed. Step 4: Settlement within regulatory timelines typically 7-30 days.",
+      "expectedSources": [
+        "CL-701",
+        "CM-802"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 126,
+      "query": "What happens if the insured survives the policy term?",
+      "category": "plan-types",
+      "difficulty": "easy",
+      "expectedAnswer": "For term life policies, no payout occurs and coverage ends. For endowment, money-back, or whole life policies, maturity benefits including sum assured plus bonuses are paid to the policyholder.",
+      "expectedSources": [
+        "ED-401",
+        "TL-101"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 127,
+      "query": "What is a money-back policy?",
+      "category": "plan-types",
+      "difficulty": "easy",
+      "expectedAnswer": "A money-back policy pays predetermined survival benefits at regular intervals during the term while providing death coverage. These partial payouts reduce the sum assured but provide liquidity.",
+      "expectedSources": [
+        "MS-402",
+        "ED-401"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 128,
+      "query": "What is a unit-linked insurance plan?",
+      "category": "plan-types",
+      "difficulty": "medium",
+      "expectedSources": [
+        "U-501",
+        "INV-702"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 4,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 129,
+      "query": "What are the types of endowment plans?",
+      "category": "plan-types",
+      "difficulty": "medium",
+      "expectedAnswer": "Standard endowment pays maturity benefit on survival or sum assured on death. Money-back endowment pays partial amounts during term. Single premium endowment requires one initial payment.",
+      "expectedSources": [
+        "ED-401",
+        "LC-202"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 4,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 130,
+      "query": "What is a pension or annuity plan?",
+      "category": "plan-types",
+      "difficulty": "medium",
+      "expectedAnswer": "Pension plans accumulate corpus during the working phase and provide regular income post-retirement. They can be immediate (purchase at retirement) or deferred (gradual accumulation).",
+      "expectedSources": [
+        "AN-601",
+        "RET-803"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 131,
+      "query": "What is a child plans?",
+      "category": "plan-types",
+      "difficulty": "easy",
+      "expectedAnswer": "Child plans ensure financial support for children's education and marriage milestones, with premium waivers if the parent dies. Benefits are paid at key educational stages.",
+      "expectedSources": [
+        "CH-802",
+        "ED-401"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 132,
+      "query": "What is an investing-focused insurance plan?",
+      "category": "plan-types",
+      "difficulty": "hard",
+      "expectedAnswer": "Investing-focused plans like ULIPs allocate substantial premium portions to market-linked investments while providing life coverage. Returns depend on fund performance and investment choices.",
+      "expectedSources": [
+        "U-501",
+        "INV-702"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 133,
+      "query": "What is a microinsurance plan?",
+      "category": "plan-types",
+      "difficulty": "medium",
+      "expectedAnswer": "Microinsurance provides low-sum-assured coverage (typically under ₹1 lakh) at affordable premiums for low-income individuals, often sold through community-based organizations.",
+      "expectedSources": [
+        "MI-903",
+        "GR-901"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 134,
+      "query": "What makes a plan tax-efficient?",
+      "category": "taxation",
+      "difficulty": "medium",
+      "expectedAnswer": "Tax efficiency comes from premium deductions under 80C, tax-exempt proceeds under 10(10D), and long-term capital gains treatment. ULIPs meet these criteria when premium ratios comply with regulations.",
+      "expectedSources": [
+        "TX-701",
+        "U-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 135,
+      "query": "What is the maximum tax deduction allowed?",
+      "category": "taxation",
+      "difficulty": "easy",
+      "expectedAnswer": "Section 80C allows a total deduction of ₹1.5 lakh across ELSS, PPF, NSC, life insurance premiums, and other eligible investments combined.",
+      "expectedSources": [
+        "TX-701",
+        "PP-501"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 136,
+      "query": "Are pension annuity payouts taxable?",
+      "category": "taxation",
+      "difficulty": "hard",
+      "expectedAnswer": "Annuity payments from pension plans are fully taxable as income in the recipient's hands, unlike lump-sum retirement benefits which may have partial exemption.",
+      "expectedSources": [
+        "TX-701",
+        "AN-601"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 137,
+      "query": "What legal protections do policyholders have?",
+      "category": "legal",
+      "difficulty": "medium",
+      "expectedAnswer": "Policyholders are protected by the Insurance Act, IRDAI regulations, and consumer protection laws. Key protections include fair claim settlement, disclosure requirements, and grievance redressal mechanisms.",
+      "expectedSources": [
+        "LG-103",
+        "CM-802"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 4,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 138,
+      "query": "What is the incontestability clause?",
+      "category": "legal",
+      "difficulty": "hard",
+      "expectedAnswer": "The incontestability clause prevents insurers from contesting a policy after 3 years based on misrepresentation, except for non-payment of premiums or fraudulent claims.",
+      "expectedSources": [
+        "LC-202",
+        "LG-103"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 139,
+      "query": "What happens to policies during divorce?",
+      "category": "legal",
+      "difficulty": "hard",
+      "expectedAnswer": "Policies remain with the policyholder unless court order designates ownership. Insured parties may need to change beneficiaries and update policy terms according to settlement agreements.",
+      "expectedSources": [
+        "LG-103",
+        "NM-201"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 140,
+      "query": "Can policies be attached by creditors?",
+      "category": "legal",
+      "difficulty": "hard",
+      "expectedAnswer": "In most cases, life insurance proceeds are protected from creditors if a nominee is properly designated. Without a nominee or with estate nomination, proceeds may form part of the deceased's estate.",
+      "expectedSources": [
+        "LG-103",
+        "NM-201"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 7,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 141,
+      "query": "What is insurable interest?",
+      "category": "legal",
+      "difficulty": "medium",
+      "expectedAnswer": "Insurable interest means having a legal and financial stake in the continued life of the insured individual. It must exist at policy inception for life insurance validity.",
+      "expectedSources": [
+        "LC-202",
+        "LG-103"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 8,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 142,
+      "query": "Can a minor be a nominee?",
+      "category": "legal",
+      "difficulty": "medium",
+      "expectedAnswer": "Yes, minors can be nominees with a guardian appointee designated to manage proceeds until majority. Guardianship documentation is required at claim time.",
+      "expectedSources": [
+        "NM-201",
+        "LG-103"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 143,
+      "query": "What are the irrevocable beneficiary rights?",
+      "category": "legal",
+      "difficulty": "hard",
+      "expectedAnswer": "Irrevocable beneficiaries have ownership rights including ability to change nominees, take loans, and must consent to policy surrender or changes. They're typically spouses or dependents.",
+      "expectedSources": [
+        "NM-201",
+        "LG-103"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 144,
+      "query": "What happens if a beneficiary predeceases the insured?",
+      "category": "legal",
+      "difficulty": "medium",
+      "expectedAnswer": "If a beneficiary dies before the insured, their share typically passes to alternate nominees or to the estate if none are designated. Regular nominee updates prevent disputes.",
+      "expectedSources": [
+        "NM-201",
+        "CL-701"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 145,
+      "query": "Are insurance proceeds subject to attachment orders?",
+      "category": "legal",
+      "difficulty": "hard",
+      "expectedAnswer": "Insurance proceeds are generally protected from attachment by court orders for debts, unless fraud is involved in policy acquisition or claims.",
+      "expectedSources": [
+        "LG-103",
+        "CL-701"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 146,
+      "query": "What consumer rights do policyholders have?",
+      "category": "legal",
+      "difficulty": "easy",
+      "expectedAnswer": "Policyholders have rights to clear disclosures, fair claim settlement, privacy of personal information, grievance redressal within timelines, and transparency in policy terms.",
+      "expectedSources": [
+        "LG-103",
+        "CM-802"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 147,
+      "query": "What is a return of premium term plan?",
+      "category": "basic-concepts",
+      "difficulty": "medium",
+      "expectedAnswer": "A return of premium term plan returns all or part of the premiums paid if the insured survives the policy term, combining term protection with a maturity benefit. Premiums are higher than standard term plans but offer some savings.",
+      "expectedSources": [
+        "RPR-103",
+        "TL-101"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 148,
+      "query": "What is the difference between revocable and irrevocable beneficiary designations?",
+      "category": "legal",
+      "difficulty": "medium",
+      "expectedAnswer": "Revocable beneficiaries can be changed by the policyholder without consent, while irrevocable beneficiaries must approve any changes. Irrevocable designation creates legal ownership rights in the beneficiary.",
+      "expectedSources": [
+        "NM-201",
+        "LG-103"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 5,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 149,
+      "query": "What is critical surgery coverage?",
+      "category": "coverage",
+      "difficulty": "medium",
+      "expectedAnswer": "Critical surgery coverage provides a lump sum payment upon diagnosis and hospitalization for specified major surgeries, helping cover out-of-pocket costs and income loss. It's often offered as a critical illness rider.",
+      "expectedSources": [
+        "CS-703",
+        "CI-601"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 3,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 150,
+      "query": "What is the waiting period for pre-existing conditions?",
+      "category": "waiting-period",
+      "difficulty": "easy",
+      "expectedAnswer": "Waiting periods for pre-existing conditions typically range from 2 to 4 years, after which coverage becomes effective. Disclosing all conditions during application ensures eligibility.",
+      "expectedSources": [
+        "PD-801",
+        "WP-402"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 151,
+      "query": "How long is the waiting period for pre-natal care coverage?",
+      "category": "waiting-period",
+      "difficulty": "medium",
+      "expectedAnswer": "Pre-natal care typically has a 9-month waiting period from policy inception before maternity-related benefits become payable. Continuous policy membership during this period is often required.",
+      "expectedSources": [
+        "MC-603",
+        "HP-502"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 2,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    },
+    {
+      "queryIndex": 152,
+      "query": "What waiting period applies to lab tests and diagnostic procedures?",
+      "category": "waiting-period",
+      "difficulty": "medium",
+      "expectedAnswer": "Most diagnostic procedures have no separate waiting period but may be subject to overall policy waiting periods. Pre-authorizations are often required for expensive tests.",
+      "expectedSources": [
+        "HP-502",
+        "WP-402"
+      ],
+      "responseContent": null,
+      "context": [],
+      "latencies": {
+        "embedding_ms": 0,
+        "retrieval_ms": 0,
+        "rerank_ms": 0,
+        "llm_ms": 0,
+        "total_ms": 1,
+        "initial_retrieval_count": 0
+      },
+      "metrics": {
+        "recall_at_5": false,
+        "reciprocal_rank": 0,
+        "rerank_improvement": 0,
+        "citation_accuracy": 0,
+        "groundedness_score": 0,
+        "hallucination_count": 0
+      },
+      "success": false,
+      "error": "API request failed"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { keycloakAuth } from "@/lib/auth/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { scanPdfFolder, validatePdfFile } from "@/lib/pdf/scanner";
 import { uploadBrochure } from "@/lib/pdf/batchProcess";
@@ -7,6 +8,10 @@ const CONCURRENCY = parseInt(process.env.BATCH_CONCURRENCY || "3", 10);
 
 export async function POST(request: NextRequest) {
   try {
+    const result = await keycloakAuth(request);
+    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const keycloakId = result.keycloakId;
+
     const body = await request.json() as { folderPath?: string; recursive?: boolean };
     
     const folderPath = body.folderPath || FOLDER_PATH;
@@ -101,3 +106,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+

@@ -7,17 +7,18 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid())
-  clerkId       String   @unique
-  email         String   @unique
-  name          String
-  avatar        String?
-  role          Role     @default(AGENT)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id         String   @id @default(cuid())
+  keycloakId String   @unique
+  email      String   @unique
+  name       String
+  avatar     String?
+  role       Role     @default(AGENT)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  agentProfile  AgentProfile?
-  leads         PolicyLead[]
+  agentProfile AgentProfile?
+  leads        PolicyLead[]
+  documents    Document[]
 }
 
 model AgentProfile {
@@ -33,23 +34,25 @@ model AgentProfile {
 }
 
 model PolicyLead {
-  id            String           @id @default(cuid())
-  agentId       String
-  agent         User             @relation(fields: [agentId], references: [id], onDelete: Cascade)
-  householdName String
-  phone         String?
-  income        Int?
-  familySize    Int?
-  messages      Message[]
-  status        LeadStatus       @default(NEW)
-  notes         String?
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  dateOfBirth   DateTime?
-  followUpAt    DateTime?
-  reminders     Reminder[]
-  birthdayReminders BirthdayReminder[]
-  issuances     PolicyIssuance[]
+  id                 String              @id @default(cuid())
+  agentId            String
+  agent              User                @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  householdName      String
+  phone              String?
+  income             Int?
+  familySize         Int?
+  messages           Message[]
+  status             LeadStatus          @default(NEW)
+  notes              String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  dateOfBirth        DateTime?
+  followUpAt         DateTime?
+  reminders          Reminder[]
+  birthdayReminders  BirthdayReminder[]
+  issuances          PolicyIssuance[]
+  checklistInstances ChecklistInstance[]
+  documentScans      DocumentScan[]
 
   @@unique([agentId, phone])
   @@index([agentId, status, followUpAt])
@@ -59,17 +62,17 @@ model PolicyLead {
 }
 
 model PolicyIssuance {
-  id             String          @id @default(cuid())
+  id             String         @id @default(cuid())
   leadId         String
-  lead           PolicyLead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  lead           PolicyLead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   policyName     String
   policyProvider String?
   premiumAmount  Int?
-  issuedAt       DateTime        @default(now())
+  issuedAt       DateTime       @default(now())
   expiresAt      DateTime?
-  status         IssuanceStatus  @default(ACTIVE)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  status         IssuanceStatus @default(ACTIVE)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
   nextPremiumDue DateTime?
 
   @@index([leadId])
@@ -102,73 +105,77 @@ model Reminder {
 }
 
 model BirthdayReminder {
-  id            String     @id @default(cuid())
-  leadId        String
-  lead          PolicyLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  name          String
-  phone         String?
-  dateOfBirth   DateTime
-  daysUntil     Int
-  isToday       Boolean    @default(false)
-  wishSent      Boolean    @default(false)
-  refreshedAt   DateTime   @default(now())
+  id          String     @id @default(cuid())
+  leadId      String
+  lead        PolicyLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  name        String
+  phone       String?
+  dateOfBirth DateTime
+  daysUntil   Int
+  isToday     Boolean    @default(false)
+  wishSent    Boolean    @default(false)
+  refreshedAt DateTime   @default(now())
 
   @@index([leadId])
 }
 
 model Document {
-  id           String     @id @default(cuid())
-  filename     String
-  source       String?
-  metadata     Json?
-  version      Int        @default(1)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id             String         @id @default(cuid())
+  filename       String
+  source         String?
+  metadata       Json?
+  version        Int            @default(1)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
-  chunks       Chunk[]
+  chunks         Chunk[]
+  validationReport ValidationReport?
+
+  uploadedById   String
+  uploadedBy     User           @relation(fields: [uploadedById], references: [id])
 }
 
 model Brochure {
   id           String         @id @default(cuid())
-  basename     String         // e.g., "Kotak_Premier_Life_Plan"
-  originalName String         // Full filename with version info
-  pdfData      Bytes          // Store raw PDF in DB (BYTEA)
+  basename     String // e.g., "Kotak_Premier_Life_Plan"
+  originalName String // Full filename with version info
+  pdfData      Bytes // Store raw PDF in DB (BYTEA)
   currentPage  Int            @default(0)
   totalPages   Int
   status       BrochureStatus @default(PENDING)
-  versionHash  String?        // MD5 for deduplication across versions
+  versionHash  String? // MD5 for deduplication across versions
   versionNum   Int            @default(1)
   metadata     Json?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 
-  chunks       Chunk[]
-  Log          BrochureLog[]
+  chunks Chunk[]
+  Log    BrochureLog[]
 }
 
 model BrochureLog {
-  id           String         @id @default(cuid())
-  brochureId   String
-  brochure     Brochure       @relation(fields: [brochureId], references: [id])
-  
-  versionNum   Int            // Version number at time of log
-  action       BrochureAction
-  metadata     Json?          // {pages: 45, chunks: 128, error: "..."}
-  timestamp    DateTime       @default(now())
+  id         String   @id @default(cuid())
+  brochureId String
+  brochure   Brochure @relation(fields: [brochureId], references: [id])
+
+  versionNum Int // Version number at time of log
+  action     BrochureAction
+  metadata   Json? // {pages: 45, chunks: 128, error: "..."}
+  timestamp  DateTime       @default(now())
 }
 
 model Chunk {
-  id            String   @id @default(cuid())
-  documentId    String?
-  brochureId    String?
-  document      Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  brochure      Brochure? @relation(fields: [brochureId], references: [id])
-  content       String
-  chunkOrder    Int
-  pageNumber    Int?
-  category      String?    // Header/section detection for Qdrant payload
-  metadata      Json?
-  createdAt     DateTime @default(now())
+  id         String    @id @default(cuid())
+  documentId String?
+  brochureId String?
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  brochure   Brochure? @relation(fields: [brochureId], references: [id])
+  content    String
+  chunkOrder Int
+  pageNumber Int?
+  category   String? // Header/section detection for Qdrant payload
+  metadata   Json?
+  createdAt  DateTime  @default(now())
 
   @@index([documentId, chunkOrder])
   @@index([brochureId, chunkOrder])
@@ -202,6 +209,36 @@ enum IssuanceStatus {
   CLAIMED
 }
 
+// ── Document and Checklist Enums ─────────────────────────────────────────────
+
+enum DocumentType {
+  KYC_AADHAAR_FRONT
+  KYC_AADHAAR_BACK
+  KYC_PAN
+  KYC_ADDRESS
+  KYC_BANK_STATEMENT
+  KYC_INCOME_PROOF
+}
+
+enum UploadStatus {
+  PENDING
+  UPLOADED
+  PROCESSING
+  VALIDATED
+  REJECTED
+  SKIPPED
+}
+
+enum ChecklistStatus {
+  PENDING
+  UPLOADED
+  PROCESSING
+  VALIDATED
+  SKIPPED
+  FAILED
+  INVALIDATED
+}
+
 enum BrochureStatus {
   PENDING
   PROCESSING
@@ -218,30 +255,266 @@ enum BrochureAction {
 }
 
 model OrchestrationLog {
-  id               String   @id @default(cuid())
-  workflowId       String   @unique
-  type             String
-  status           String
-  input            Json
-  intermediateResults Json? @map("intermediate_results")
-  finalOutput      Json?    @map("final_output")
-  agentsExecuted   Json     @map("agents_executed")
-  errors           Json?
-  createdAt        DateTime @default(now())
-  completedAt      DateTime?
+  id                  String    @id @default(cuid())
+  workflowId          String    @unique
+  type                String
+  status              String
+  input               Json
+  intermediateResults Json?     @map("intermediate_results")
+  finalOutput         Json?     @map("final_output")
+  agentsExecuted      Json      @map("agents_executed")
+  errors              Json?
+  createdAt           DateTime  @default(now())
+  completedAt         DateTime?
 
   AgentLogs OrchestrationAgentLog[]
 }
 
 model OrchestrationAgentLog {
-  id          String   @id @default(cuid())
-  workflowId  String
-  agent       String
-  status      String
-  input       Json?    @map("input_data")
-  output      Json?    @map("output_data")
-  latencyMs   Int?
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  workflowId String
+  agent      String
+  status     String
+  input      Json?    @map("input_data")
+  output     Json?    @map("output_data")
+  latencyMs  Int?
+  createdAt  DateTime @default(now())
 
   orchestrationLog OrchestrationLog @relation(fields: [workflowId], references: [workflowId], onDelete: Cascade)
+}
+
+// ── Product-Based Requirement Templates System ─────────────────────────────
+
+model Product {
+  id      String      @id @default(cuid())
+  code    String      @unique // e.g., "kotak_term_v1", "lic_endowment_2024"
+  name    String // Display name: "Kotak Term Plan Plus"
+  insurer String // "kotak", "lic", etc.
+  type    ProductType // term_insurance, endowment, health, etc.
+
+  version  Int     @default(1)
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  requirementTemplates RequirementTemplate[]
+  checklistInstances   ChecklistInstance[]
+
+  @@index([insurer, type])
+}
+
+model RequirementTemplate {
+  id String @id @default(cuid())
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  version Int // Increment on template update
+
+  sourceFile      String? // "kotak/documents_complete.txt"
+  compiledAt      DateTime @default(now())
+  compilerVersion String // "1.0.0" - tracks compiler version used
+
+  items                      RequirementItem[]
+  checklistInstances         ChecklistInstance[]
+  requirementCompilerReports RequirementCompilerReport[]
+
+  @@unique([productId, version])
+  @@index([productId])
+}
+
+model RequirementItem {
+  id         String              @id @default(cuid())
+  templateId String
+  template   RequirementTemplate @relation(fields: [templateId], references: [id])
+
+  // GROUPING STRUCTURE - PRESERVE NON-FLATTENED
+  groupId    String // e.g., "IDENTITY_PROOF"
+  groupLabel String // "Identity Proof" (display name)
+  groupOrder Int // Order of groups: 1, 2, 3...
+
+  itemId      String // Unique per-item ID
+  docType     DocumentType
+  label       String // "Aadhaar Card (Front)"
+  isPreferred Boolean?     @default(false) // priority in alternatives
+  itemOrder   Int // Order within group: 1, 2, 3...
+
+  // RULESET - JSON DSL (EMBEDDED IN ITEM)
+  ruleSet Json? // If present, evaluate to determine if item applies
+
+  // Group-level constraints
+  selectionPolicy String @default("ONE_OF")
+  // "ONE_OF" = any one from group, "ALL" = need all items
+
+  minRequired Int  @default(1) // Minimum from group to complete
+  maxAllowed  Int? // Optional upper limit
+
+  scanRecords    DocumentScan[]
+  checklistItems ChecklistItemInstance[]
+
+  @@index([templateId, groupId])
+  @@index([docType])
+}
+
+model RequirementCompilerReport {
+  id         String              @id @default(cuid())
+  templateId String
+  template   RequirementTemplate @relation(fields: [templateId], references: [id])
+
+  sourceFile     String // Original .txt file path
+  parseWarnings  Json? // [{ type, message, line, confidence }]
+  confidence     Float // Confidence score (0.0-1.0)
+  reviewRequired Boolean @default(false) // Manual verification needed?
+
+  unknownDocumentTypes String[] // Document types found but not in our enum
+  itemsExtracted       Int // Total items parsed
+  groupsFound          Int // Number of requirement groups
+
+  compilerVersion String // Version used
+  compiledAt      DateTime @default(now())
+
+  @@index([templateId, compiledAt])
+}
+
+model ChecklistInstance {
+  id     String     @id @default(cuid())
+  leadId String
+  lead   PolicyLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  templateId String
+  template   RequirementTemplate @relation(fields: [templateId], references: [id])
+
+  // VERSION LOCKING - Copy at instantiation time (IMMUTABLE)
+  templateVersion Int // Same as template.version when created
+
+  // Application context for ruleSet evaluation
+  applicationData Json? // Applicant data used during checklist generation
+
+  appliedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  overallStatus ChecklistStatus @default(PENDING)
+  // IN_PROGRESS, COMPLETED, INVALIDATED
+
+  invalidatedReason String?
+
+  items     ChecklistItemInstance[]
+  product   Product?                @relation(fields: [productId], references: [id])
+  productId String?
+
+  @@index([leadId, appliedAt])
+}
+
+model ChecklistItemInstance {
+  id         String            @id @default(cuid())
+  instanceId String
+  instance   ChecklistInstance @relation(fields: [instanceId], references: [id])
+
+  itemId      String
+  requirement RequirementItem @relation(fields: [itemId], references: [id])
+
+  // Status progression: PENDING → UPLOADED → PROCESSING → VALIDATED/FAILED/SKIPPED
+  status ChecklistStatus @default(PENDING)
+
+  uploadedDocId String?       @unique // Links to DocumentScan record
+  document      DocumentScan? @relation(fields: [uploadedDocId], references: [id])
+
+  validatedAt     DateTime?
+  validatedBy     String?
+  completionNotes String?
+
+  skipped    Boolean @default(false)
+  skipReason String? // Reason when status = SKIPPED
+
+  ruleErrors Json? // Validation errors per rule
+
+  @@index([instanceId, status])
+}
+
+enum ProductType {
+  TERM_INSURANCE
+  ENDOWMENT_PLANS
+  MONEYBACK_PLANS
+  ULIP
+  PENSION_PLANS
+  HEALTH_INSURANCE
+  MICRO_INSURANCE
+  SINGLE_PREMIUM
+}
+
+// ── Document Scan and Validation Models ─────────────────────────────────────
+
+model DocumentScan {
+  id String @id @default(cuid())
+
+  leadId String
+  lead   PolicyLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  templateId String? // Reference to RequirementTemplate (optional, may be in ChecklistInstance)
+  itemId     String? // Reference to RequirementItem
+
+  docType DocumentType?
+  status  UploadStatus  @default(PENDING)
+
+  originalHash String // SHA256 of uploaded file
+  filename     String
+  mimetype     String?
+  sizeBytes    Int?
+
+  ocrData          Json? // Raw OCR output
+  extractedData    Json? // Structured data from OCR
+
+  validationReport ValidationReport?
+
+  uploadedAt      DateTime   @default(now())
+  validatedAt     DateTime?
+  validatedBy     String?
+
+  checklistItemInstance ChecklistItemInstance?
+  requirementItem       RequirementItem?       @relation(fields: [requirementItemId], references: [id])
+  requirementItemId     String?
+
+  @@index([leadId, status])
+  @@index([templateId, itemId])
+}
+
+model ValidationReport {
+  id            String       @id @default(cuid())
+  documentId    String       @unique
+  document      Document     @relation(fields: [documentId], references: [id])
+  
+  scanId        String?       @unique
+  scan          DocumentScan? @relation(fields: [scanId], references: [id])
+  
+  rulesPassed   Int          // Number of validation rules passed
+  rulesFailed   Int          // Number of validation rules failed
+
+  aiConfidence  Float?       // LLM-based confidence score
+  agentVerified Boolean?     // null = pending, true/false = verified
+  validatedAt   DateTime?
+  validatedBy   String?
+
+  errors        Json?        // [{ field, message, rule }]
+  warnings      Json?        // Non-critical issues
+
+  overallStatus    UploadStatus? @default(PENDING)
+  confidenceScore  Float?       // Deprecated: use aiConfidence
+  extractedData    Json?        // Deprecated: use ocrData on DocumentScan
+  discrepancies    Json?        // Deprecated validation errors
+  
+  createdAt     DateTime     @default(now())
+}
+
+model AuditTrail {
+  id          String   @id @default(cuid())
+  actorType   String
+  actorId     String
+  action      String
+  entityType  String?
+  entityId    String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([actorId, createdAt])
 }

@@ -1,0 +1,289 @@
+================================================================================
+KOTAK MAHINDRA INSURANCE - DOCUMENT REQUIREMENTS BY POLICY TYPE
+================================================================================
+
+SOURCE: Extracted from policy PDFs in test folder + research on standard 
+        underwriting requirements for Kotak Mahindra Life Insurance policies.
+
+================================================================================
+1. KOTAK TERM INSURANCE (New Policy)
+================================================================================
+
+IDENTITY PROOF:
+  - Aadhaar Card
+  - Passport  
+  - PAN Card
+  - Voter ID
+
+ADDRESS PROOF:
+  - Utility bills (electricity, telephone)
+  - Ration Card
+  - Passport
+
+INCOME PROOF:
+  - Salary slips (last 3 months)
+  - Form 16
+  - Income Tax Returns (ITR) for last 2 years
+  - Bank statements for last 6 months
+
+AGE PROOF:
+  - PAN Card
+  - Aadhaar Card
+  - Passport
+  - Birth Certificate
+
+MEDICAL REPORTS:
+  - Blood test reports (for certain age brackets or sum assured amounts)
+  - Medical history declarations
+  - Physical examination reports
+
+RECENT PHOTOGRAPHS:
+  - Passport-sized photographs
+
+APPLICATION FORMS:
+  - Completed and signed proposal form
+  - Medical report forms (if applicable)
+
+================================================================================
+2. KOTAK LIFE INSURANCE (Policy-Based - Endowment, Moneyback, Savings Plans)
+================================================================================
+
+STANDARD DOCUMENTS (All Policies):
+  - Identity Proof: Aadhaar Card, Passport, PAN Card, or Voter ID
+  - Address Proof: Utility bills, Ration Card, or Passport
+  - Income Proof: Salary slips (last 3 months), Form 16, ITR (2 years), 
+                  Bank statements (6 months)
+  - Age Proof: PAN Card, Aadhaar Card, Passport, or Birth Certificate
+  - Recent Photographs: Passport-sized photographs
+
+POLICY-SPECIFIC DOCUMENTS:
+  
+ENDOWMENT PLANS (e.g., Classic Endowment Plan, Guaranteed Savings Plan):
+  - Completed proposal form
+  - Medical reports (if age > 45 or sum assured > specified limit)
+  - Bank details for premium payment
+  - Nomination form
+
+MONEYBACK PLANS (e.g., Premier Moneyback Plan):
+  - Same as above + policy-specific questionnaire
+
+SAVINGS PLANS (e.g., Assured Savings Plan, SmartLife Plan):
+  - Risk disclosure form (if investment component > 15% of premium)
+  - Investment objective declaration
+  - Portfolio statement (if existing policies with insurer)
+
+ULIP PLANS (e.g., Wealth Optima Plan, Fortune Maximiser):
+  - Investor questionnaire
+  - Risk profile assessment
+  - Portfolio details (for fund switching options)
+  - KYC acknowledgment
+
+PENSION PLANS (e.g., Assured Pension Plan, Premier Pension Plan):
+  - Annuity option selection form
+  - NomineeDetails for annuity payments
+  - Bank account details for annuity payouts
+  - Pre-retirement counseling acknowledgment (if applicable)
+
+MICRO INSURANCE PLANS (e.g., Sampoorn Bima Micro Insurance):
+  - Simplified application form
+  - Income declaration (self-declared)
+  - Community verification (for group plans)
+
+================================================================================
+3. KOTAK HEALTH INSURANCE (New Policy)
+================================================================================
+
+IDENTITY & AGE PROOF:
+  - PAN Card
+  - Aadhaar Card
+  - Driving License
+  - Passport
+
+ADDRESS PROOF:
+  - Aadhaar Card
+  - Passport
+  - Driving License
+  - Valid Utility Bills
+
+MEDICAL RECORDS:
+  - Pre-policy health check-up reports (for age > 45 or sum insured >specified limit)
+  - Medical history declarations
+  - Previous treatment records (if pre-existing conditions)
+
+RECENT PHOTOGRAPHS:
+  - Passport-size photographs
+
+APPLICATION FORMS:
+  - Health insurance proposal form
+  - Health declaration forms
+  - Nomination form
+  - Bank authorization for premium payment
+
+================================================================================
+4. KOTAK CAR INSURANCE (Own Damage / Comprehensive)
+================================================================================
+
+VEHICLE DOCUMENTS:
+  - Registration Certificate (RC) copy
+  - Previous Insurance Policy document (for renewal)
+  - Fitness Certificate
+  - Permit (if applicable for commercial vehicles)
+
+IDENTITY & ADDRESS PROOF:
+  - Aadhaar Card
+  - PAN Card
+  - Passport
+  - Driving License
+
+RECENT PHOTOGRAPHS:
+  - Passport-sized photographs of vehicle owner
+
+OTHER DOCUMENTS:
+  - Quote/Proposal form
+  - Factory/Aptitude certificate (if modified_vehicle)
+  - NOC from financier (if vehicle is hypothecated)
+
+================================================================================
+5. KOTAK TWO-WHEELER INSURANCE (New Policy)
+================================================================================
+
+VEHICLE DOCUMENTS:
+  - Registration Certificate (RC) copy
+  - Previous Insurance Policy document (if Renewal)
+  - Fitness Certificate
+
+IDENTITY & ADDRESS PROOF:
+  - Aadhaar Card
+  - PAN Card
+  - Driving License
+
+RECENT PHOTOGRAPHS:
+  - Passport-sized photographs
+
+APPLICATION FORMS:
+  - Proposal form
+  - Nomination form
+
+================================================================================
+6. KOTAK TRAVEL INSURANCE (New Policy)
+================================================================================
+
+TRIP DOCUMENTS:
+  - Passport copy (for international travel)
+  - Travel itineraries
+  - Booking confirmations (flight, hotel)
+
+IDENTITY PROOF:
+  - Passport (primary)
+  - PAN Card
+  - Aadhaar Card
+
+RECENT PHOTOGRAPHS:
+  - Passport-sized photographs
+
+HEALTH DECLARATION:
+  - Pre-existing condition disclosure (if any)
+  - Medical reports (for high-risk activities or age > specified limit)
+
+================================================================================
+7. KOTAK HOUSEHOLD INSURANCE (New Policy)
+================================================================================
+
+PROPERTY DOCUMENTS:
+  - Property ownership documents (Sale deed, Agreement)
+  - Property tax receipt
+  - Previous insurance policy (if renewal)
+
+IDENTITY & ADDRESS PROOF:
+  - Aadhaar Card (primary)
+  - Passport
+  - Voter ID
+
+RECENT PHOTOGRAPHS:
+  - Passport-sized photographs
+
+INVENTORY DOCUMENTS (for high-value items):
+  - Purchase invoices for valuables
+  - Assessment reports for jewelry/art work
+  - Photographic evidence of property/items
+
+APPLICATION FORMS:
+  - Proposal form
+  - Inventory schedule
+  - Declaration forms
+
+================================================================================
+8. KOTAK COMPREHENSIVE DOCUMENT CHECKLIST (All Policies)
+================================================================================
+
+MANDATORY FOR ALL POLICIES:
+  [✓] Completed and signed proposal form
+  [✓] KYC documents (Aadhaar + PAN)
+  [✓] Address proof
+  [✓] Identity proof
+  [✓] Age proof
+  [✓] Recent passport-sized photographs
+  [✓] Nomination details (form 57 if not in proposal form)
+  [✓] Bank account details for premium payments
+  [✓] Income verification documents (for policies above specified sum assured)
+
+POLICY-SPECIFIC CHECKLIST:
+  □ Medical reports (if age/status requires)
+  □ Pre-policy health check-up (Health Insurance)
+  □ Vehicle RC copy (Motor Insurance)
+  □ Property documents (Household Insurance)
+  □ Travel itineraries (Travel Insurance)
+  □ Risk disclosure forms (ULIP/Investment plans)
+  □ Medical history declaration
+  □ Physical examination report
+
+================================================================================
+9. KOTAK POLICY TYPES IN TEST FOLDER
+================================================================================
+
+The following Kotak Mahindra policies were identified from PDF documents:
+
+LIFE INSURANCE PLANS:
+1. Kotak e-Term Plan (Online Term Insurance)
+2. Kotak Classic Endowment Plan
+3. Kotak Assured Savings Plan
+4. Kotak Guaranteed Savings Plan
+5. Kotak Premier Endowment Plan
+6. Kotak Single Invest Plus / SmartLife Plan (ULIP)
+7. Kotak Wealth Optima Plan (ULIP)
+8. Kotak Fortune Maximiser Policy (ULIP)
+9. Kotak Ace Investment Plan (ULIP)
+10. Kotak Assured Pension Plan (Pension)
+11. Kotak Lifetime Income Plan (Annuity)
+12. Kotak Saral Pension (Simple Pension Plan)
+13. Kotak Premier Moneyback Plan
+14. Kotak Sampoorn Bima Micro Insurance Plan
+15. KotakPremier Life Plan
+
+HEALTH INSURANCE:
+16. Kotak Health Shield (Health Insurance)
+
+================================================================================
+10. DOCUMENT SUBMISSION METHODS
+================================================================================
+
+ONLINE SUBMISSION:
+  - Upload scanned copies of documents via insurer portal
+  - E-sign proposal form using Aadhaar OTP
+  - Digital medical reports from empanelled labs
+  
+OFFLINE SUBMISSION:
+  - Submit physical documents at branch/office
+  - Medical tests at empanelled diagnostic centers
+  - Agent-assisted submission
+
+================================================================================
+END OF DOCUMENT
+================================================================================
+
+NOTES:
+- Requirements may vary based on policy type, sum assured, age of applicant,
+  and regulatory changes (IRDAI guidelines).
+- Always verify current requirements with Kotak Mahindra Life Insurance or 
+  authorized agent before application.
+- KYC (Aadhaar + PAN) is mandatory for all policies per IRDAI regulations.

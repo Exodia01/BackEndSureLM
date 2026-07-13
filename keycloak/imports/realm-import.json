@@ -1,0 +1,83 @@
+{
+  "realm": "surelm_realm",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": true,
+  "bruteForceProtected": true,
+  
+  "smtpServer": {
+    "host": "${KEYCLOAK_SMTP_HOST:localhost}",
+    "port": "${KEYCLOAK_SMTP_PORT:1025}",
+    "from": "noreply@surelm.local"
+  },
+  
+  "groups": [
+    {
+      "name": "banks",
+      "path": "/banks",
+      "subGroups": []
+    }
+  ],
+  
+  "clients": [
+    {
+      "clientId": "web-app",
+      "name": "SureLM Web Application",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "redirectUris": [
+        "http://localhost:3000/dashboard/*",
+        "http://localhost:3000/crm",
+        "http://localhost:3000/"
+      ],
+      "webOrigins": ["+"],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true
+    },
+    {
+      "clientId": "api-gateway",
+      "name": "SureLM API Gateway",
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${KEYCLOAK_API_SECRET:api-secret-dev}",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true
+    }
+  ],
+  
+  "realmRoles": [
+    {
+      "name": "ADMIN",
+      "description": "Full system administration access"
+    },
+    {
+      "name": "MANAGER",
+      "description": "Manager-level access to teams and reports"
+    },
+    {
+      "name": "AGENT",
+      "description": "Agent-level access to leads and conversations"
+    }
+  ],
+  
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@surelm.local",
+      "firstName": "System",
+      "lastName": "Admin",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${KEYCLOAK_ADMIN_PASSWORD:kcadmin123}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ADMIN"]
+    }
+  ]
+}

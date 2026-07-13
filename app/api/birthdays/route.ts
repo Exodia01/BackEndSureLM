@@ -1,4 +1,5 @@
-import { auth } from "@clerk/nextjs/server";
+import { keycloakAuth } from "@/lib/auth/middleware";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
 interface LeadWithDOB {
@@ -49,12 +50,13 @@ async function refreshBirthdays(agentId: string) {
   return reminders;
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const result = await keycloakAuth(req);
+    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const keycloakId = result.keycloakId;
 
-    const user = await db.user.findUnique({ where: { clerkId } });
+    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return Response.json({ success: true, data: [] });
 
     const leads: LeadWithDOB[] = await db.policyLead.findMany({
@@ -88,12 +90,13 @@ export async function GET() {
   }
 }
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const result = await keycloakAuth(req);
+    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const keycloakId = result.keycloakId;
 
-    const user = await db.user.findUnique({ where: { clerkId } });
+    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const reminders = await refreshBirthdays(user.id);
@@ -104,20 +107,20 @@ export async function POST() {
   }
 }
 
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
-
-    const { id } = await req.json();
-    const user = await db.user.findUnique({ where: { clerkId } });
+    const result = await keycloakAuth(req);
+    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const keycloakId = result.keycloakId;
+    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
+    const { id } = await req.json();
     const existing = await db.birthdayReminder.findFirst({
       where: { id, lead: { agentId: user.id } },
       include: { lead: true },
     });
-if (!existing) return Response.json({ success: false, error: "Not found" }, { status: 404 });
+    if (!existing) return Response.json({ success: false, error: "Not found" }, { status: 404 });
     const updated = await db.birthdayReminder.update({
       where: { id },
       data: { wishSent: true },

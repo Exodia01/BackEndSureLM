@@ -1,0 +1,692 @@
+KOTAK MAHINDRA INSURANCE - COMPLETE DOCUMENT REQUIREMENTS GUIDE
+
+Compiled based on IRDAI Guidelines, Kotak Mahindra Life Insurance requirements,
+common industry practices, and policy documentation standards.
+
+Last Updated: July 2026
+
+================================================================================
+IRDAI MANDATORY KYC DOCUMENTS (APPLIES TO ALL POLICY TYPES)
+================================================================================
+
+1. IDENTIFICATION PROOF (ANY ONE):
+   - Aadhaar Card (Original + Self-attested copy) [PREFERRED]
+   - Passport (Self-attested copy)
+   - Voter ID Card (Self-attested copy)
+   - Driving License (Self-attested copy)
+   - PAN Card (Mandatory for policies with annual premium > ₹50,000 or sum assured > ₹50 Lakhs)
+
+2. ADDRESS PROOF (ANY ONE):
+   - Aadhaar Card (Self-attested copy) [MOST ACCEPTED]
+   - Passport (Self-attested copy)
+   - Voter ID Card (Self-attested copy)
+   - Driving License (Self-attested copy)
+   - utility bills (electricity, water, telephone, gas - not older than 3 months)
+   - Bank statement/passbook with address (not older than 3 months)
+   - Ration card (Self-attested copy)
+
+3. AGE PROOF (REQUIRED FOR CHILDREN/DEPENDENTS):
+   - Birth Certificate
+   - Maternity/Child Health Card
+   - Aadhaar Card (if age is clearly mentioned)
+   - Marksheet of Class X or equivalent
+
+4. INCOME PROOF (APPLIES TO POLICIES REQUIRING INCOME VERIFICATION):
+   - Salary Slips (last 3 months) for salaried individuals
+   - Form 16/ITR copies (latest applicable year)
+   - Business Income Certificate (for self-employed, audited financials may be required)
+   - Bank statements (last 6 months)
+   - Employment appointment letter with salary details
+
+5. PHOTOGRAPHS:
+   - Recent passport-size color photographs (2-4 copies depending on policy type)
+   - Background: White or light-colored
+   - Size: 3.5cm x 3.5cm minimum
+
+6. SIGNED APPLICATION FORM:
+   - Policy application form (filled and signed by proposer, insured, and nominee)
+   - Nomination form
+   - KYC acknowledgment
+   - Medical questionnaire (if applicable)
+
+================================================================================
+1. TERM INSURANCE POLICY DOCUMENTS
+================================================================================
+
+IDENTITY PROOF:
+- PAN Card (compulsory) + Aadhaar Card (preferred)
+- Passport/Driving License/Voter ID as backup
+
+ADDRESS PROOF:
+- Original Aadhaar card or recent utility bills
+- Passbook with bank account details
+
+AGE PROOF:
+- Birth certificate or class X marksheet
+- For senior citizens: Pension book, passport, or birth certificate
+
+INCOME PROOF:
+- Not always required for term plans (pure protection plan)
+- May be requested for high sum assured (> ₹50 Lakhs) to assess affordability
+- Salary slips/ITR copies if requested
+
+MEDICAL REQUIREMENTS:
+
+BY AGE GROUP:
+- BELOW 18 YEARS: Medical test rarely required unless pre-existing conditions suspected
+- 18-35 YEARS: Usually no medical test for standard term plans with sum assured ≤ ₹50 Lakhs
+- 36-45 YEARS: Minor medical tests may be required for sum assured > ₹25 Lakhs
+- 46-55 YEARS: Comprehensive medical tests often mandatory regardless of sum assured
+- 56+ YEARS: Mandatory comprehensive medical tests
+
+COMMON MEDICAL TESTS:
+- Blood tests (HB, FBS, PPBS, LFT, RFT, Lipid Profile)
+- Urine tests (Routine and microalbuminuria)
+- ECG (especially for age > 40 or if family history of heart disease)
+- Chest X-ray (for age > 50 or if smoker/alcoholic)
+- TMT (Treadmill Test) for age > 45 with risk factors
+- Ultrasonography (if indicated)
+
+REQUIRED DOCUMENTS LIST:
+1. Completed and signed proposal form
+2. KYC documents (PAN, Aadhaar)
+3. Medical report form (filled by doctor if medical test required)
+4. Photocopy of previous insurance policy (if any, for disclosure)
+5. Proof of income (for high sum assured)
+6. Two passport-sized photographs
+7. Nomination form
+8. Doctor's prescription and medical records (if pre-existing conditions declared)
+
+SPECIAL NOTES:
+- Term plans often have easier documentation than savings plans
+- Non-medical term plans available for smaller sums (typically ≤ ₹25 Lakhs for age < 35)
+- Digitalterm plans may accept e-KYC with Aadhaar OTP verification
+
+================================================================================
+2. ENDOWMENT PLANS DOCUMENTS
+================================================================================
+
+IDENTITY PROOF:
+- PAN Card (mandatory) + Aadhaar Card (required)
+- Backup: Passport/Driving License/Voter ID
+
+ADDRESS PROOF:
+- Original Aadhaar card or bank statement/passbook
+- Utility bills accepted for recent residential address
+
+AGE PROOF:
+- Birth certificate for insured and nominees (especially minors)
+- Class X marksheet as secondary proof
+- For senior citizens: Pension book, passport, or aadhaar
+
+INCOME PROOF:
+- Generally required due to premium payment capacity assessment
+- Salary slips (last 3 months) or Form 16/ITR for salaried
+- Business documents for self-employed
+- Bank statements (last 6 months)
+
+MEDICAL REQUIREMENTS:
+
+BY AGE GROUP AND SUM ASSURED:
+- BELOW 18 YEARS: Minimal or no medical tests
+- 18-35 YEARS: May require basic medical examination if sum assured > ₹25 Lakhs
+- 36-45 YEARS: Often required for sum assured > ₹20 Lakhs
+- 46+ YEARS: Medical tests almost always required
+
+MEDICAL TESTS COMMONLY REQUIRED:
+- Blood tests (HbsAg, FBS, LFT, RFT)
+- Urine routine examination
+- ECG (mandatory for age > 35, or withany reported symptoms)
+- Chest X-ray (if smoker or > 40 years)
+- Basic physical examination by registered medical practitioner
+
+REQUIRED DOCUMENTS LIST:
+1. Completed proposal form
+2. Proof of identity and address (PAN + Aadhaar mandatory)
+3. Age proof for all proposers/insured
+4. Medical test report (if required based on age/sum assured)
+5. Incomeproof (for premium affordability assessment)
+6. Recent passport-sized photographs (typically 2-4 copies)
+7. Nomination form
+8. Bank details for premium payment (cancelled cheque or account details)
+
+SPECIAL FEATURES:
+- Endowment plans require more rigorous documentation than term plans
+- Medical underwriting is stricter due to savings component
+- Pre-policy medical check-ups may be scheduled after application submission
+
+================================================================================
+3. MONEYBACK PLANS DOCUMENTS
+================================================================================
+
+IDENTITY PROOF:
+- PAN Card (compulsory)
+- Aadhaar Card (mandatory for e-KYC verification)
+
+ADDRESS PROOF:
+- Original Aadhaar card or recent bank statement/passbook
+- Utility bills not older than 3 months accepted as secondary proof
+
+AGE PROOF:
+- Birth certificate is primary requirement
+- Class X marksheet as alternative
+- For minors: Maternity/child health record
+
+INCOME PROOF:
+- Required due to higher premium payments
+- Salary slips (last 3 months) for salaried individuals
+- ITR copies or business income statement for self-employed
+- Bank statements showing regular transactions
+
+MEDICAL REQUIREMENTS:
+
+BY AGE GROUP:
+- BELOW 18 YEARS: Basic medical examination recommended but not always mandatory
+- 18-35 YEARS: Medical tests often required if sum assured > ₹20 Lakhs
+- 36-45 YEARS: Comprehensive medical examination typically required
+- 46+ YEARS: Full medical check-up almost always required
+
+SPECIFIC MEDICAL TESTS FOR MONEYBACK PLANS:
+- Blood glucose (FBS, PPBS)
+- Cholesterol and lipid profile
+- Liver function tests (LFT)
+- Kidney function tests (RFT)
+- ECG (mandatory for adults)
+- Chest X-ray (routine for age > 40)
+- Hemoglobin test
+- Urine routine and microscopic examination
+
+REQUIRED DOCUMENTS LIST:
+1. Filled proposal form with full declarations
+2. KYC documents (PAN, Aadhaar - scanned copies for online, originals for offline)
+3. Medical examination report (Form required by insurer)
+4. Income proof documents
+5. Proof of age for proposer and nominees
+6. Bank account details (cancelled cheque leaf or account statement)
+7. Passport-sized photographs (minimum 2, often 4 required)
+8. Nomination form signed by proposer
+9. Pre-existing disease disclosure form (if applicable)
+
+SPECIAL NOTES:
+- Moneyback plans have survival benefits, requiring stricter underwriting
+- Documentation process may be more detailed than standard endowment plans
+- Medical assessment is typically conducted at approved diagnostic centers
+
+================================================================================
+4. ULIP (UNIT LINKED INSURANCE PLANS) DOCUMENTS
+================================================================================
+
+IDENTITY PROOF:
+- PAN Card (Mandatory - required by SEBI for investment components)
+- Aadhaar Card (compulsory for e-KYC and mutual fund investments)
+
+ADDRESS PROOF:
+- Original Aadhaar card or recent bank statement/passbook
+- Utility bills as secondary proof
+
+AGE PROOF:
+- Birth certificate
+- Class X marksheet or equivalent certificate
+
+INCOME PROOF:
+- Salary slips (last 3 months) - for salaried
+- ITR copies and financial statements - for self-employed
+- Bank statements (last 6 months) showing investment history
+- Details of existing investments may be requested
+
+MEDICAL REQUIREMENTS:
+
+BY AGE GROUP AND FUND CHOICE:
+- BELOW 18 YEARS: Minimal or no medical examination
+- 18-35 YEARS: Medical test usually not required for equity-oriented funds
+- 36-45 YEARS: May require basic medical tests if choosing balanced/hybrid funds
+- 46+ YEARS: Comprehensive medical check-up recommended, mandatory for high sum assured
+
+COMMON MEDICAL TESTS:
+- Blood tests (HB, FBS, Lipid Profile)
+- Urine routine examination
+- ECG (mandatory for age > 35, especially with investment component)
+- Basic physical examination including weight, height, BP measurement
+
+REQUIRED DOCUMENTS LIST:
+1. Completed ULIP proposal form (special format from insurer)
+2. PAN Cardcopy (for insurance + investment components)
+3. Aadhaar copy and e-KYC acknowledgment
+4. Age proof documents
+5. Medical examination report (if required)
+6. Incomeproof for premium payment capacity
+7. Bank details for premium payments and maturity proceeds (cancelled cheque leaf)
+8. Photographs (typically 2 copies, some insurers require more)
+9. Nomination form
+10. Risk profile assessment form (SEBI-mandated for investment component)
+
+SPECIAL ULIP REQUIREMENTS:
+- Separate KYCacknowledgment for the insurance and investment portions
+- Risk disclosure documents to be signed by proposer
+- Fund selection forms indicating investment preference
+- For online ULIPs: Video KYC may be accepted
+
+================================================================================
+5. PENSION/ANNUITY PLANS DOCUMENTS
+================================================================================
+
+IDENTITY PROOF:
+- PAN Card (compulsory)
+- Aadhaar Card (mandatory)
+
+ADDRESS PROOF:
+- Original Aadhaar card or recent utility bills/bank statements
+- Government-issued address proof
+
+AGE PROOF:
+- Birth certificate is primary requirement
+- Class X marksheet as secondaryproof
+- For senior citizens: Pension book, passport, or aadhaar
+
+INCOME PROOF:
+- Mandatory for all pension plans to assess annuity requirements
+- Salary slips (last 3 months) - salaried individuals
+- ITR copies and audited financials - self-employed
+- Bank statements (last 12 months) to show consistent income stream
+- Details of existing retirement benefits/pensions
+
+MEDICAL REQUIREMENTS:
+
+BY AGE GROUP:
+- BELOW 18 YEARS: Rarely required for pension plans
+- 18-35 YEARS: May require basic medical examination if deferred annuity plan
+- 36-45 YEARS: Medical check-up often required, especially for immediate annuities
+- 46+ YEARS: Comprehensive medical examination almost always mandatory
+
+COMMON MEDICAL TESTS:
+- Blood tests (HBA1C, Lipid Profile, LFT, RFT)
+- ECG with interpretation report
+- Chest X-ray (routine for age > 45)
+- Urine routine and protein estimation
+- Eye check-up (especially for elderly)
+- Dental examination (for some plans)
+
+REQUIRED DOCUMENTS LIST:
+1. Completed pension plan proposal form
+2. KYC documents (PAN + Aadhaar)
+3. Age proof for proposer
+4. Medical examination report (if required based on age and plan type)
+5. Incomeproof documents
+6. Bank account details for premium payment and annuity receipts (cancelled cheque)
+7. Photographs (typically 2-4 copies)
+8. Nomination form and emergency contact details
+9. Details of existing retirement benefits (optional but recommended)
+
+SPECIAL PENSION PLAN REQUIREMENTS:
+- Annuity calculation forms may be required
+- Medical assessment often includes life expectancy evaluation
+- For NPS-linked pension plans: Additional NPS KYC documents
+- Senior citizen plans may require additional geriatric assessments
+
+================================================================================
+6. HEALTH INSURANCE DOCUMENTS (KOTAK MAHINDRA GENERAL INSURANCE)
+================================================================================
+
+IDENTITY PROOF:
+- PAN Card (compulsory for all proposers)
+- Aadhaar Card (mandatory and preferred)
+
+ADDRESS PROOF:
+- Original Aadhaar card or recent utility bills/bank statements
+- Ration card accepted in some cases
+
+AGE PROOF:
+- Birth certificate or class X marksheet
+- Fordependents: Birth certificates with parent names
+- For senior citizens: Passport or aadhaar
+
+INCOME PROOF:
+- Not always required for health insurance (unlike life plans)
+- May be requested for high sum assured policies (> ₹10 Lakhs)
+- Salary slips or ITR copies if income verification required
+
+MEDICAL REQUIREMENTS:
+
+BY AGE GROUP:
+- BELOW 6 MONTHS: Medical examination mandatory for infants
+- 6 MONTHS - 17 YEARS: Basic health check-up may be required, especially with pre-existing conditions
+- 18-35 YEARS: Often no medical test for standard plans < ₹5 Lakhs sum assured
+- 36-45 YEARS: Optionalmedical test may be requested based on lifestyle/health questionnaire
+- 46+ YEARS: Mandatory medical examination
+- 51+ YEARS: Comprehensive health check-up almost always required
+
+COMMON MEDICAL TESTS BY INSURER:
+- Blood tests (HB, FBS, LFT, RFT, Lipid Profile)
+- Urine routine and microalbuminuria
+- ECG (mandatory for age > 35 or withanyreported symptoms)
+- Chest X-ray (routine for age > 40)
+- TMT (Treadmill Test) for age > 45 or with cardiac risk factors
+- Ultrasound abdomen (forage > 40 or if symptomatic)
+- Pap smear and mammography (for female proposers above specified ages)
+
+REQUIRED DOCUMENTS LIST:
+1. Completed health insurance proposal form
+2. KYC documents (PAN + Aadhaar for all proposers and adults covered)
+3. Medical examination reports (if required)
+4. Age proof for insured persons
+5. Photographs of all proposed insured individuals (passport size, white background)
+6. Pre-existing disease disclosure form (critical - must be truthfully filled)
+7. Hospitalization records ifany preexisting conditions disclosed
+8. Bank details for premium payment and cashless network hospital verification
+
+SPECIAL HEALTH INSURANCE REQUIREMENTS:
+- Health questionnaires are extremely detailed and critical for claim approval
+- Pre-policy check-ups may be scheduled at diagnostic centers empanelled with insurer
+- For group health insurance: Employer NOC and employee details required
+- For NRIs: Additional documents including overseas medical reports may be accepted
+
+================================================================================
+7. MICRO INSURANCE PLANS DOCUMENTS
+================================================================================
+
+IDENTITY PROOF:
+- Aadhaar Card (primary and preferred)
+- BPL card with photo (accepted for low-income groups)
+- Voter ID/Driving License as alternatives
+
+ADDRESS PROOF:
+- Aadhaar card or ration card
+- Self-declaration of address accepted in many cases
+- Gram Panchayat certification may be accepted
+
+AGE PROOF:
+- Birth certificate if available
+- Self-declared age with parent/guardian attestation for minors
+- Community leader/gram panchayat certification for age in rural areas
+
+INCOME PROOF:
+- Not typically required due to government-subsidized nature
+- BPL card often serves as incomeproof
+- Self-declaration of annual income may suffice
+
+MEDICAL REQUIREMENTS:
+
+BY AGE GROUP:
+- BELOW 18 YEARS: Minimal or no medical examination
+- 18-35 YEARS: Often no medical tests required
+- 36+ YEARS: May require basic physical examination but not extensive testing
+
+DOCUMENTATION SIMPLIFICATION FOR MICRO INSURANCE:
+1. Simplified proposal form (often in vernacular language)
+2. Aadhaar-based self-declaration
+3. Biometric verification at enrollment centers
+4. Minimal paperwork designed for low-literacy populations
+5. Self-attested documents rather than notarized ones
+
+REQUIRED DOCUMENTS LIST:
+1. Simplified application form (may be fillable at kiosk/center)
+2. Aadhaar card copy or self-declaration with witness signature
+3. Age proof (self-certified in many cases)
+4. Photographs of proposer and family members (often 1-2 copies suffice)
+5. Nomination form (simplified format)
+
+SPECIAL MICRO INSURANCE FEATURES:
+- Digital onboarding via mobile apps with Aadhaar-based e-KYC
+- Paperless documentation where feasible
+- Agent-assisted document collection in rural areas
+- Group policies for SHGs (Self-Help Groups) may have different requirements
+
+================================================================================
+8. SINGLE PREMIUM POLICIES DOCUMENTS
+================================================================================
+
+IDENTITY PROOF:
+- PAN Card (compulsory - large transaction requires KYC)
+- Aadhaar Card (mandatory)
+
+ADDRESS PROOF:
+- Original Aadhaar card or recent utility bills/bank statements
+- Utility bills must be recent (within 3 months)
+
+AGE PROOF:
+- Birth certificate for proposer
+- Class X marksheet as secondary proof
+
+INCOME PROOF:
+- Usually required due to large payment amount
+- Salary slips, Form 16/ITR copies
+- Source of funds documentation (bank statements showing fund availability)
+- Wealth tax returns may be requested for very high-value policies
+
+MEDICAL REQUIREMENTS:
+
+BY AGE GROUP:
+- BELOW 18 YEARS: Basic medical examination recommended
+- 18-35 YEARS: Medical test often required due to large sum assured typical in这类 plans
+- 36+ YEARS: Comprehensivemedical examination almost always mandatory
+- Even younger proposers may need tests due to high coverage amounts
+
+COMMON MEDICAL TESTS:
+- Extensive blood panel (HB, FBS, LFT, RFT, Lipid Profile, HBA1C)
+- Full ECG with detailed report and interpretation
+- Chest X-ray (routine for all proposers)
+- TMT for age > 40 orwith cardiac risk factors
+- Urine routine and protein estimation
+- Eye examination
+- Dental check-up
+
+REQUIRED DOCUMENTS LIST:
+1. Completed single premium proposal form
+2. KYC documents (PAN + Aadhaar - scanned copies)
+3. Medical examination report from approved center
+4. Incomeproof and source of funds documentation
+5. Bank account details for premium payment verification (cancelled cheque leaf)
+6. Recent passport-sized photographs (typically 4-6 copies)
+7. Nomination form signed by proposer
+8. Sourceof funds declaration form (important for large single payments)
+9. Anti-money laundering compliance checklist
+
+SPECIAL SINGLE PREMIUM REQUIREMENTS:
+- Enhanced due diligence for large premium amounts
+- Source of wealth verification increasingly mandatory
+- Medical underwriting is stricter than regular premium policies
+- Additional declarations regarding financial_status may be required
+
+================================================================================
+GENERAL DOCUMENTATION BEST PRACTICES
+================================================================================
+
+1. DIGITAL vs OFFLINE SUBMISSION:
+   - Digital: Scanned copies (PDF/JPG), e-KYC with Aadhaar OTP, video KYC accepted
+   - Offline: Original + attested copies required for verification
+
+2. SIGNATURE REQUIREMENTS:
+   - proposer must sign all forms in same handwriting as KYC documents
+   - Witnesses may be required for certain declarations
+   - Minors cannot sign; guardian signs on their behalf
+
+3. NOTARIZATION REQUIREMENTS:
+   - Not always mandatory but recommended for address proofs in some cases
+   - Attested copies preferred over self-attested for older documents
+   - For NRI customers: Embassy-attested documents may be required
+
+4. NRI DOCUMENTATION ADDITIONAL REQUIREMENTS:
+   - Valid passport copy with visa page
+   - Proof of overseas address (utility bill, bank statement)
+   - PIO/OCI card if applicable
+   - Indian address proof for contact purposes
+   - NRE/NRO account details for premium payments and maturity proceeds
+
+5. MINOR NOMINEE DOCUMENTATION:
+   - Birth certificate of minor nominee
+   - Guardian's KYC documents
+   - Guardianshipcertificate (if applicable)
+   - photographs of both minors and guardians
+
+6. DOCUMENT VALIDITY:
+   - Address proofs: Must be within 3 months validity
+   - Medical reports: Typically valid for 30-90 days from date of test
+   - PAN/Aadhaar: No expiry but must be valid at time of proposal
+
+================================================================================
+KOTAK MAHINDRA SPECIFIC CONSIDERATIONS
+================================================================================
+
+1. DIGITAL POLICIES (KOTAK E-TERM, KOTAK e-INVEST PLUS):
+   - Aadhaar-based e-KYC with OTP authentication
+   - Video KYC for high-risk profiles or large sums
+   - Paperless documentation
+   - Digital signature accepted
+
+2. POLICY DOCUMENTATION ACCESS:
+   - Policy details available in Kotak mobile app and internet banking
+   - Physical documents sent by post for offline policies
+   - e-policy option via Digilocker integration
+
+3. MEDICAL TEST NETWORK:
+   - Kotak Mahindra Life has tie-ups with diagnostic chains (e.g., Thyrocare, SRL)
+   - Home collection of samples often available
+   - Medical examination centers in major cities
+
+4. DOCUMENT UPLOAD PORTAL:
+   - Online upload via Kotak Life website portal
+   - Mobile app photo capture feature
+   - Secure encrypted upload for sensitive documents
+
+5. CLAIM DOCUMENTATION NOTE:
+   - Documentation requirements for claims differ from application
+   - Claim forms require additional medical police reports as needed
+   - For term insurance claims: Death certificate, policy document, nominee KYC
+
+================================================================================
+IRDAI MANDATORY DISCLOSURES AND DECLARATIONS
+================================================================================
+
+All insurance applications must include:
+
+1. Disclosure of Pre-existing Diseases (critical for health and life plans)
+2. Smoking/Alcohol Consumption Declaration
+3. Existing Insurance Policies Disclosure
+4. Occupation Details (risk classification)
+5. Family Medical History (for some policies)
+6. Risk Classification Questionnaire
+7. Consent for Medical Information Release
+8. Privacy Policy Acknowledgment
+9. KYC Acknowledgment
+10. Terms and Conditions Acceptance
+
+================================================================================
+DOCUMENT CHECKLIST BY POLICY TYPE SUMMARY
+================================================================================
+
+TERM INSURANCE:
+• PAN + Aadhaar (both mandatory)
+• Address proof (Aadhaar preferred)
+• Age proof (for proposer)
+• Medical test report (if age > 35, sum assured > ₹25 Lakhs)
+• Completed proposal form
+• Nomination form
+• Photographs (2-4 copies)
+
+ENDOWMENT PLANS:
+• PAN + Aadhaar (both mandatory)
+• Address proof
+• Age proof for proposer and nominees
+• Medical examination report
+• Income proof (to assess premium affordability)
+• Bank account details
+• Completed proposal form
+
+MONEYBACK PLANS:
+• PAN + Aadhaar
+• Addressproof
+• Age proof
+• Comprehensive medical test report
+• Incomeproof (more rigorous than endowment plans)
+• Bank details for savings component
+• Risk profile assessment (for investment portion)
+
+ULIP PLANS:
+• PAN + Aadhaar (both mandatory - SEBI requirement)
+• Address proof
+• Age proof
+• Medicaltest (if age > 40)
+• Income proof + source of funds
+• Fund selection form
+• Risk disclosure acknowledgment
+• Portfolio statement forms
+
+PENSION/ANNUITY PLANS:
+• PAN + Aadhaar
+• Address proof
+• Age proof (critical for annuity calculation)
+• Comprehensivemedical examination
+• Incomeproof for annuity calculation
+• Details of existing retirement benefits
+• Annuity option selection form
+
+HEALTH INSURANCE:
+• PAN + Aadhaar (all proposers and adults)
+• Address proof
+• Age proof for all insured persons
+• Medicaltest(report if age > 40 or pre-existing conditions)
+• Health questionnaires (extremely detailed)
+• Pre-existing disease disclosure form
+
+MICRO INSURANCE:
+• Aadhaar-based self-declaration
+• Simplified application form
+• Photographs of family members
+• Nomination form (simplified)
+• Biometric verification at centers
+
+SINGLE PREMIUM POLICIES:
+• PAN + Aadhaar (both mandatory)
+• Addressproof
+• Age proof
+• Comprehensivemedical examination (stricter than other plans)
+• Incomeproof + source of funds documentation
+• Bank account details for payment verification
+• Sourceof wealth declaration form
+
+================================================================================
+CONCLUSION AND RECOMMENDATIONS
+================================================================================
+
+1. ALWAYS CHECK THE LATEST REQUIREMENTS:
+   - IRDAI guidelines may change
+   - Kotak Mahindra may update documentation requirements periodically
+   - Verify with official website or customer service before submission
+
+2. DOCUMENT ACCURACY IS CRITICAL:
+   - Inaccurate information can lead to claim repudiation
+   - Full disclosure of health conditions is essential
+   - Consistent signatures across all documents
+
+3. DIGITAL DOCUMENTATION TRENDS:
+   - Kotak increasingly accepting e-KYC and digital signatures
+   - Video KYC available for convenience
+   - Mobile app upload features streamline the process
+
+4. HELPFUL TIPS:
+   - Keep scanned copies of all documents
+   - Use self-attestation for all photocopies
+   - Retain original KYC documents at home
+   - Follow up on document verification status
+
+5. CUSTOMER SUPPORT:
+   - Kotak Mahindra Life: 1800-266-9545 / customer.care@kotaklife.com
+   - Kotak Mahindra General Insurance (Health): 1800-266-9777
+   - Website: www.kotaklife.com / www.kotak.com
+
+Note: This document is compiled from public information, industry standards, and 
+common insurance practices. Actual requirements may vary based on specific policy 
+terms, regulatory changes, and individual circumstances. Always verify with the 
+insurance company before submitting documents.
+
+================================================================================
+SOURCE NOTES AND REFERENCES:
+- IRDAI Guidelines on KYC for Insurance Policies (2013)
+- IRDAI (Protection) Regulations, 2020
+- Kotak Mahindra Life Insurance application forms and guidelines
+- Industry best practices from life insurance association
+- Standard medical test requirements across Indian insurers
+
+Document prepared: July 2026
+For internal use only - not to be used as official replacement for insurer's 
+current documentation requirements.

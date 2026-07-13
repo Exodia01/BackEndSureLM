@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/lib/auth/context";
 import { redirect } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -213,10 +213,10 @@ function EmptyState() {
 
 // ── Page ────────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
-  const { user, isLoaded } = useUser();
+  const { user, isAuthenticated } = useAuth();
   const [activeLead, setActiveLead] = useState<Lead | null>(null);
 
-  if (isLoaded && !user) redirect("/sign-in");
+  if (isAuthenticated && !user) redirect("/sign-in");
 
   return (
     <>
@@ -248,8 +248,8 @@ export default function DashboardPage() {
       >
         <Sidebar
           user={{
-            name: user?.firstName ?? "Agent",
-            avatar: user?.imageUrl ?? "",
+            name: user?.name ?? "Agent",
+            avatar: user?.avatar ?? "",
           }}
           activeLead={activeLead}
           onSelectLead={setActiveLead}
