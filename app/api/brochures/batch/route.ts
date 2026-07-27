@@ -1,4 +1,4 @@
-import { keycloakAuth } from "@/lib/auth/middleware";
+import { validateRequest } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { scanPdfFolder, validatePdfFile } from "@/lib/pdf/scanner";
 import { uploadBrochure } from "@/lib/pdf/batchProcess";
@@ -8,9 +8,8 @@ const CONCURRENCY = parseInt(process.env.BATCH_CONCURRENCY || "3", 10);
 
 export async function POST(request: NextRequest) {
   try {
-    const result = await keycloakAuth(request);
-    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
+    const { authenticated, user } = await validateRequest(request);
+    if (!authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await request.json() as { folderPath?: string; recursive?: boolean };
     

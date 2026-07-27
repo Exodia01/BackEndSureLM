@@ -1,4 +1,4 @@
-import { keycloakAuth } from "@/lib/auth/middleware";
+import { validateRequest } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
@@ -52,11 +52,9 @@ async function refreshBirthdays(agentId: string) {
 
 export async function GET(req: NextRequest) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return Response.json({ success: true, data: [] });
 
     const leads: LeadWithDOB[] = await db.policyLead.findMany({
@@ -92,11 +90,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const reminders = await refreshBirthdays(user.id);
@@ -109,10 +105,9 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
-    const user = await db.user.findUnique({ where: { keycloakId } });
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const { id } = await req.json();

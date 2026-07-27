@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useState, useEffect, useContext, ReactNode } from "react";
-import { generatePKCECodes } from "./pkce";
+import { generatePKCECodes } from "./utils/pkce";
 
 export interface KeycloakUser {
   id: string;
@@ -15,13 +15,13 @@ export interface AuthContextType {
   user: KeycloakUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: () => void;
+  login: () => Promise<void>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<boolean>;
   error: string | null;
 }
 
-const KEYCLOAK_URL = process.env.KEYCLOAK_URL || "http://localhost:8443/auth";
+const KEYCLOAK_URL = process.env.NEXT_PUBLIC_KEYCLOAK_URL || process.env.KEYCLOAK_URL;
 const REALM = process.env.KEYCLOAK_REALM || "surelm_realm";
 const CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || "web-app";
 const REDIRECT_URI = process.env.KEYCLOAK_REDIRECT_URI || "http://localhost:3000/callback";
@@ -95,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const KEYCLOAK_URL = process.env.KEYCLOAK_URL || "http://localhost:8443/auth";
+      const KEYCLOAK_URL = process.env.NEXT_PUBLIC_KEYCLOAK_URL || process.env.KEYCLOAK_URL;
       const REALM = process.env.KEYCLOAK_REALM || "surelm_realm";
       const CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || "web-app";
       
@@ -148,10 +148,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const currentToken = localStorage.getItem("keycloak_access_token");
     
     if (currentToken) {
-      try {
-        const KEYCLOAK_URL = process.env.KEYCLOAK_URL || "http://localhost:8443/auth";
-        const REALM = process.env.KEYCLOAK_REALM || "surelm_realm";
-        const CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || "web-app";
+    try {
+      const KEYCLOAK_URL = process.env.NEXT_PUBLIC_KEYCLOAK_URL || process.env.KEYCLOAK_URL;
+      const REALM = process.env.KEYCLOAK_REALM || "surelm_realm";
+      const CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || "web-app";
         
         await fetch(KEYCLOAK_URL + "/realms/" + REALM + "/protocol/openid-connect/logout", {
           method: "POST",
@@ -174,16 +174,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
   }
 
-  function login(): void {
-    const KEYCLOAK_URL = process.env.KEYCLOAK_URL || "http://localhost:8443/auth";
-    const REALM = process.env.KEYCLOAK_REALM || "surelm_realm";
-    const CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || "web-app";
-    const REDIRECT_URI = process.env.KEYCLOAK_REDIRECT_URI || "http://localhost:3000/callback";
-    
-    const authUrl = KEYCLOAK_URL + "/realms/" + REALM + "/protocol/openid-connect/auth";
-    
-    window.location.href = authUrl + "?client_id=" + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI + "&response_type=code&scope=openid%20email%20profile";
-  }
+async function login(): Promise<void> {
+  const KEYCLOAK_URL = process.env.NEXT_PUBLIC_KEYCLOAK_URL || process.env.KEYCLOAK_URL;
+  const REALM = process.env.KEYCLOAK_REALM || "surelm_realm";
+  const CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || "web-app";
+  const REDIRECT_URI = process.env.KEYCLOAK_REDIRECT_URI || "http://localhost:3000/callback";
+
+  const domain = typeof window !== "undefined" 
+    ? (process.env.COOKIE_DOMAIN || new URL(window.location.href).hostname)
+    : "localhost";
+
+  const { codeVerifier, codeChallenge, state } = await generatePKCECodes();
+
+  const expires = new Date(Date.now() + 5 * 60 * 1000);
+  document.cookie = `pkce_state=${state}; Path=/; Expires=${expires.toUTCString()}; SameSite=Lax;_DOMAIN=${domain}`;
+  document.cookie = `pkce_verifier=${codeVerifier}; Path=/; Expires=${expires.toUTCString()}; SameSite=Lax;_DOMAIN=${domain}`;
+
+  const authUrl = KEYCLOAK_URL + "/realms/" + REALM + "/protocol/openid-connect/auth";
+
+  window.location.href = `${authUrl}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=openid%20email%20profile&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+}
 
   return (
     <AuthContext.Provider

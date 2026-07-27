@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 const primaryModel = new Ollama({
   model: "minicpm-v",
-  baseUrl: "http://localhost:11434",
+  baseUrl: process.env.OLLAMA_HOST || 'http://localhost:11434',
 });
 
 const fallbackModel = new Ollama({
   model: "llava:7b",
-  baseUrl: "http://localhost:11434",
+  baseUrl: process.env.OLLAMA_HOST || 'http://localhost:11434',
 });
 
 async function extractTextWithModel(

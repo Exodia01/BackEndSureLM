@@ -45,10 +45,9 @@ Return JSON with fields: name, father_name, dob, pan_number`;
   else if (docType === 'pan') prompt = PAN_PROMPT;
 
   try {
-    const response = await ollama.invoke([
-      { type: 'text', text: prompt },
-      { type: 'image_url', image_url: `data:image/jpeg;base64,${imageBase64}` },
-    ]);
+    const response = await ollama.invoke(prompt, {
+      images: [`data:image/jpeg;base64,${imageBase64}`],
+    });
 
     if (!response || typeof response !== 'string') throw new Error('Empty OCR response');
 

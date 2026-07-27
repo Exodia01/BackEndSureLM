@@ -1,16 +1,12 @@
-import { keycloakAuth } from '@/lib/auth/middleware';
+import { validateRequest } from '@/lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { detectDocumentType } from '@/lib/documents/autoClassifier';
 
 export async function POST(req: NextRequest) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    const keycloakId = result.keycloakId;
-
-    const user = await db.user.findUnique({ where: { keycloakId } });
-    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
     const { imageBase64 } = body;

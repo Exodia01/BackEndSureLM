@@ -1,15 +1,11 @@
-import { keycloakAuth } from "@/lib/auth/middleware";
+import { validateRequest } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
-
-    const user = await db.user.findUnique({ where: { keycloakId } });
-    if (!user) return Response.json({ success: true, data: { leads: [], stats: {} } });
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
     const today = new Date();
     const in30Days = new Date(today);
@@ -22,6 +18,15 @@ export async function GET(req: NextRequest) {
       include: {
         issuances: true,
         reminders: { where: { isDone: false } },
+        checklistInstances: {
+          include: {
+            items: {
+              include: {
+                requirement: true,
+              },
+            },
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -47,6 +52,14 @@ export async function GET(req: NextRequest) {
         (i) => i.nextPremiumDue && new Date(i.nextPremiumDue) >= today && new Date(i.nextPremiumDue) <= in7Days
       );
 
+      const checklistItems = lead.checklistInstances.flatMap(instance =>
+        instance.items.map(item => ({
+          id: item.id,
+          title: item.requirement.label,
+          docType: item.requirement.docType,
+        }))
+      );
+
       return {
         ...lead,
         isBirthdayToday,
@@ -54,6 +67,7 @@ export async function GET(req: NextRequest) {
         hasPremiumDue: premiumsDue.length > 0,
         hasPremiumDueUrgent: premiumsDueUrgent.length > 0,
         premiumsDue,
+        checklistItems,
       };
     });
 
@@ -76,15 +90,11 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
     const { leadId, ...updates } = await req.json();
     if (!leadId) return Response.json({ success: false, error: "leadId required" }, { status: 400 });
-    
-    const user = await db.user.findUnique({ where: { keycloakId } });
-    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const lead = await db.policyLead.update({
       where: { id: leadId, agentId:user.id },

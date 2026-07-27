@@ -8,10 +8,7 @@
     "build": "ts-node scripts/cleanup.ts && prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "test-db": "tsx test-db.ts",
-    "test:all": "tsx test-full-integration-report.ts",
-    "test:benchmark": "tsx test/benchmark/evaluate.ts",
-    "run:benchmark-api": "node --loader ts-node/esm test/benchmark/evaluate.ts"
+    "test": "vitest run"
   },
   "dependencies": {
     "@langchain/ollama": "^0.1.4",
@@ -50,11 +47,12 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "pdf-parse": "^2.4.5",
+    "pg": "^8.22.0",
     "shadcn": "^3.8.5",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "tsx": "^4.7.0",
     "typescript": "^5",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.10"
   }
 }

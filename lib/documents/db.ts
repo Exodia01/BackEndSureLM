@@ -1,26 +1,21 @@
 import { db } from '../db';
+import { ValidationStatus, ValidationStage } from '@prisma/client';
 
 export async function createDocument(
-  originalHash: string,
   filename: string,
-  mimetype: string,
-  sizeBytes: number,
+  source: string | null,
   uploadedBy: string,
-  documentType: string,
   householdId?: string
 ) {
   return await db.document.create({
     data: {
-      originalHash,
       filename,
-      mimetype,
-      sizeBytes,
-      uploadedBy,
-      householdId,
-      documentType,
+      source,
+      uploadedById: uploadedBy,
+      householdId: householdId ?? undefined,
     },
     include: {
-      auditTrail: true,
+      validationReport: true,
     },
   });
 }
@@ -29,60 +24,55 @@ export async function getDocumentById(documentId: string) {
   return await db.document.findUnique({
     where: { id: documentId },
     include: {
-      validations: true,
+      validationLogs: true,
       validationReport: true,
     },
   });
 }
 
-export async function updateDocumentStatus(
+export async function updateValidationStatus(
   documentId: string,
-  newStatus: 'VALIDATED' | 'REJECTED' | 'REVIEW_REQUIRED'
+  status: 'VALIDATED' | 'REJECTED' | 'REVIEW_REQUIRED'
 ) {
-  return await db.document.update({
-    where: { id: documentId },
-    data: { validationStatus: newStatus, validatedAt: new Date() },
+  return await db.validationReport.update({
+    where: { documentId },
+    data: {
+      overallStatus: status as any,
+      validatedAt: new Date(),
+    },
   });
 }
 
 export async function createValidationLog(
   documentId: string,
-  stage: string,
-  status: string,
-  configuration: Record<string, unknown>,
-  results: Record<string, unknown>
+  stage: ValidationStage,
+  status: ValidationStatus,
+  configuration?: Record<string, unknown>,
+  results?: Record<string, unknown>
 ) {
   return await db.validationLog.create({
     data: {
       documentId,
       stage,
       status,
-      configuration: JSON.stringify(configuration),
-      results: JSON.stringify(results),
+      configuration: JSON.stringify(configuration || {}) as any,
+      results: JSON.stringify(results || {}) as any,
     },
   });
 }
 
 export async function createValidationReport(
   documentId: string,
-  overallStatus: string,
-  confidenceScore: number,
-  extractedData: Record<string, unknown>,
-  discrepancies?: Record<string, unknown>[],
-  visualConfidence?: number,
-  ruleConfidence?: number,
-  externalMatch?: number
+  overallStatus: 'PENDING' | 'PROCESSING' | 'VALIDATED' | 'REJECTED',
+  aiConfidence?: number
 ) {
   return await db.validationReport.create({
     data: {
       documentId,
-      overallStatus,
-      confidenceScore,
-      extractedData: JSON.stringify(extractedData),
-      discrepancies: discrepancies ? JSON.stringify(discrepancies) : null,
-      visualConfidence: visualConfidence ?? 0,
-      ruleConfidence: ruleConfidence ?? 0,
-      externalMatch: externalMatch ?? null,
+      overallStatus: overallStatus as any,
+      rulesPassed: 0,
+      rulesFailed: 0,
+      aiConfidence: aiConfidence ?? null,
     },
   });
 }
@@ -91,23 +81,21 @@ export async function createAuditTrail(
   actorType: string,
   actorId: string,
   action: string,
-  entityType: string,
-  entityId: string,
-  requestId?: string
+  entityType?: string,
+  entityId?: string
 ) {
   return await db.auditTrail.create({
     data: {
       actorType,
       actorId,
       action,
-      entityType,
-      entityId,
-      requestId,
+      entityType: entityType ?? undefined,
+      entityId: entityId ?? undefined,
     },
   });
 }
 
-export async function linkDocumentToHousehold(documentId: string, householdId: string) {
+export async function linkDocumentToHousehold(documentId: string, householdId: string | null) {
   return await db.document.update({
     where: { id: documentId },
     data: { householdId },

@@ -1,4 +1,4 @@
-export const KEYCLOAK_URL = process.env.KEYCLOAK_URL || "http://localhost:8443/auth";
+export const KEYCLOAK_URL = process.env.NEXT_PUBLIC_KEYCLOAK_URL || process.env.KEYCLOAK_URL;
 export const REALM = process.env.KEYCLOAK_REALM || "surelm_realm";
 export const CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || "web-app";
 export const REDIRECT_URI = process.env.KEYCLOAK_REDIRECT_URI || "http://localhost:3000/callback";

@@ -1,22 +1,19 @@
-import { keycloakAuth } from "@/lib/auth/middleware";
+import { validateRequest } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { loadOrCreateTemplate } from "@/lib/documents/templateEngine";
 
 export async function POST(req: NextRequest) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
     const body = await req.json();
-    const { leadId, productName } = body;
+    const { leadId, productId } = body;
 
     if (!leadId) {
-      return NextResponse.json({ error: "linkId is required" }, { status: 400 });
+      return NextResponse.json({ error: "leadId is required" }, { status: 400 });
     }
 
     const lead = await db.policyLead.findUnique({
@@ -25,33 +22,53 @@ export async function POST(req: NextRequest) {
     });
 
     if (!lead) {
-      return NextResponse.json({ error: "Link not found" }, { status: 404 });
+      return NextResponse.json({ error: "Lead not found" }, { status: 404 });
     }
 
-    const customerType = lead.status === "POLICY_ISSUED" || lead.issuances.length > 0
-      ? ("EXISTING" as any)
-      : ("NEW" as any);
+    const activePolicy = lead.issuances[0]?.policyName;
+    const effectiveProductId = productId ?? (activePolicy ? activePolicy : null);
 
-    const template = await loadOrCreateTemplate(
-      productName ?? "General Policy",
-      customerType
-    );
+    if (!effectiveProductId) {
+      return NextResponse.json({ error: "productId is required or policy must be issued" }, { status: 400 });
+    }
+
+    const product = await db.product.findUnique({
+      where: { id: effectiveProductId },
+      select: { name: true, code: true },
+    });
+
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    const template = await db.requirementTemplate.findFirst({
+      where: { productId: effectiveProductId },
+      orderBy: { version: "desc" as any },
+    });
+
+    if (!template) {
+      return NextResponse.json({ error: "No requirement template found for product" }, { status: 404 });
+    }
+
+    const items = await db.requirementItem.findMany({
+      where: { templateId: template.id },
+    });
 
     return NextResponse.json({
       success: true,
       template: {
         id: template.id,
-        name: template.name,
+        name: `KYC Template v${template.version}`,
         version: template.version,
-        customerType: template.customerType,
-        productCode: template.productCode,
-        items: template.items.map(item => ({
+        productId: template.productId,
+        productCode: product.code || undefined,
+        items: items.map(item => ({
           id: item.id,
-          docType: item.docType,
+          docType: item.docType as any,
           label: item.label,
-          description: item.description,
-          isRequired: item.isRequired,
-          sortOrder: item.sortOrder,
+          description: item.label,
+          isRequired: item.minRequired > 0,
+          sortOrder: item.itemOrder,
         })),
       },
     }, { status: 200 });

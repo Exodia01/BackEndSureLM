@@ -1,4 +1,4 @@
-import { keycloakAuth } from "@/lib/auth/middleware";
+import { validateRequest } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
@@ -7,12 +7,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
-
-    const user = await db.user.findUnique({ where: { keycloakId } });
-    if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const brochure = await db.brochure.findUnique({
       where: { id: (await params).id },
@@ -33,12 +29,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
-
-    const user = await db.user.findUnique({ where: { keycloakId } });
-    if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     if (user.role !== "ADMIN") {
       return NextResponse.json({ error: "Admin access required" }, { status: 403 });

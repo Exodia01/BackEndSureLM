@@ -1,18 +1,17 @@
-import { keycloakAuth } from "@/lib/auth/middleware";
+import { validateRequest } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { generateChecklistFromPolicySelection } from "@/lib/checklist/generator";
 
 export async function GET(req: NextRequest) {
   try {
-    const token = req.cookies.get("keycloak_access_token")?.value;
-    if (!token) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+
+    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const leadId = req.nextUrl.searchParams.get("leadId");
     if (!leadId) return Response.json({ success: false, error: "leadId required" }, { status: 400 });
-
-    const user = await db.user.findUnique({ where: { keycloakId: token } });
-    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const lead = await db.policyLead.findFirst({ where: { id: leadId, agentId: user.id } });
     if (!lead) return Response.json({ success: false, error: "Lead not found" }, { status: 404 });
@@ -31,16 +30,15 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const token = req.cookies.get("keycloak_access_token")?.value;
-    if (!token) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+
+    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const { leadId, policyName, policyProvider, premiumAmount } = await req.json();
     if (!leadId || !policyName) {
       return Response.json({ success: false, error: "Missing fields" }, { status: 400 });
     }
-
-    const user = await db.user.findUnique({ where: { keycloakId: token } });
-    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const lead = await db.policyLead.findFirst({ where: { id: leadId, agentId: user.id } });
     if (!lead) return Response.json({ success: false, error: "Lead not found" }, { status: 404 });
@@ -62,9 +60,9 @@ export async function POST(req: NextRequest) {
     }
 
     const applicantData = {
-      income: lead.income ?? null,
-      familySize: lead.familySize ?? null,
-      dateOfBirth: lead.dateOfBirth ?? null,
+      income: (lead.income ?? undefined) as number | undefined,
+      familySize: (lead.familySize ?? undefined) as number | undefined,
+      dateOfBirth: lead.dateOfBirth as Date | undefined,
     };
 
     // Next premium due = 30 days from now (monthly collection)

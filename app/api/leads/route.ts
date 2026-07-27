@@ -1,14 +1,12 @@
-import { keycloakAuth } from "@/lib/auth/middleware";
+import { validateRequest } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-    const user = await db.user.findUnique({ where: { keycloakId } });
     if (!user) return Response.json({ success: true, data: [] });
 
     const leads = await db.policyLead.findMany({
@@ -25,30 +23,16 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const result = await keycloakAuth(req);
-    if (!result.authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
-    const keycloakId = result.keycloakId;
+    const { authenticated, user } = await validateRequest(req);
+    if (!authenticated) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const { householdName, notes } = await req.json();
 
     if (!householdName) {
       return Response.json({ success: false, error: "householdName is required" }, { status: 400 });
     }
-
-    const payload = result.payload;
-    const email = Array.isArray(payload.email) ? payload.email[0] : (payload.email as string);
-    const name = `${payload.given_name ?? ""} ${payload.family_name ?? ""}`.trim() || "Agent";
-
-    const user = await db.user.upsert({
-      where: { keycloakId },
-      update: {},
-      create: {
-        keycloakId,
-        email: email ?? "",
-        name: name,
-        role: "AGENT",
-      },
-    });
 
     const lead = await db.policyLead.create({
       data: {
