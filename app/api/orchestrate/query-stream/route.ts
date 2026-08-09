@@ -1,19 +1,31 @@
-import { NextResponse } from "next/server";
-import { orchestrateQueryStreaming } from "@/lib/orchestration";
+import { NextRequest, NextResponse } from "next/server";
+import { requireAuth } from "@/lib/auth/guards";
+import { orchestrateQueryStreaming } from "@/lib/ai/orchestrator";
+import type { AgentMessage } from "@/lib/ai/agents/types";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.ok) return auth.response;
+
+  let body: { messages?: unknown; sessionId?: string };
   try {
-    const body = await request.json();
-    const { messages, sessionId } = body;
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
 
-    if (!messages || !Array.isArray(messages)) {
-      return NextResponse.json(
-        { error: "messages array is required" },
-        { status: 400 }
-      );
-    }
+  if (!body.messages || !Array.isArray(body.messages)) {
+    return NextResponse.json(
+      { error: "messages array is required" },
+      { status: 400 }
+    );
+  }
 
-    const stream = await orchestrateQueryStreaming({ messages, sessionId });
+  try {
+    const stream = await orchestrateQueryStreaming({
+      messages: body.messages as AgentMessage[],
+      sessionId: typeof body.sessionId === "string" ? body.sessionId : undefined,
+    });
 
     return new Response(stream, {
       headers: {
@@ -23,9 +35,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Orchestration stream error:", error);
-    
+
     return NextResponse.json(
-      { 
+      {
         error: "Stream failed",
         message: (error as Error).message,
       },
