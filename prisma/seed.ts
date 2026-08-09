@@ -30,10 +30,10 @@ async function main() {
 
   const agent = await db.user.create({
     data: {
-      clerkId: "user_3AGF1eebZ3755pk4y0OWQYcw4rm",
+      keycloakId: "agent-uuid-" + Date.now().toString(),
       email: "agent@sureim.com",
       name: "Rajesh Kumar",
-      role: "AGENT",
+      realmRole: "AGENT",
     },
   });
 
@@ -208,7 +208,6 @@ async function main() {
 
   console.log("💬 Created sample messages");
   console.log("\n✅ Seeding complete!");
-  console.log("\n⚠️  Replace CLERK_ID_HERE in seed.ts with your Clerk user ID before running!");
 }
 
 main()

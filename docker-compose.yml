@@ -1,38 +1,63 @@
-version: "3.8"
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: surelm-postgres
+    container_name: surelm_0_postgres
     environment:
-      POSTGRES_DB: surelm
+      POSTGRES_DB: surelm_0
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: [REDACTED-CREDENTIAL]
     command: ["postgres", "-c", "listen_addresses=*"]
     ports:
-      - "5432:5432"
+      - "6432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_0:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d surelm_0"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     restart: unless-stopped
 
   qdrant:
     image: qdrant/qdrant:v1.12.0
-    container_name: surelm-qdrant
+    container_name: surelm_0_qdrant
     ports:
-      - "6333:6333"
+      - "6334:6333"
     volumes:
-      - qdrant_data:/qdrant/storage
+      - qdrant_data_0:/qdrant/storage
     restart: unless-stopped
 
-  ollama:
-    image: ollama/ollama:latest
-    container_name: surelm-ollama
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: surelm_0_keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/surelm_0
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: [REDACTED-CREDENTIAL]
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 18444
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
+      KC_HTTP_RELATIVE_PATH: /auth
+      KC_HTTPS_PORT: 8443
+      KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/keycloak-dev.p12
+      KC_HTTPS_KEY_STORE_PASSWORD: keycloak
+      KC_HTTPS_KEY_STORE_TYPE: PKCS12
     ports:
-      - "11434:11434"
+      - "18444:8443"
+      - "8081:8080"
+    command: start-dev
+    depends_on:
+      postgres:
+        condition: service_healthy
     volumes:
-      - ollama_data:/root/.ollama
+      - ./certs:/opt/keycloak/conf:ro
     restart: unless-stopped
 
 volumes:
-  postgres_data:
-  qdrant_data:
-  ollama_data:
+  postgres_data_0:
+  qdrant_data_0:

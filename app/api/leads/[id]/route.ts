@@ -1,25 +1,31 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
+import { validateAuth, getUserFromToken, ensureUserInDb } from "@/lib/auth/keycloak";
+import { requireAgent } from "@/lib/auth/guards";
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest) {
   try {
-    const { id } = await params;
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAgent(req);
+    if (!auth.ok) {
+      const body = await auth.response.json().catch(() => ({ error: "Unauthorized" }));
+      return Response.json({ success: false, error: body.error }, { status: auth.response.status });
+    }
 
-    const user = await db.user.findUnique({ where: { clerkId } });
-    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+    const user = auth.user;
 
-    const lead = await db.policyLead.findFirst({
-      where: { id, agentId: user.id },
-    });
+    // Self-provision user in DB
+    await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });
+
+    const userInDb = await db.user.findUnique({ where: { keycloakId: user.sub } });
+    if (!userInDb) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+
+    const leadId = req.nextUrl.searchParams.get("id");
+    if (!leadId) return Response.json({ success: false, error: "Lead ID required" }, { status: 400 });
+
+    const lead = await db.policyLead.findFirst({ where: { id: leadId, agentId: userInDb.id } });
     if (!lead) return Response.json({ success: false, error: "Lead not found" }, { status: 404 });
 
-    await db.policyLead.delete({ where: { id } });
+    await db.policyLead.delete({ where: { id: lead.id } });
 
     return Response.json({ success: true });
   } catch (error) {

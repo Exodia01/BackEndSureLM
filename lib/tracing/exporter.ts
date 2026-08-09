@@ -1,7 +1,9 @@
 import { BasicTracerProvider, BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { Resource } from "@opentelemetry/resources";
-import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
+
+const ATTR_SERVICE_NAME = "service.name";
+const ATTR_SERVICE_VERSION = "service.version";
 
 const otlpEndpoint = process.env.OPENTELEMETRY_EXPORTER_OTLP_ENDPOINT || "http://localhost:4317/v1/traces";
 const serviceName = process.env.PHOENIX_PROJECT_NAME || "surelm-platform";

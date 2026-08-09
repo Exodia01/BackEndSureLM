@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { UserButton } from "@clerk/nextjs";
 import { Plus, Search, X, Loader2, Trash2, MoreVertical, MessageSquare } from "lucide-react";
 import Link from "next/link";
 
@@ -14,7 +13,7 @@ interface Lead {
 }
 
 interface SidebarProps {
-  user: { name: string; avatar: string };
+  user?: { sub?: string; name?: string; avatar?: string };
   onSelectLead?: (lead: Lead | null) => void;
   activeLead?: Lead | null;
 }
@@ -299,9 +298,8 @@ export default function Sidebar({ user, onSelectLead, activeLead }: SidebarProps
 
           <div style={S.headerRow}>
             <div style={S.userInfo}>
-              <UserButton afterSignOutUrl="/" />
               <div>
-                <p style={S.userName}>{user.name}</p>
+                <p style={S.userName}>{user?.name ?? "Agent"}</p>
                 <p style={S.userRole}>Agent</p>
               </div>
             </div>

@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { scanPdfFolder, validatePdfFile } from "@/lib/pdf/scanner";
 import { uploadBrochure } from "@/lib/pdf/batchProcess";
+import { requireAdmin } from "@/lib/auth/guards";
 
 const FOLDER_PATH = process.env.SCANNING_FOLDER_PATH || "pdf-incoming";
 const CONCURRENCY = parseInt(process.env.BATCH_CONCURRENCY || "3", 10);
 
 export async function POST(request: NextRequest) {
+  const auth = await requireAdmin(request);
+  if (!auth.ok) return auth.response;
+
   try {
     const body = await request.json() as { folderPath?: string; recursive?: boolean };
     

@@ -1,7 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { KeycloakSession } from "@/lib/auth/session";
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import ChatArea from "@/components/dashboard/ChatArea";
@@ -213,10 +212,15 @@ function EmptyState() {
 
 // ── Page ────────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
-  const { user, isLoaded } = useUser();
+  const [user, setUser] = useState<{ sub: string; name?: string } | null>(null);
   const [activeLead, setActiveLead] = useState<Lead | null>(null);
 
-  if (isLoaded && !user) redirect("/sign-in");
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then(r => r.json())
+      .then(setUser)
+      .catch(() => setUser(null));
+  }, []);
 
   return (
     <>
@@ -248,15 +252,15 @@ export default function DashboardPage() {
       >
         <Sidebar
           user={{
-            name: user?.firstName ?? "Agent",
-            avatar: user?.imageUrl ?? "",
+            sub: user?.sub,
+            name: user?.name ?? "Agent",
           }}
           activeLead={activeLead}
           onSelectLead={setActiveLead}
         />
 
         {activeLead ? (
-          <ChatArea lead={activeLead} />
+          <ChatArea key={activeLead.id} lead={activeLead} />
         ) : (
           <EmptyState />
         )}

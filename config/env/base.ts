@@ -8,10 +8,10 @@ export default {
     environment: process.env.NODE_ENV || 'development',
   },
   database: {
-    url: process.env.DATABASE_URL || 'postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm',
+    url: process.env.DATABASE_URL || 'postgresql://admin:[REDACTED-CREDENTIAL]@localhost:6432/surelm_0',
   },
   vectorStore: {
-    url: process.env.QDRANT_URL || 'http://localhost:6333',
+    url: process.env.QDRANT_URL || 'http://localhost:6334',
   },
   ollama: {
     host: process.env.OLLAMA_HOST || 'http://127.0.0.1:11434',

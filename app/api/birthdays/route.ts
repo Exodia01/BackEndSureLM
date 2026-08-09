@@ -1,5 +1,7 @@
-import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { validateAuth, getUserFromToken, ensureUserInDb } from "@/lib/auth/keycloak";
+import { requireAgent, requireAuth } from "@/lib/auth/guards";
 
 interface LeadWithDOB {
   id: string;
@@ -49,16 +51,24 @@ async function refreshBirthdays(agentId: string) {
   return reminders;
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAgent(req);
+    if (!auth.ok) {
+      const body = await auth.response.json().catch(() => ({ error: "Unauthorized" }));
+      return Response.json({ success: false, error: body.error }, { status: auth.response.status });
+    }
 
-    const user = await db.user.findUnique({ where: { clerkId } });
-    if (!user) return Response.json({ success: true, data: [] });
+    const user = auth.user;
+
+    // Self-provision user in DB
+    await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });
+
+    const userInDb = await db.user.findUnique({ where: { keycloakId: user.sub } });
+    if (!userInDb) return Response.json({ success: true, data: [] });
 
     const leads: LeadWithDOB[] = await db.policyLead.findMany({
-      where: { agentId: user.id },
+      where: { agentId: userInDb.id },
       select: { id: true, householdName: true, phone: true, dateOfBirth: true },
     });
 
@@ -66,7 +76,7 @@ export async function GET() {
       where: { leadId: { in: leads.map((l: LeadWithDOB) => l.id) } },
     });
 
-    if (count === 0) await refreshBirthdays(user.id);
+    if (count === 0) await refreshBirthdays(userInDb.id);
 
     const reminders = await db.birthdayReminder.findMany({
       where: { leadId: { in: leads.map((l: LeadWithDOB) => l.id) } },
@@ -81,22 +91,30 @@ export async function GET() {
       orderBy: { daysUntil: "asc" },
     });
 
-    return Response.json({ success: true, data: reminders });
+    return NextResponse.json({ success: true, data: reminders });
   } catch (error) {
     console.error("Birthday fetch error:", error);
     return Response.json({ success: false, error: "Failed to fetch birthdays" }, { status: 500 });
   }
 }
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAgent(req);
+    if (!auth.ok) {
+      const body = await auth.response.json().catch(() => ({ error: "Unauthorized" }));
+      return Response.json({ success: false, error: body.error }, { status: auth.response.status });
+    }
 
-    const user = await db.user.findUnique({ where: { clerkId } });
-    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+    const user = auth.user;
 
-    const reminders = await refreshBirthdays(user.id);
+    // Self-provision user in DB
+    await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });
+
+    const userInDb = await db.user.findUnique({ where: { keycloakId: user.sub } });
+    if (!userInDb) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+
+    const reminders = await refreshBirthdays(userInDb.id);
     return Response.json({ success: true, data: reminders });
   } catch (error) {
     console.error("Birthday refresh error:", error);
@@ -104,20 +122,28 @@ export async function POST() {
   }
 }
 
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAgent(req);
+    if (!auth.ok) {
+      const body = await auth.response.json().catch(() => ({ error: "Unauthorized" }));
+      return Response.json({ success: false, error: body.error }, { status: auth.response.status });
+    }
 
+    const user = auth.user;
     const { id } = await req.json();
-    const user = await db.user.findUnique({ where: { clerkId } });
-    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+
+    // Self-provision user in DB
+    await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });
+
+    const userInDb = await db.user.findUnique({ where: { keycloakId: user.sub } });
+    if (!userInDb) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const existing = await db.birthdayReminder.findFirst({
-      where: { id, lead: { agentId: user.id } },
+      where: { id, lead: { agentId: userInDb.id } },
       include: { lead: true },
     });
-if (!existing) return Response.json({ success: false, error: "Not found" }, { status: 404 });
+    if (!existing) return Response.json({ success: false, error: "Not found" }, { status: 404 });
     const updated = await db.birthdayReminder.update({
       where: { id },
       data: { wishSent: true },

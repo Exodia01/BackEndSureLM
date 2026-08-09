@@ -3,7 +3,7 @@
 // Common response structure
 export const ApiResponseSchema = z.object({
   success: z.boolean(),
-  data: z.record(z.unknown()).optional(),
+  data: z.record(z.string(), z.unknown()).optional(),
   error: z.string().optional(),
 });
 

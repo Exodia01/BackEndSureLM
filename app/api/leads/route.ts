@@ -1,19 +1,26 @@
-import { auth } from "@clerk/nextjs/server";
-import { NextRequest } from "next/server";
+﻿import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
+import { validateAuth, getUserFromToken, ensureUserInDb } from "@/lib/auth/keycloak";
+import { requireAgent, requireAuth } from "@/lib/auth/guards";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) {
-      return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAgent(req);
+    if (!auth.ok) {
+      const body = await auth.response.json().catch(() => ({ error: "Unauthorized" }));
+      return Response.json({ success: false, error: body.error }, { status: auth.response.status });
     }
 
-    const user = await db.user.findUnique({ where: { clerkId } });
-    if (!user) return Response.json({ success: true, data: [] });
+    const user = auth.user;
+
+    // Self-provision user in DB
+    await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });
+
+    const userInDb = await db.user.findUnique({ where: { keycloakId: user.sub } });
+    if (!userInDb) return Response.json({ success: true, data: [] });
 
     const leads = await db.policyLead.findMany({
-      where: { agentId: user.id },
+      where: { agentId: userInDb.id },
       orderBy: { createdAt: "desc" },
     });
 
@@ -26,50 +33,28 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) {
-      return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAgent(req);
+    if (!auth.ok) {
+      const body = await auth.response.json().catch(() => ({ error: "Unauthorized" }));
+      return Response.json({ success: false, error: body.error }, { status: auth.response.status });
     }
 
+    const user = auth.user;
     const { householdName, notes } = await req.json();
 
     if (!householdName) {
       return Response.json({ success: false, error: "householdName is required" }, { status: 400 });
     }
 
-    // Get or create user in DB with timeout
-    let clerkUser: any;
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-      clerkUser = await fetch(`https://api.clerk.com/v1/users/${clerkId}`, {
-        headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` },
-        signal: controller.signal,
-      }).then((r) => r.json());
-    } catch (error) {
-      console.warn("[leads] Clerk API failed, using DB user:", error);
-      const existingUser = await db.user.findUnique({ where: { clerkId } });
-      if (!existingUser) {
-        throw new Error("Clerk API unavailable and user not found in DB");
-      }
-      clerkUser = existingUser;
-    }
+    // Self-provision user in DB
+    await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });
 
-    const user = await db.user.upsert({
-      where: { clerkId },
-      update: {},
-      create: {
-        clerkId,
-        email: clerkUser.email_addresses?.[0]?.email_address ?? "",
-        name: `${clerkUser.first_name ?? ""} ${clerkUser.last_name ?? ""}`.trim() || "Agent",
-        avatar: clerkUser.image_url ?? null,
-        role: "AGENT",
-      },
-    });
+    const userInDb = await db.user.findUnique({ where: { keycloakId: user.sub } });
+    if (!userInDb) return Response.json({ success: false, error: "User not found" }, { status: 404 });
 
     const lead = await db.policyLead.create({
       data: {
-        agentId: user.id,
+        agentId: userInDb.id,
         householdName,
         notes: notes ?? null,
         status: "NEW",

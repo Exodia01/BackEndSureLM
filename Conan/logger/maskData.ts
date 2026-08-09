@@ -1,10 +1,10 @@
-export function maskPhone(phone) {
+export function maskPhone(phone: string) {
   if (!phone || phone.length < 4) return '***';
   const maskedDigits = '*'.repeat(phone.length - 2);
   return '+' + maskedDigits + phone.slice(-2);
 }
 
-export function maskIncome(income) {
+export function maskIncome(income: number | null | undefined) {
   if (income === null || income === undefined) return '$XXX,XXX';
   const formatted = income.toLocaleString();
   const parts = formatted.split(',');
@@ -16,7 +16,7 @@ export function maskIncome(income) {
   return '$XXX';
 }
 
-export function maskEmail(email) {
+export function maskEmail(email: string) {
   if (!email || email.length < 5) return '***@***.***';
   
   const segments = email.split('@');
@@ -37,7 +37,7 @@ export function maskEmail(email) {
   return email;
 }
 
-export function maskPii(text) {
+export function maskPii(text: string) {
   const phonePattern = /\+?[\d\s-]{7,}\d/g;
   const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
   

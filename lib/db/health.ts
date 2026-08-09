@@ -1,5 +1,6 @@
-﻿import { db } from "./client";
-import axios from "axios";
+﻿import { db } from "../db";
+
+const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6334";
 
 export async function checkPostgresHealth(): Promise<boolean> {
   try {
@@ -11,12 +12,10 @@ export async function checkPostgresHealth(): Promise<boolean> {
   }
 }
 
-const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6333";
-
 export async function checkQdrantHealth(): Promise<boolean> {
   try {
-    await axios.get(`${QDRANT_URL}/collections`);
-    return true;
+    const response = await fetch(`${QDRANT_URL}/collections`);
+    return response.ok;
   } catch (error) {
     console.error("[db] Qdrant health check failed:", error);
     return false;

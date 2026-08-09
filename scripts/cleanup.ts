@@ -1,6 +1,11 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const tempDir = path.join(__dirname, '..', 'logs', 'temp');
 const today = new Date().toISOString().split('T')[0];
@@ -28,7 +33,7 @@ if (fs.existsSync(tempDir)) {
         console.log(`Moved: ${file} -> ${path.basename(destPath)}`);
         movedCount++;
       } catch (err) {
-        console.error(`Failed to move ${file}:`, err.message);
+        console.error(`Failed to move ${file}:`, err instanceof Error ? err.message : String(err));
       }
     });
     console.log(`Successfully moved ${movedCount}/${files.length} files`);

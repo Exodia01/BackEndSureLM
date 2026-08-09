@@ -1,1 +1,0 @@
-﻿import 'dotenv/config'; import { db } from './lib/db'; async function main() { try { await db.$queryRawSELECT 1 as x; console.log('OK'); } catch (err: any) { console.error(err.message); } finally { await db.$disconnect(); } } main();

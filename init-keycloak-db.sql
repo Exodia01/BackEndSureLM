@@ -1,0 +1,14 @@
+-- Initialize Keycloak database
+CREATE DATABASE keycloak;
+
+-- Create admin user
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'admin') THEN
+        CREATE USER admin WITH PASSWORD '[REDACTED-CREDENTIAL]';
+    END IF;
+END $$;
+
+GRANT ALL PRIVILEGES ON DATABASE keycloak TO admin;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO admin;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO admin;

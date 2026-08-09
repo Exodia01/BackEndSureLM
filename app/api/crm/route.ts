@@ -1,14 +1,29 @@
-import { auth } from "@clerk/nextjs/server";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { validateAuth, getUserFromToken, ensureUserInDb } from "@/lib/auth/keycloak";
+import { requireAgent, requireAuth } from "@/lib/auth/guards";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAgent(req);
+    if (!auth.ok) {
+      const body = await auth.response.json().catch(() => ({ error: "Unauthorized" }));
+      return NextResponse.json({ success: false, error: body.error }, { status: auth.response.status });
+    }
 
-    const user = await db.user.findUnique({ where: { clerkId } });
-    if (!user) return Response.json({ success: true, data: { leads: [], stats: {} } });
+    const user = auth.user;
+
+    // Self-provision user in DB
+    await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });
+
+    const dbUser = await db.user.findUnique({ where: { keycloakId: user.sub } });
+
+    if (!dbUser) {
+      return NextResponse.json(
+        { success: true, data: { leads: [], stats: {} } },
+        { status: 200 }
+      );
+    }
 
     const today = new Date();
     const in30Days = new Date(today);
@@ -17,7 +32,7 @@ export async function GET() {
     in7Days.setDate(today.getDate() + 7);
 
     const leads = await db.policyLead.findMany({
-      where: { agentId: user.id },
+      where: { agentId: dbUser.id },
       include: {
         issuances: true,
         reminders: { where: { isDone: false } },
@@ -66,7 +81,10 @@ export async function GET() {
       activeReminders: leads.reduce((acc, l) => acc + l.reminders.length, 0),
     };
 
-    return Response.json({ success: true, data: { leads: leadsWithFlags, stats } });
+    return NextResponse.json(
+      { success: true, data: { leads: leadsWithFlags, stats } },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("CRM fetch error:", error);
     return Response.json({ success: false, error: "Failed to fetch CRM data" }, { status: 500 });
@@ -75,17 +93,37 @@ export async function GET() {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAgent(req);
+    if (!auth.ok) {
+      const body = await auth.response.json().catch(() => ({ error: "Unauthorized" }));
+      return NextResponse.json({ success: false, error: body.error }, { status: auth.response.status });
+    }
 
-    const { leadId, ...updates } = await req.json();
-    if (!leadId) return Response.json({ success: false, error: "leadId required" }, { status: 400 });
-    
-    const user = await db.user.findUnique({ where: { clerkId } });
-    if (!user) return Response.json({ success: false, error: "User not found" }, { status: 404 });
+    const user = auth.user;
+    const body = await req.json();
+    const { leadId, ...updates } = body;
+
+    if (!leadId) {
+      return NextResponse.json(
+        { success: false, error: "leadId required" },
+        { status: 400 }
+      );
+    }
+
+    // Self-provision user in DB
+    await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });
+
+    const dbUser = await db.user.findUnique({ where: { keycloakId: user.sub } });
+
+    if (!dbUser) {
+      return NextResponse.json(
+        { success: false, error: "User not found" },
+        { status: 404 }
+      );
+    }
 
     const lead = await db.policyLead.update({
-      where: { id: leadId, agentId:user.id },
+      where: { id: leadId, agentId: dbUser.id },
       data: {
         ...(updates.status && { status: updates.status }),
         ...(updates.phone !== undefined && { phone: updates.phone }),
@@ -97,9 +135,15 @@ export async function PATCH(req: NextRequest) {
       },
     });
 
-    return Response.json({ success: true, data: lead });
+    return NextResponse.json(
+      { success: true, data: lead },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("CRM update error:", error);
-    return Response.json({ success: false, error: "Failed to update lead" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Failed to update lead" },
+      { status: 500 }
+    );
   }
 }

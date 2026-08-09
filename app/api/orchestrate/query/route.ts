@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { orchestrateQuery, orchestrateQueryStreaming } from "@/lib/orchestration";
+import { orchestrateQuery, orchestrateQueryStreaming } from "@/lib/ai/orchestrator";
 
 export async function POST(request: Request) {
   try {

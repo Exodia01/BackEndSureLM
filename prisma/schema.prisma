@@ -8,16 +8,18 @@ datasource db {
 
 model User {
   id            String   @id @default(cuid())
-  clerkId       String   @unique
+  keycloakId    String   @unique
   email         String   @unique
   name          String
   avatar        String?
-  role          Role     @default(AGENT)
+  realmRole     Role?    @map("role")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  agentProfile  AgentProfile?
-  leads         PolicyLead[]
+  agentProfile      AgentProfile?
+  leads             PolicyLead[]
+  documents         CustomerDocument[]
+  reviewedReports   DocumentValidationReport[]
 }
 
 model AgentProfile {
@@ -50,6 +52,7 @@ model PolicyLead {
   reminders     Reminder[]
   birthdayReminders BirthdayReminder[]
   issuances     PolicyIssuance[]
+  applications  Application[]
 
   @@unique([agentId, phone])
   @@index([agentId, status, followUpAt])
@@ -71,8 +74,154 @@ model PolicyIssuance {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   nextPremiumDue DateTime?
+  issuedBy       String?
+
+  // Phase 4A FK linkage. Legacy rows keep these NULL; the Phase 4 application
+  // issuance flow must populate all three and reference the application's
+  // frozen policy/version.
+  applicationId   String?
+  application     Application?    @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  policyId        String?
+  policy          Policy?         @relation(fields: [policyId], references: [id], onDelete: SetNull)
+  policyVersionId String?
+  policyVersion   PolicyVersion?  @relation(fields: [policyVersionId], references: [id], onDelete: SetNull)
+
+  @@unique([leadId, policyName])
+  @@index([leadId])
+  @@index([applicationId])
+  @@index([policyId])
+  @@index([policyVersionId])
+}
+
+model Application {
+  id              String            @id @default(cuid())
+  leadId          String
+  lead            PolicyLead        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  policyId        String
+  policy          Policy            @relation(fields: [policyId], references: [id], onDelete: Restrict)
+  policyVersionId String
+  policyVersion   PolicyVersion     @relation(fields: [policyVersionId], references: [id], onDelete: Restrict)
+  status          ApplicationStatus @default(DRAFT)
+  submittedAt     DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  documents       CustomerDocument[]
+  issuances       PolicyIssuance[]
 
   @@index([leadId])
+  @@index([policyId])
+  @@index([policyVersionId])
+  @@index([leadId, status, createdAt])
+
+  // NOTE: At most one ACTIVE application per (lead, policy, version) is
+  // enforced by a hand-written partial unique index (Prisma cannot express
+  // partial indexes):
+  //   CREATE UNIQUE INDEX "Application_active_lead_policy_version_key"
+  //     ON "Application"("leadId","policyId","policyVersionId")
+  //     WHERE "status" NOT IN ('ISSUED','REJECTED','WITHDRAWN');
+  // Terminal states (ISSUED/REJECTED/WITHDRAWN) permit a later application.
+  // Applied in prisma/migrations/20260808140000_phase4a_application/migration.sql
+}
+
+model CustomerDocument {
+  id               String         @id @default(cuid())
+  applicationId    String
+  application      Application    @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  docType          DocumentType
+  status           DocumentStatus @default(UPLOADED)
+  originalFilename String
+  originalHash     String         // SHA-256 hex
+  mimeType         String
+  sizeBytes        Int
+  storageKey       String         // server-relative "aa/bb.../sha256.ext"; never an absolute path
+  pageCount        Int?
+  ocrData          Json?
+  extractedData    Json?
+  attempts         Int            @default(0) // retry counter for the processing job
+  requirementRuleKey String?      // e.g. "KYC_PAN" — the RequirementDefinition.ruleKey this doc satisfies
+  uploadedById     String
+  uploadedBy       User           @relation(fields: [uploadedById], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  job              DocumentJob?
+  stages           DocumentStageLog[]
+  validationReport DocumentValidationReport?
+
+  @@unique([applicationId, originalHash])
+  @@index([applicationId, docType])
+  @@index([originalHash])
+  @@index([uploadedById])
+  @@index([status, createdAt])
+}
+
+model DocumentJob {
+  id           String           @id @default(cuid())
+  documentId   String           @unique
+  document     CustomerDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  jobType      String           @default("DOCUMENT_PROCESSING")
+  status       DocumentJobStatus @default(PENDING)
+  attempts     Int              @default(0)
+  maxAttempts  Int              @default(3)
+  availableAt  DateTime         @default(now())
+  startedAt    DateTime?
+  completedAt  DateTime?
+  lastError    String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([status, availableAt])
+}
+
+model DocumentStageLog {
+  id         String             @id @default(cuid())
+  documentId String
+  document   CustomerDocument   @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  stage      DocumentStage
+  status     DocumentStageStatus
+  attempts   Int                @default(0)
+  model      String?
+  confidence Float?
+  errorCode  String?
+  message    String?
+  metadata   Json?
+  createdAt  DateTime           @default(now())
+
+  @@index([documentId, stage, createdAt])
+}
+
+model DocumentValidationReport {
+  id                String           @id @default(cuid())
+  documentId        String           @unique
+  document          CustomerDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  status            ValidationResult
+  deterministicPass Boolean?
+  ruleResults       Json
+  discrepancies     Json
+  aiAssist          Json?
+  docTypeDetected   DocumentType?
+  docTypeConfidence Float?
+  reviewedById      String?
+  reviewedBy        User?            @relation(fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt        DateTime?
+  reviewNotes       String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+}
+
+model AuditEvent {
+  id         String   @id @default(cuid())
+  actorId    String
+  actorRole  String?
+  action     String
+  entityType String
+  entityId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([actorId, createdAt])
 }
 
 model Message {
@@ -132,7 +281,8 @@ model Brochure {
   id           String         @id @default(cuid())
   basename     String         // e.g., "Kotak_Premier_Life_Plan"
   originalName String         // Full filename with version info
-  pdfData      Bytes          // Store raw PDF in DB (BYTEA)
+  filePath     String?        // Absolute path to PDF on disk (e.g., /data/pdfs/{versionHash}.pdf)
+  pdfData      Bytes?         // Legacy BYTEA storage; populated only until migrate-brochure-pdfs.ts runs
   currentPage  Int            @default(0)
   totalPages   Int
   status       BrochureStatus @default(PENDING)
@@ -144,6 +294,8 @@ model Brochure {
 
   chunks       Chunk[]
   Log          BrochureLog[]
+  policyLinks  PolicyBrochure[]
+  requirements RequirementDefinition[]
 }
 
 model BrochureLog {
@@ -202,11 +354,79 @@ enum IssuanceStatus {
   CLAIMED
 }
 
+enum DocumentType {
+  AADHAAR
+  PAN
+  BANK_STATEMENT
+  INCOME_PROOF
+  ADDRESS_PROOF
+  IDENTITY_PROOF
+  POLICY_DOCUMENT
+  OTHER
+}
+
+enum DocumentStatus {
+  PENDING
+  UPLOADED
+  PROCESSING
+  OCR_COMPLETE
+  EXTRACTED
+  VALIDATED
+  REJECTED
+  DUPLICATE
+  OCR_FAILED
+  EXTRACTION_FAILED
+  VALIDATION_FAILED
+  REVIEW_REQUIRED
+}
+
+enum DocumentStage {
+  UPLOAD
+  NORMALIZE
+  OCR
+  CLASSIFY
+  EXTRACT
+  VALIDATE
+  REVIEW
+}
+
+enum DocumentStageStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  FAILED
+}
+
+enum DocumentJobStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+enum ValidationResult {
+  PASS
+  FAIL
+  REVIEW_REQUIRED
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDERWRITING
+  DOCUMENTS_REQUIRED
+  APPROVED
+  ISSUED
+  REJECTED
+  WITHDRAWN
+}
+
 enum BrochureStatus {
   PENDING
   PROCESSING
   READY
   FAILED
+  ARCHIVED
 }
 
 enum BrochureAction {
@@ -215,6 +435,115 @@ enum BrochureAction {
   PROCESS_START
   PROCESS_COMPLETE
   FAILED
+}
+
+model Policy {
+  id              String              @id @default(cuid())
+  name            String
+  provider        String?
+  category        String?
+  allowReuse      Boolean             @default(false)
+  isActive        Boolean             @default(true)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  currentVersionId String?            @unique
+
+  currentVersion  PolicyVersion?      @relation("PolicyCurrentVersion", fields: [currentVersionId], references: [id])
+  brochures       PolicyBrochure[]
+  versions        PolicyVersion[]     @relation("PolicyVersions")
+  requirements    RequirementDefinition[]
+  snapshots       RequirementSnapshot[]
+  applications    Application[]
+  issuances       PolicyIssuance[]
+
+  @@index([name])
+  @@index([isActive])
+}
+
+model PolicyBrochure {
+  id         String    @id @default(cuid())
+  policyId   String
+  brochureId String
+  createdAt  DateTime  @default(now())
+
+  policy     Policy    @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  brochure   Brochure  @relation(fields: [brochureId], references: [id], onDelete: Cascade)
+
+  @@unique([policyId, brochureId])
+  @@index([brochureId])
+}
+
+model PolicyVersion {
+  id            String               @id @default(cuid())
+  policyId      String
+  versionNum    Int
+  label         String?
+  isCurrent     Boolean              @default(false)
+  publishedBy   String?
+  publishedAt   DateTime             @default(now())
+  createdAt     DateTime             @default(now())
+
+  policy        Policy               @relation("PolicyVersions", fields: [policyId], references: [id], onDelete: Cascade)
+  currentFor    Policy?              @relation("PolicyCurrentVersion")
+  snapshot      RequirementSnapshot?
+  applications  Application[]
+  issuances     PolicyIssuance[]
+
+  @@unique([policyId, versionNum])
+  @@index([policyId, isCurrent])
+
+  // NOTE: A partial unique index enforces at most one current version per
+  // policy (B1 hardening): UNIQUE(policy_id) WHERE is_current = true.
+  // Prisma's schema DSL cannot express partial indexes, so it is applied via
+  // the migration prisma/migrations/20260807130000_phase3_security/migration.sql
+  // and documented here for discoverability.
+}
+
+model RequirementDefinition {
+  id              String          @id @default(cuid())
+  policyId        String
+  brochureId      String
+  isDraft         Boolean         @default(true)
+  ruleKey         String          // Stable semantic key, e.g. "KYC_PAN"
+  label           String
+  description     String?
+  confidence      Float
+  extractionMode  ExtractionMode
+  validationRules Json?           // Zod-validated rules (age limits, sums assured, etc.)
+  provenance      Json?           // { source_brochure_id, source_chunk_ids, extraction_model, extracted_at }
+  sourceChunkIds  String[]        // Chunk IDs the rule was extracted from
+  maxAttempts     Int             @default(3)
+  approvedAt      DateTime?
+  approvedBy      String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  policy          Policy          @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  brochure        Brochure        @relation(fields: [brochureId], references: [id], onDelete: Cascade)
+
+  @@unique([policyId, ruleKey, isDraft])
+  @@index([brochureId])
+  @@index([isDraft])
+}
+
+model RequirementSnapshot {
+  id            String         @id @default(cuid())
+  policyVersionId String       @unique
+  policyId      String
+  requirements  Json           // Immutable copy of approved RequirementDefinitions at version publish time
+  createdAt     DateTime       @default(now())
+  createdBy     String?
+
+  version       PolicyVersion  @relation(fields: [policyVersionId], references: [id], onDelete: Cascade)
+  policy        Policy         @relation(fields: [policyId], references: [id], onDelete: Cascade)
+
+  @@index([policyId])
+}
+
+enum ExtractionMode {
+  EXPLICIT
+  INFERRED
+  UNCERTAIN
 }
 
 model OrchestrationLog {

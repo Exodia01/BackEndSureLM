@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    container_name: surelm-keycloak
+    command: start-dev
+    ports:
+      - "18443:8443"
+    environment:
+      KC_HTTPS_PORT: 8443
+      KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/certs/keycloak.keystore.p12
+      KC_HTTPS_KEY_STORE_PASSWORD: [REDACTED-CREDENTIAL]
+      KC_HTTPS_PRIVATE_KEY_ALIAS: keycloak
+      KC_HTTP_RELAXED_AUTH: "true"
+
+      # Admin credentials
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: kc[REDACTED-CREDENTIAL]
+
+      # Database configuration
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://surelm-postgres:5432/keycloak
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: [REDACTED-CREDENTIAL]
+
+      # Realm import configuration
+      KC_IMPORT_DIR: /opt/keycloak/data/import
+      KC_IMPORT_STRATEGY: OVERWRITE
+
+      # URLs
+      KC_HOSTNAME_STRICT: "false"
+      KC_PROFILE: httpsscheme
+    volumes:
+      - ./keycloak/certs:/opt/keycloak/certs:ro
+      - ./realm-import.json:/opt/keycloak/data/import/surelm_realm.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: surelm-postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: [REDACTED-CREDENTIAL]
+    command: ["postgres", "-c", "listen_addresses=*"]
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-keycloak-db.sql:/docker-entrypoint-initdb.d/init-keycloak-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

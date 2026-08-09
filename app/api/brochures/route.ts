@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadBrochure, listBrochures } from "@/lib/pdf/batchProcess";
+import { requireAuth, requireAdmin } from "@/lib/auth/guards";
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.ok) return auth.response;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const limit = parseInt(searchParams.get("limit") || "20");
@@ -21,7 +25,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const auth = await requireAdmin(request);
+  if (!auth.ok) return auth.response;
+
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File | null;

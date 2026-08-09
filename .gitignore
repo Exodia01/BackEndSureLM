@@ -1,8 +1,39 @@
-git:
-  ignored:
-    - logs/application/*.log
-    - logs/traces/*.json
-    - temp/
-    - node_modules/
-    - .env.local
-node_modules
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+build/
+
+# Environment
+.env
+.env.local
+.env.production
+.env*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Temp / runtime
+temp/
+data/
+data_phase2/
+pdf-incoming-phase2/
+.kiro/
+.clerk/
+__pycache__/
+*.pyc
+
+# Test archives & generated reports
+tests-archive/
+tsc*.txt
+lint*.txt
+all_errors.txt
+errors*.txt
+tspareport.txt
+
+# Editor
+.vscode/

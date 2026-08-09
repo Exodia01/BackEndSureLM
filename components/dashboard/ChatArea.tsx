@@ -179,42 +179,39 @@ export default function ChatArea({ lead }: ChatAreaProps) {
 
 
   useEffect(() => {
-    setMessages([]);
-    setInput("");
-    setLoadingHistory(true);
-    setIssuedPolicies(new Set());
-    setStreamingId(null);
-    loadAll();
-  }, [lead.id]);
-  const loadAll = async () => {
-    try {
-      const [mRes, iRes] = await Promise.all([
-        fetch(`/api/messages?leadId=${lead.id}`),
-        fetch(`/api/issuances?leadId=${lead.id}`),
-      ]);
-      const [mJson, iJson] = await Promise.all([mRes.json(), iRes.json()]);
+    let cancelled = false;
+    (async () => {
+      try {
+        const [mRes, iRes] = await Promise.all([
+          fetch(`/api/messages?leadId=${lead.id}`),
+          fetch(`/api/issuances?leadId=${lead.id}`),
+        ]);
+        const [mJson, iJson] = await Promise.all([mRes.json(), iRes.json()]);
 
-      if (mJson.success && mJson.data.length > 0) {
-        setMessages(mJson.data.map((m: DbMessage) => ({
-          id: m.id,
-          role: m.role === "AGENT" ? "agent" : "ai",
-          content: m.content,
-          policies: m.policies ?? undefined,
-          timestamp: new Date(m.createdAt),
-        })));
-      } else {
-        setMessages([WELCOME_MESSAGE(lead.householdName)]);
-      }
+        if (cancelled) return;
+        if (mJson.success && mJson.data.length > 0) {
+          setMessages(mJson.data.map((m: DbMessage) => ({
+            id: m.id,
+            role: m.role === "AGENT" ? "agent" : "ai",
+            content: m.content,
+            policies: m.policies ?? undefined,
+            timestamp: new Date(m.createdAt),
+          })));
+        } else {
+          setMessages([WELCOME_MESSAGE(lead.householdName)]);
+        }
 
-      if (iJson.success && iJson.data.length > 0) {
-        setIssuedPolicies(new Set(iJson.data.map((i: { policyName: string }) => i.policyName)));
+        if (!cancelled && iJson.success && iJson.data.length > 0) {
+          setIssuedPolicies(new Set(iJson.data.map((i: { policyName: string }) => i.policyName)));
+        }
+      } catch {
+        if (!cancelled) setMessages([WELCOME_MESSAGE(lead.householdName)]);
+      } finally {
+        if (!cancelled) setLoadingHistory(false);
       }
-    } catch {
-      setMessages([WELCOME_MESSAGE(lead.householdName)]);
-    } finally {
-      setLoadingHistory(false);
-    }
-  };
+    })();
+    return () => { cancelled = true; };
+  }, [lead.id, lead.householdName]);
 
   const saveMessage = async (role: "agent" | "ai", content: string, policies?: Policy[]) => {
     try {
@@ -226,25 +223,76 @@ export default function ChatArea({ lead }: ChatAreaProps) {
     } catch { console.error("Failed to save message"); }
   };
 
+  const parsePremium = (premium: string): number => {
+    const num = parseFloat(premium.replace(/[^0-9.]/g, ""));
+    return Number.isFinite(num) ? num : 0;
+  };
+
+  // Drive the canonical server chain for the canonical issuance surface:
+  // create/reuse the application, submit it, then approve (the deterministic
+  // frozen-snapshot gate; 409 surfaces its blockers), then issue.
+  const ensureApplicationReady = async (policy: Policy): Promise<string> => {
+    const appRes = await fetch("/api/applications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ leadId: lead.id, policyName: policy.name }),
+    });
+    const appJson = await appRes.json();
+    if (!appJson.success || !appJson.data?.id) {
+      throw new Error(appJson.error ?? "Failed to create application");
+    }
+    const applicationId: string = appJson.data.id;
+
+    const checklistRes = await fetch(`/api/applications/${applicationId}/checklist`);
+    const checklistJson = await checklistRes.json();
+    if (!checklistJson.success) {
+      throw new Error(checklistJson.error ?? "Failed to load application checklist");
+    }
+
+    const status: string = checklistJson.data?.application?.status;
+    if (status === "DRAFT") {
+      const submitRes = await fetch(`/api/applications/${applicationId}/submit`, { method: "POST" });
+      const submitJson = await submitRes.json();
+      if (!submitJson.success) throw new Error(submitJson.error ?? "Failed to submit application");
+    }
+
+    const approveRes = await fetch(`/api/applications/${applicationId}/approve`, { method: "POST" });
+    const approveJson = await approveRes.json();
+    if (!approveJson.success) throw new Error(approveJson.error ?? "Application cannot be approved yet");
+
+    return applicationId;
+  };
+
   const issuePolicy = async (policy: Policy) => {
     if (issuingPolicy || issuedPolicies.has(policy.name)) return;
     setIssuingPolicy(policy.name);
     setOcrPolicy(null);
     try {
+      const applicationId = await ensureApplicationReady(policy);
+
       const res = await fetch("/api/issuances", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          leadId: lead.id,
-          policyName: policy.name,
-          policyProvider: policy.provider,
-          premiumAmount: policy.premium,
+          applicationId,
+          premiumAmount: parsePremium(policy.premium),
         }),
       });
       const json = await res.json();
-      if (json.success) setIssuedPolicies((p) => new Set(p).add(policy.name));
-    } catch { console.error("Failed to issue policy"); }
-    finally { setIssuingPolicy(null); }
+      if (json.success) {
+        setIssuedPolicies((p) => new Set(p).add(policy.name));
+      } else {
+        throw new Error(json.error ?? "Failed to issue policy");
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to issue policy";
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now().toString(), role: "ai", content: `Policy "${policy.name}" could not be issued yet: ${msg}`, timestamp: new Date() },
+      ]);
+    } finally {
+      setIssuingPolicy(null);
+    }
   };
 
   // ── Streaming sendMessage ──────────────────────────────────────────────────
@@ -395,6 +443,7 @@ export default function ChatArea({ lead }: ChatAreaProps) {
           <PolicyOCRModal
             policy={ocrPolicy}
             householdName={lead.householdName}
+            leadId={lead.id}
             onSuccess={issuePolicy}
             onClose={() => setOcrPolicy(null)}
           />

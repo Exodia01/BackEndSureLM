@@ -1,19 +1,34 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
+import { validateAuth } from "@/lib/auth/keycloak";
 
-// Define which routes require authentication
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
+export const runtime = "nodejs";
 
-export default clerkMiddleware(async (auth, req) => {
-  // If the route is protected and user is not signed in, redirect to sign-in
-  if (isProtectedRoute(req)) {
-    await auth.protect();
+const PROTECTED_ROUTES = ["/dashboard", "/policies"];
+
+function isProtectedRoute(pathname: string): boolean {
+  return PROTECTED_ROUTES.some((route) =>
+    pathname.startsWith(route)
+  );
+}
+
+export default async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  if (isProtectedRoute(pathname)) {
+    const { valid } = await validateAuth(req);
+
+    if (!valid) {
+      return NextResponse.redirect(new URL("/sign-in", req.url));
+    }
   }
-});
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and static files
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
+    "/dashboard/:path*",
+    "/policies/:path*",
+    "/api/:path*",
   ],
 };
