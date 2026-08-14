@@ -2,6 +2,7 @@
 import { db } from "@/lib/db";
 import { validateAuth, getUserFromToken, ensureUserInDb } from "@/lib/auth/keycloak";
 import { requireAgent, requireAuth } from "@/lib/auth/guards";
+import { writeAuditEvent } from "@/lib/audit";
 
 export async function GET(req: NextRequest) {
   try {
@@ -59,6 +60,15 @@ export async function POST(req: NextRequest) {
         notes: notes ?? null,
         status: "NEW",
       },
+    });
+
+    await writeAuditEvent({
+      actorId: userInDb.id,
+      actorRole: "agent",
+      action: "lead.created",
+      entityType: "PolicyLead",
+      entityId: lead.id,
+      metadata: { notes: notes ?? null },
     });
 
     return Response.json({ success: true, data: lead });

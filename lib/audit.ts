@@ -33,7 +33,8 @@ export type AuditAction =
   | "application.approval_blocked"
   | "application.rejected"
   | "application.checklist_viewed"
-  | "issuance.created";
+  | "issuance.created"
+  | "lead.created";
 
 export interface AuditEventInput {
   actorId: string;
