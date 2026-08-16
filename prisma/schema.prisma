@@ -507,6 +507,14 @@ model RequirementDefinition {
   ruleKey         String          // Stable semantic key, e.g. "KYC_PAN"
   label           String
   description     String?
+  // Frozen-contract fields (Content/SureLM_Business_Context_Contract.md §8).
+  // Nullable: extraction may omit them and they are persisted verbatim when
+  // produced. isDraft/maxAttempts/provenance invariants are unaffected.
+  documentType      String?       // e.g. "BROCHURE" or product type from extraction
+  category          String?       // eligibility, premium_payment, death_benefit, ...
+  isMandatory       Boolean?      // true when the brochure states the requirement as mandatory
+  displayOrder      Int?          // display ordering hint for a future checklist UI
+  onMaxAttemptsMessage String?    // terminal failure message stored per business rule #10
   confidence      Float
   extractionMode  ExtractionMode
   validationRules Json?           // Zod-validated rules (age limits, sums assured, etc.)

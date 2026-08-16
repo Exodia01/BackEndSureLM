@@ -25,6 +25,11 @@ export interface FrozenRequirement {
   ruleKey: string;
   label: string;
   description?: string | null;
+  documentType?: string | null;
+  category?: string | null;
+  isMandatory?: boolean | null;
+  displayOrder?: number | null;
+  onMaxAttemptsMessage?: string | null;
   confidence?: number | null;
   extractionMode?: string | null;
   validationRules?: Record<string, unknown> | null;
