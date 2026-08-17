@@ -21,4 +21,9 @@ import { EXTRACTION_MODEL } from "../lib/ai/extractRequirements";
     JSON.stringify((cols as { column_name: string }[]).map((c) => c.column_name))
   );
   console.log("EXTRACTION_MODEL:", EXTRACTION_MODEL);
+  console.log(
+    "[phase2f] NOTE: this value is resolved in THIS process only (tsx + dotenv/config, which loads `.env`).",
+    "It does NOT represent the Next.js runtime, which loads `.env.local` with higher precedence.",
+    `env sources: EXTRACTION_MODEL=${process.env.EXTRACTION_MODEL ?? "(unset)"}, PRIMARY_MODEL_NAME=${process.env.PRIMARY_MODEL_NAME ?? "(unset)"}`
+  );
 })();
