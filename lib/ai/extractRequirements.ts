@@ -21,8 +21,18 @@ const ValidationRulesSchema = z
     maxSumAssured: z.number().nonnegative().nullable().optional(),
     minPremium: z.number().nonnegative().nullable().optional(),
     maxPremium: z.number().nonnegative().nullable().optional(),
-    policyTermYears: z.number().int().nonnegative().nullable().optional(),
-    premiumTermYears: z.number().int().nonnegative().nullable().optional(),
+    // Term years are naturally multi-valued: brochures commonly list a fixed
+    // scalar (e.g. "policy term: 25 years") OR an explicit menu of options
+    // (e.g. "policy term: 10 / 15 / 20 / 25 / 30 years"). Accept both so the
+    // schema reflects the source fidelity the frozen contract requires.
+    policyTermYears: z
+      .union([z.number().int().nonnegative(), z.array(z.number().int().nonnegative())])
+      .nullable()
+      .optional(),
+    premiumTermYears: z
+      .union([z.number().int().nonnegative(), z.array(z.number().int().nonnegative())])
+      .nullable()
+      .optional(),
     allowedPaymentModes: z.array(z.string()).optional(),
     notes: z.string().optional(),
   })
@@ -87,7 +97,7 @@ For each requirement return:
 - onMaxAttemptsMessage: a short, customer-facing message to show when the customer cannot satisfy this requirement (e.g. after the maximum attempts). Write it in plain language based on what the brochure says; if the brochure is silent, describe the failure condition generically.
 - confidence: 0..1.
 - extractionMode: EXPLICIT if the brochure states the figure directly, INFERRED if it is reasonably derivable from stated figures, UNCERTAIN if ambiguous or missing.
-- validationRules: an object capturing numeric thresholds only when explicitly present in the text (e.g. minEntryAge, maxEntryAge, minSumAssured, maxSumAssured, minPremium, maxPremium, policyTermYears, premiumTermYears, allowedPaymentModes). Omit fields not stated.
+- validationRules: an object capturing numeric thresholds only when explicitly present in the text (e.g. minEntryAge, maxEntryAge, minSumAssured, maxSumAssured, minPremium, maxPremium, policyTermYears, premiumTermYears, allowedPaymentModes). Omit fields not stated. When the brochure lists MULTIPLE allowed options for a term (e.g. "policy term: 10 / 15 / 20 / 25 / 30 years"), represent policyTermYears/premiumTermYears as an array of numbers (e.g. [10, 15, 20, 25, 30]); use a single number only when the brochure states one fixed term.
 
 Respond with STRICT JSON only, no markdown, matching exactly:
 {"productType": string, "requirements": [{"ruleKey": string, "label": string, "description": string, "documentType": string, "category": string, "isMandatory": boolean, "displayOrder": number, "onMaxAttemptsMessage": string, "confidence": number, "extractionMode": "EXPLICIT"|"INFERRED"|"UNCERTAIN", "validationRules": { ... }}]}

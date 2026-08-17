@@ -13,13 +13,15 @@
 3. [Repository Map](#repository-map)
 4. [Authoritative Policy Workflow (Phase 2)](#authoritative-policy-workflow-phase-2)
 5. [Corpus State (Phase 1)](#corpus-state-phase-1)
-6. [Implemented vs Blocked](#implemented-vs-blocked)
-7. [Developer Quick Start](#developer-quick-start)
-8. [Running & Verifying](#running--verifying)
-9. [Testing](#testing)
-10. [Protect These Files](#protect-these-files)
-11. [Historical / Forensic Notes](#historical--forensic-notes)
-12. [Known Debt & Blockers](#known-debt--blockers)
+6. [Phase 2G Model Architecture](#phase-2g-model-architecture)
+7. [Phase 2H Population (scripted ADMIN workflow)](#phase-2h-population-scripted-admin-workflow)
+8. [Implemented vs Blocked](#implemented-vs-blocked)
+9. [Developer Quick Start](#developer-quick-start)
+10. [Running & Verifying](#running--verifying)
+11. [Testing](#testing)
+12. [Protect These Files](#protect-these-files)
+13. [Historical / Forensic Notes](#historical--forensic-notes)
+14. [Known Debt & Blockers](#known-debt--blockers)
 
 ---
 
@@ -60,6 +62,7 @@ SureLM empowers grassroots insurance agents to bring financial protection to hou
 - `.env.local` (runtime-authoritative) sets `PRIMARY_MODEL_NAME=qwen2.5:7b` and `EXTRACTION_MODEL=qwen2.5:7b`.
 - `.env` still carries a **legacy** `PRIMARY_MODEL_NAME=qwen2.5-coder:1.5b`. This is a known conflict — `.env.local` wins at runtime. It is documented, not "fixed," because `.env` values are machine-local.
 - Fallback models (`llama3:latest`, `llama3.2:3b`) are **not installed in Ollama** (HTTP 404 when probed). The LLM layer (`lib/ai/agents/llm.ts`) tries primary → fallback → throws. Treat fallbacks as **not production-ready**.
+- `lib/ai/agents/llm.ts` sends `options: { num_ctx: Number(process.env.OLLAMA_NUM_CTX) || 32768 }` on every Ollama generate/stream call. This is required: Ollama's default 2048-token context truncates large brochures and caused extraction to return non-JSON prose (Phase 2H root cause). `qwen2.5:7b` supports 32768 tokens.
 
 ### Environment files
 
@@ -120,6 +123,8 @@ scripts/
   phase2b-brochure-catalog.ts                # Read-only brochure catalog (27 products)
   phase2f-apply-migration.ts                 # Applies the additive 2F migration to surelm_0
   phase2f-verify-state.ts                    # Verifies migration + DB state
+  phase2h-populate.ts                        # Scripted ADMIN workflow: populates 27 policies (idempotent)
+  phase2h-verify.ts                          # Full Phase 2H integrity audit (277 checks)
   bootstrap-keycloak.ts                      # Keycloak initialization
   document-worker.ts                         # Document processing worker
   cleanup.ts                                 # Build cleanup
@@ -143,7 +148,7 @@ tests/
 
 ## Authoritative Policy Workflow (Phase 2)
 
-> This workflow was implemented in Phase 2 and is the **source of truth for authoritative policy data**. It is **not** seeded, fabricated, or inferred. Verdict from `scripts/PHASE2-AUTHORITATIVE-DATA-WORKFLOW.md`: **PARTIAL** — workflow fully wired, but authoritative tables are empty pending real ADMIN action.
+> This workflow was implemented in Phase 2 and is the **source of truth for authoritative policy data**. It is **not** seeded, fabricated, or inferred. The workflow was fully exercised in **Phase 2H**: all 27 canonical brochures were populated through it via a scripted ADMIN run (see [Phase 2H Population](#phase-2h-population-scripted-admin-workflow)).
 
 ```
 ADMIN creates Policy
@@ -217,7 +222,8 @@ Verified canonical state (see `scripts/PHASE1-CANONICAL-DATA-REPAIR.md` and `scr
 - **27** READY brochures (source PDFs in `PDF_STORAGE_DIR=S:/BackEndSureLM/data_phase2/pdfs`).
 - **486** canonical chunks, **486** Qdrant vectors (`policy_knowledge`, 768-dim, Cosine).
 - **0** canonical orphans (all chunks have a valid brochure).
-- **3** legacy chunks with `brochureId = null` (IDs `113736`, `113736_2`, `113736_3`) — reported, **not deleted**. They predate the canonical repair.
+- **3** legacy chunks with `brochureId = null` (IDs `113736`, `113736_2`, `113736_3`) — reported, **not deleted**. They predate the canonical repair. (These 3 rows explain why `db.chunk.count()` returns 489 while the canonical corpus is 486.)
+- All 27 brochures are now linked to a `Policy` (see Phase 2H). The corpus itself was **not re-ingested** during Phase 2H — chunk/vector counts are unchanged.
 
 ### Valid retrieval baseline (Phase 1, `surelm_0` canonical DB)
 
@@ -234,6 +240,71 @@ Verified canonical state (see `scripts/PHASE1-CANONICAL-DATA-REPAIR.md` and `scr
 
 ---
 
+## Phase 2G Model Architecture
+
+Unified model configuration across every execution path (`commit ac37d32`):
+
+| Layer | Model | Notes |
+|-------|-------|-------|
+| Primary LLM | `qwen2.5:7b` | `.env.local` `PRIMARY_MODEL_NAME` |
+| Requirement extraction | `qwen2.5:7b` | `.env.local` `EXTRACTION_MODEL` |
+| Embeddings | `nomic-embed-text` (768-dim) | Unchanged |
+| Vision / OCR | `minicpm-v` (primary), `llava:7b` (fallback) | **Silo 2 only** — OCR is NOT used in the Silo 1 requirement-extraction path |
+| Context window | `num_ctx = 32768` (default) | Sent by `lib/ai/agents/llm.ts`; override via `OLLAMA_NUM_CTX` |
+
+Silo boundary: **Silo 1** = PDF → chunks → extraction (`qwen2.5:7b`) → ADMIN approval → `PolicyVersion` → immutable `RequirementSnapshot`. **Silo 2** = OCR/vision. Phase 2H uses only Silo 1.
+
+---
+
+## Phase 2H Population (scripted ADMIN workflow)
+
+All 27 canonical brochures were populated into the authoritative chain by a **scripted ADMIN workflow** (`scripts/phase2h-populate.ts`) that invokes the **same service/workflow functions used by the ADMIN APIs** — no business logic is duplicated:
+
+```
+27 Policy + PolicyBrochure links (mirrors POST /api/policies + /api/policies/[id]/brochures)
+  → extractRequirements()  (qwen2.5:7b, drafts, maxAttempts=3, provenance)
+  → draft verification gate (category/extractionMode/confidence/provenance)
+  → approveRequirement("admin") for every draft
+  → publishPolicyVersion({label:"v1", publishedBy:"admin"})
+      → PolicyVersion (isCurrent) + immutable RequirementSnapshot
+```
+
+### Frozen extraction schema (Phase 2H-R contract decision)
+
+`validationRules.policyTermYears` / `premiumTermYears` accept **either a scalar number or an array of numbers**. The frozen contract (`Content/SureLM_Business_Context_Contract.md` §8) defines `validationRules` as extensible JSON and never requires scalar-only term years. Brochures legitimately list multiple allowed terms:
+
+- **Kotak Ace Investment**: "Policy Term: 10 / 15 / 20 / 25 / 30 years" → `policyTermYears: [10,15,20,25,30]`
+- **Kotak POS Bachat Bima**: "Policy Term (Fixed): 16 years / 20 years" → `policyTermYears: [16,20]`
+
+An initial run of the phase reported these two as STOPPED because the Zod schema required a single number while the model correctly emitted the brochure's option list. The schema was widened to a scalar-or-array union (`lib/ai/extractRequirements.ts`), which is **backward compatible** with the two pre-existing scalar values (`5`, `99`) already in the 25 published policies. Existing approved requirements were **not modified**. Downstream consumers (`lib/ai/services/policyVersioning.ts`, `lib/applications/checklist.ts`) treat `validationRules` as opaque JSON, so no consumer change was needed.
+
+### Current authoritative DB counts (verified)
+
+| Table | Count |
+|-------|-------|
+| Policy | 27 |
+| PolicyBrochure links | 27 (exactly 1 per policy, correct brochure) |
+| RequirementDefinition | **230** approved, **0** drafts |
+| PolicyVersion | 27 (exactly one `isCurrent: true` per policy, all `v1`) |
+| RequirementSnapshot | 27 (immutable, snapshot→version→policy verified) |
+| Brochure | 27 READY (unchanged) |
+| Canonical chunks / Qdrant vectors | 486 / 486 (unchanged) |
+
+Provenance is present on all 230 approved requirements: `source_brochure_id`, non-empty `source_chunk_ids`, `extraction_model = qwen2.5:7b`.
+
+### How Phase 2H was executed / verified
+
+```bash
+# Population (idempotent; skips already-published policies)
+npx tsx scripts/phase2h-populate.ts
+
+# Full integrity audit (277 checks: counts, links, versions, snapshots,
+# no orphans/duplicates, no drafts in snapshots, provenance, Qdrant count)
+npx tsx scripts/phase2h-verify.ts
+```
+
+---
+
 ## Implemented vs Blocked
 
 **Implemented**
@@ -242,10 +313,11 @@ Verified canonical state (see `scripts/PHASE1-CANONICAL-DATA-REPAIR.md` and `scr
 - Authoritative policy workflow end-to-end: Policy → PolicyBrochure → RequirementDefinition (extract → review/approve) → PolicyVersion → immutable RequirementSnapshot.
 - Phase 2F frozen-contract fields (additive, applied and verified).
 - 27-brochure canonical corpus ingested; 486 chunks/vectors verified.
+- **Phase 2H: all 27 policies populated through the authoritative workflow** (230 approved requirements, 27 versions + snapshots, 0 drafts).
 - Rate limiting, audit events, concurrent-publish safety, document processing pipeline.
 
 **Blocked / NOT done**
-- **End-to-end recommender validation on authoritative data** — blocked because authoritative tables are empty (`Policy`, `PolicyVersion`, `PolicyBrochure`, `RequirementDefinition`, `RequirementSnapshot` are all `0` rows). A real ADMIN must create policies and run the workflow before the recommender can be validated against authoritative data.
+- **End-to-end recommender validation against authoritative data** — the authoritative tables are now populated (27 policies, 230 approved requirements), so the recommender can finally be validated against real data; that validation itself has **not yet been run**.
 - Fallback LLM models are not installed — do not claim them as working.
 
 ---
@@ -330,7 +402,7 @@ npx prisma validate
 ```
 
 **Current status (verified):**
-- `npx vitest run` → **37 files / 296 tests passing**.
+- `npx vitest run` → **37 files / 300 tests passing**.
 - `npx prisma validate` and `npx prisma generate` pass.
 - `npx tsc --noEmit` → only **3 pre-existing errors** in untracked Phase 1 scripts (`scripts/eval-baseline-retrieval.mts` duplicate property; `scripts/qdrant-integrity-audit.ts` cannot find module `./lib/db`; `scripts/qdrant-integrity-audit.ts` `Property 'filter' does not exist`). These are not in the shipped workflow code.
 
@@ -359,11 +431,12 @@ npx prisma validate
 
 ## Known Debt & Blockers
 
-1. **Authoritative tables empty** — recommender cannot be validated end-to-end on authoritative data until an ADMIN creates policies via the workflow.
+1. **End-to-end recommender validation on authoritative data not yet run** — the authoritative tables are now populated (Phase 2H), but recommender validation against the 27 policies / 230 approved requirements is outstanding.
 2. **`.env` legacy model value** (`qwen2.5-coder:1.5b`) conflicts with `.env.local` (`qwen2.5:7b`); `.env.local` wins. Clean up per machine.
 3. **Fallback models not installed** in Ollama.
 4. **No `_prisma_migrations` history** on `surelm_0`; migrations must be applied by phase tooling, never by `db push`/`migrate dev`.
 5. 3 pre-existing `tsc` errors in untracked Phase 1 scripts (see [Testing](#testing)).
+6. `scripts/phase2h-populate.ts` and `scripts/phase2h-verify.ts` are committed as the Phase 2H execution/verification tooling (the latter currently asserts the Phase 2H final counts — 27 policies, 230 approved).
 
 ---
 

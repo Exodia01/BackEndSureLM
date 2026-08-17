@@ -279,4 +279,122 @@ describe("requirement extraction", () => {
     expect(() => schema.parse({ minEntryAge: -5 })).toThrow();
     expect(() => schema.parse({ minEntryAge: 18 })).not.toThrow();
   });
+
+  it("accepts scalar policyTermYears (backward compatible)", async () => {
+    const scalar = JSON.stringify({
+      requirements: [
+        {
+          ruleKey: "policy_term",
+          label: "Policy Term",
+          description: "Policy term is 25 years.",
+          category: "policy_features",
+          confidence: 0.9,
+          extractionMode: "EXPLICIT",
+          validationRules: { policyTermYears: 25 },
+        },
+      ],
+    });
+    dbMock.brochure.findUnique.mockResolvedValue({ id: "b1", status: "READY" });
+    dbMock.policy.findUnique.mockResolvedValue({ id: "p1" });
+    dbMock.chunk.findMany.mockResolvedValue([{ id: "c1", chunkOrder: 0, content: "x" }]);
+    llmMock.mockResolvedValue(scalar);
+    dbMock.$transaction.mockImplementation(async (fn: (tx: any) => Promise<any>) => fn(dbMock));
+
+    const result = await extractRequirements("b1", "p1");
+    expect(result.draftsCreated).toBe(1);
+    const [arg] = dbMock.requirementDefinition.create.mock.calls[0];
+    expect(arg.data.validationRules).toEqual({ policyTermYears: 25 });
+  });
+
+  it("accepts array policyTermYears when brochure lists multiple options", async () => {
+    const multi = JSON.stringify({
+      requirements: [
+        {
+          ruleKey: "policy_term",
+          label: "Policy Term",
+          description: "Available policy terms: 10, 15, 20, 25 or 30 years.",
+          category: "policy_features",
+          confidence: 0.9,
+          extractionMode: "EXPLICIT",
+          validationRules: { policyTermYears: [10, 15, 20, 25, 30] },
+        },
+      ],
+    });
+    dbMock.brochure.findUnique.mockResolvedValue({ id: "b1", status: "READY" });
+    dbMock.policy.findUnique.mockResolvedValue({ id: "p1" });
+    dbMock.chunk.findMany.mockResolvedValue([{ id: "c1", chunkOrder: 0, content: "x" }]);
+    llmMock.mockResolvedValue(multi);
+    dbMock.$transaction.mockImplementation(async (fn: (tx: any) => Promise<any>) => fn(dbMock));
+
+    const result = await extractRequirements("b1", "p1");
+    expect(result.draftsCreated).toBe(1);
+    const [arg] = dbMock.requirementDefinition.create.mock.calls[0];
+    expect(arg.data.validationRules).toEqual({ policyTermYears: [10, 15, 20, 25, 30] });
+  });
+
+  it("accepts scalar or array premiumTermYears", async () => {
+    const scalar = JSON.stringify({
+      requirements: [
+        {
+          ruleKey: "premium_term",
+          label: "Premium Payment Term",
+          description: "Premium payment term equals the policy term.",
+          category: "premium_payment",
+          confidence: 0.9,
+          extractionMode: "INFERRED",
+          validationRules: { premiumTermYears: 10 },
+        },
+      ],
+    });
+    dbMock.brochure.findUnique.mockResolvedValue({ id: "b1", status: "READY" });
+    dbMock.policy.findUnique.mockResolvedValue({ id: "p1" });
+    dbMock.chunk.findMany.mockResolvedValue([{ id: "c1", chunkOrder: 0, content: "x" }]);
+    llmMock.mockResolvedValue(scalar);
+    dbMock.$transaction.mockImplementation(async (fn: (tx: any) => Promise<any>) => fn(dbMock));
+
+    const r1 = await extractRequirements("b1", "p1");
+    expect(r1.draftsCreated).toBe(1);
+
+    const multi = JSON.stringify({
+      requirements: [
+        {
+          ruleKey: "premium_term",
+          label: "Premium Payment Term",
+          description: "Available premium payment terms: 5 or 10 years.",
+          category: "premium_payment",
+          confidence: 0.9,
+          extractionMode: "EXPLICIT",
+          validationRules: { premiumTermYears: [5, 10] },
+        },
+      ],
+    });
+    llmMock.mockResolvedValue(multi);
+    const r2 = await extractRequirements("b1", "p1");
+    expect(r2.draftsCreated).toBe(1);
+    const [arg] = dbMock.requirementDefinition.create.mock.calls[1];
+    expect(arg.data.validationRules).toEqual({ premiumTermYears: [5, 10] });
+  });
+
+  it("rejects array with invalid element in policyTermYears", async () => {
+    const bad = JSON.stringify({
+      requirements: [
+        {
+          ruleKey: "policy_term",
+          label: "Policy Term",
+          description: "desc",
+          category: "policy_features",
+          confidence: 0.9,
+          extractionMode: "EXPLICIT",
+          validationRules: { policyTermYears: [10, -5] },
+        },
+      ],
+    });
+    dbMock.brochure.findUnique.mockResolvedValue({ id: "b1", status: "READY" });
+    dbMock.policy.findUnique.mockResolvedValue({ id: "p1" });
+    dbMock.chunk.findMany.mockResolvedValue([{ id: "c1", chunkOrder: 0, content: "x" }]);
+    llmMock.mockResolvedValue(bad);
+    dbMock.$transaction.mockImplementation(async (fn: (tx: any) => Promise<any>) => fn(dbMock));
+
+    await expect(extractRequirements("b1", "p1")).rejects.toThrow();
+  });
 });

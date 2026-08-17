@@ -53,6 +53,7 @@ async function chatOllama(
       model: modelName || process.env.PRIMARY_MODEL_NAME || "qwen2.5-coder:1.5b",
       prompt,
       stream: false,
+      options: { num_ctx: Number(process.env.OLLAMA_NUM_CTX) || 32768 },
     }),
   });
 
@@ -78,6 +79,7 @@ async function streamOllama(
       model: modelName || process.env.PRIMARY_MODEL_NAME || "qwen2.5-coder:1.5b",
       prompt,
       stream: true,
+      options: { num_ctx: Number(process.env.OLLAMA_NUM_CTX) || 32768 },
     }),
   });
 
