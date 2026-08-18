@@ -246,14 +246,14 @@ describe("getApplicationChecklist — frozen snapshot is authoritative", () => {
   });
 });
 
-describe("evaluateChecklist — unmapped requirements fail closed", () => {
-  it("a requirement with no mapped evidence doc type stays UNSATISFIED even with valid documents", () => {
+describe("evaluateChecklist — taxonomy-aware classification", () => {
+  it("an artifact ruleKey (max_attempts_*) stays UNSATISFIED (fail closed) even with valid documents", () => {
     const evaluation = evaluateChecklist(
       [
         {
           id: "req-x",
-          ruleKey: "vehicle_age",
-          label: "Vehicle within age limit",
+          ruleKey: "max_attempts_message",
+          label: "Maximum Attempts Message",
           description: null,
           confidence: 0.9,
           extractionMode: "ocr",
@@ -273,10 +273,98 @@ describe("evaluateChecklist — unmapped requirements fail closed", () => {
       ]
     );
 
+    expect(evaluation.requirements[0].classification).toBe("UNCLASSIFIED");
     expect(evaluation.requirements[0].evidenceDocType).toBeNull();
     expect(evaluation.requirements[0].satisfied).toBe(false);
-    expect(evaluation.requirements[0].reason).toContain("no mapped evidence document type");
+    expect(evaluation.requirements[0].reason).toContain("Unclassified requirement");
     expect(evaluation.canApprove).toBe(false);
     expect(evaluation.satisfied).toBe(false);
+  });
+
+  it("a non-artifact unknown ruleKey is classified as POLICY_KNOWLEDGE (satisfied from context)", () => {
+    const evaluation = evaluateChecklist(
+      [
+        {
+          id: "req-x",
+          ruleKey: "vehicle_age",
+          label: "Vehicle within age limit",
+          description: null,
+          confidence: 0.9,
+          extractionMode: "ocr",
+          validationRules: null,
+          sourceChunkIds: [],
+        },
+      ],
+      []
+    );
+
+    expect(evaluation.requirements[0].classification).toBe("POLICY_KNOWLEDGE");
+    expect(evaluation.requirements[0].evidenceDocType).toBeNull();
+    expect(evaluation.requirements[0].satisfied).toBe(true);
+    expect(evaluation.requirements[0].reason).toContain("Product knowledge requirement");
+    expect(evaluation.satisfied).toBe(true);
+    // canApprove requires requirements.length > 0, so it should be true
+    expect(evaluation.canApprove).toBe(true);
+  });
+
+  it("a CUSTOMER_EVIDENCE ruleKey without evidence fails closed", () => {
+    const evaluation = evaluateChecklist(
+      [
+        {
+          id: "req-x",
+          ruleKey: "kyc_documents",
+          label: "KYC Documents",
+          description: null,
+          confidence: 0.9,
+          extractionMode: "ocr",
+          validationRules: null,
+          sourceChunkIds: [],
+        },
+      ],
+      []
+    );
+
+    expect(evaluation.requirements[0].classification).toBe("CUSTOMER_EVIDENCE");
+    expect(evaluation.requirements[0].satisfied).toBe(false);
+    expect(evaluation.requirements[0].reason).toContain("Missing validated");
+    expect(evaluation.canApprove).toBe(false);
+    // "No documents uploaded" should NOT appear because no documents exist
+    // but the requirement IS evidence-gated
+    expect(evaluation.blockers.some((b) => b.includes("No documents uploaded"))).toBe(true);
+  });
+
+  it("a POLICY_KNOWLEDGE-only checklist requires no documents to approve", () => {
+    const evaluation = evaluateChecklist(
+      [
+        {
+          id: "req-1",
+          ruleKey: "min_entry_age",
+          label: "Minimum Entry Age",
+          description: null,
+          confidence: 0.99,
+          extractionMode: "ocr",
+          validationRules: null,
+          sourceChunkIds: [],
+        },
+        {
+          id: "req-2",
+          ruleKey: "max_entry_age",
+          label: "Maximum Entry Age",
+          description: null,
+          confidence: 0.99,
+          extractionMode: "ocr",
+          validationRules: null,
+          sourceChunkIds: [],
+        },
+      ],
+      []
+    );
+
+    expect(evaluation.satisfied).toBe(true);
+    expect(evaluation.canApprove).toBe(true);
+    // No "No documents uploaded" blocker because no evidence-gated requirements
+    expect(evaluation.blockers).not.toContainEqual(
+      expect.stringContaining("No documents uploaded")
+    );
   });
 });

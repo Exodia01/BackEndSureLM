@@ -5,20 +5,66 @@
  * RequirementSnapshot (captured at policy-version publish time). Current/latest
  * policy requirements never participate: the frozen snapshot is authoritative.
  *
- * Semantics (Phase 4C):
- *  - A requirement is SATISFIED only when a VALIDATED document whose
- *    validation report is PASS exists for the requirement (either bound
- *    explicitly via `requirementRuleKey`, or by matching the requirement's
- *    resolved evidence doc type).
- *  - A VALIDATED document is EVIDENCE for a requirement; it never implies
- *    suitability by itself.
- *  - Any REVIEW_REQUIRED document blocks automatic approval.
- *  - Any failed/rejected document blocks approval.
- *  - Requirements that cannot be mapped to an evidence document type are
- *    treated as UNSATISFIED (fail closed): approval is impossible until the
- *    policy author exposes evidence that can be verified deterministically.
+ * Semantics (Phase 4C + Phase 2J taxonomy reconciliation):
+ *  - Each requirement is classified as CUSTOMER_EVIDENCE, POLICY_KNOWLEDGE,
+ *    or UNCLASSIFIED before evaluation.
+ *  - POLICY_KNOWLEDGE requirements are satisfied from authoritative
+ *    policy/brochure context — no customer document needed.
+ *  - CUSTOMER_EVIDENCE requirements require a VALIDATED document whose
+ *    validation report is PASS (unchanged from Phase 4C).
+ *  - UNCLASSIFIED requirements fail closed: approval is impossible.
+ *  - The "No documents uploaded" blocker is emitted ONLY when at least one
+ *    CUSTOMER_EVIDENCE requirement exists and no documents are present.
  */
 import type { DocumentTypeKey } from "@/lib/documents/schemas";
+
+export type RequirementClassification =
+  | "CUSTOMER_EVIDENCE"
+  | "POLICY_KNOWLEDGE"
+  | "UNCLASSIFIED";
+
+/**
+ * Rule keys that are definitively customer evidence (require customer documents).
+ * These are the only requirements that need uploaded/validated documents.
+ */
+const CUSTOMER_EVIDENCE_KEYS = new Set([
+  "kyc_documents",
+  "kyc_pan",
+  "kyc_aadhaar",
+  "identity_proof",
+  "address_proof",
+  "income_proof",
+  "bank_statement",
+]);
+
+/** Artifact / extraction-noise patterns — always UNCLASSIFIED (fail closed). */
+const ARTIFACT_RE = /^max_attempts_/i;
+
+/**
+ * Classify a frozen requirement into one of three evidence categories.
+ *
+ *  - CUSTOMER_EVIDENCE: requires a customer-supplied document (e.g. KYC).
+ *  - POLICY_KNOWLEDGE: product fact satisfied from authoritative context.
+ *  - UNCLASSIFIED: ambiguous, artifact, or unsupported — fail closed.
+ *
+ * In a policy knowledge base the default is POLICY_KNOWLEDGE: every ruleKey
+ * that is not explicitly customer evidence or an extraction artifact is a
+ * product fact derivable from the brochure/snapshot context.  This avoids
+ * brittle pattern-matching across 80+ naming conventions (camelCase, snake_case,
+ * Indian-annuitant-specific keys, etc.).
+ */
+export function classifyRequirement(ruleKey: string): RequirementClassification {
+  if (!ruleKey) return "UNCLASSIFIED";
+
+  // Explicit customer evidence set (deterministic, documented)
+  if (CUSTOMER_EVIDENCE_KEYS.has(ruleKey)) return "CUSTOMER_EVIDENCE";
+
+  // Artifact detection — extraction noise, not real requirements
+  if (ARTIFACT_RE.test(ruleKey)) return "UNCLASSIFIED";
+
+  // Default: product/policy knowledge in a policy knowledge base
+  return "POLICY_KNOWLEDGE";
+}
 
 export interface FrozenRequirement {
   id?: string | null;
@@ -49,6 +95,7 @@ export interface EvidenceDocumentView {
 export interface ChecklistRequirementResult {
   ruleKey: string;
   label: string;
+  classification: RequirementClassification;
   evidenceDocType: DocumentTypeKey | null;
   satisfied: boolean;
   evidenceDocumentId: string | null;
@@ -109,44 +156,68 @@ export function evaluateChecklist(
   const hasFailedDocuments = failed.length > 0;
   const hasDocuments = documents.length > 0;
 
-  const reqResults: ChecklistRequirementResult[] = requirements.map((req) => {
-    const evidenceDocType = resolveEvidenceDocType(req.ruleKey);
-    const evidence =
-      evidenceDocType === null
-        ? null
-        : validatedPassing.find(
-            (d) =>
-              (d.requirementRuleKey !== null && d.requirementRuleKey === req.ruleKey) ||
-              d.docType === evidenceDocType
-          ) ?? null;
+  let hasEvidenceGatedRequirements = false;
 
-    if (evidenceDocType === null) {
+  const reqResults: ChecklistRequirementResult[] = requirements.map((req) => {
+    const classification = classifyRequirement(req.ruleKey);
+
+    if (classification === "POLICY_KNOWLEDGE") {
       return {
         ruleKey: req.ruleKey,
         label: req.label,
+        classification,
         evidenceDocType: null,
+        satisfied: true,
+        evidenceDocumentId: null,
+        reason: "Product knowledge requirement satisfied from authoritative policy context",
+      };
+    }
+
+    if (classification === "CUSTOMER_EVIDENCE") {
+      hasEvidenceGatedRequirements = true;
+      const evidenceDocType = resolveEvidenceDocType(req.ruleKey);
+      const evidence =
+        evidenceDocType === null
+          ? null
+          : validatedPassing.find(
+              (d) =>
+                (d.requirementRuleKey !== null && d.requirementRuleKey === req.ruleKey) ||
+                d.docType === evidenceDocType
+            ) ?? null;
+
+      if (evidence) {
+        return {
+          ruleKey: req.ruleKey,
+          label: req.label,
+          classification,
+          evidenceDocType,
+          satisfied: true,
+          evidenceDocumentId: evidence.id,
+          reason: `Evidence: VALIDATED ${evidence.docType} (${evidence.id})`,
+        };
+      }
+      return {
+        ruleKey: req.ruleKey,
+        label: req.label,
+        classification,
+        evidenceDocType,
         satisfied: false,
         evidenceDocumentId: null,
-        reason: "Requirement has no mapped evidence document type; cannot be confirmed deterministically",
+        reason: evidenceDocType
+          ? `Missing validated ${evidenceDocType} evidence`
+          : "Customer evidence requirement with no mapped document type",
       };
     }
-    if (evidence) {
-      return {
-        ruleKey: req.ruleKey,
-        label: req.label,
-        evidenceDocType,
-        satisfied: true,
-        evidenceDocumentId: evidence.id,
-        reason: `Evidence: VALIDATED ${evidence.docType} (${evidence.id})`,
-      };
-    }
+
+    // UNCLASSIFIED — fail closed
     return {
       ruleKey: req.ruleKey,
       label: req.label,
-      evidenceDocType,
+      classification,
+      evidenceDocType: null,
       satisfied: false,
       evidenceDocumentId: null,
-      reason: `Missing validated ${evidenceDocType} evidence`,
+      reason: "Unclassified requirement; cannot be confirmed deterministically",
     };
   });
 
@@ -163,7 +234,9 @@ export function evaluateChecklist(
   if (hasFailedDocuments) {
     blockers.push(`${failed.length} document(s) failed validation or were rejected`);
   }
-  if (!hasDocuments && requirements.length > 0) blockers.push("No documents uploaded");
+  if (!hasDocuments && hasEvidenceGatedRequirements) {
+    blockers.push("No documents uploaded");
+  }
 
   const canApprove = satisfied && !hasReviewRequired && !hasFailedDocuments && requirements.length > 0;
 

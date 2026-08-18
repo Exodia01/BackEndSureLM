@@ -11,8 +11,10 @@ export async function postgresFullTextSearch(
       c."documentId",
       c."chunkOrder",
       c.content,
+      b.id as brochure_id,
       ts_rank(to_tsvector('english', coalesce(c.content, '')), plainto_tsquery('english', ${query})) as score
     FROM "Chunk" c
+    LEFT JOIN "Brochure" b ON c."brochureId" = b.id
     WHERE to_tsvector('english', coalesce(c.content, '')) @@ plainto_tsquery('english', ${query})
     ORDER BY score DESC
     LIMIT ${limit}
@@ -29,6 +31,7 @@ export async function postgresFullTextSearch(
     payload: {
       chunk_id: String(row.chunk_id),
       document_id: row.documentid ? String(row.documentid) : undefined,
+      brochure_id: row.brochure_id ? String(row.brochure_id) : undefined,
       chunk_order: row.chunkorder ?? undefined,
       content: row.content,
     }

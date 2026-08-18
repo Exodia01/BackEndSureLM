@@ -1,6 +1,11 @@
 import "dotenv/config";
 import { db } from "../lib/db";
-import { evaluateChecklist, resolveEvidenceDocType } from "../lib/applications/checklist";
+import {
+  evaluateChecklist,
+  resolveEvidenceDocType,
+  classifyRequirement,
+  type RequirementClassification,
+} from "../lib/applications/checklist";
 
 const P = console.log;
 let fails = 0;
@@ -45,10 +50,37 @@ interface SnapReq {
     const reqs = (snap?.requirements as unknown as SnapReq[] | undefined) ?? [];
     P(`  snapshot reqs: ${reqs.length}`);
 
-    // 1. INCOMPLETE -> block. No documents uploaded.
+    // Classify requirements
+    const classifications: Record<RequirementClassification, number> = {
+      CUSTOMER_EVIDENCE: 0,
+      POLICY_KNOWLEDGE: 0,
+      UNCLASSIFIED: 0,
+    };
+    for (const r of reqs) {
+      classifications[classifyRequirement(r.ruleKey)]++;
+    }
+    P(`  classification: CE=${classifications.CUSTOMER_EVIDENCE} PK=${classifications.POLICY_KNOWLEDGE} UN=${classifications.UNCLASSIFIED}`);
+
+    const hasEvidenceReqs = classifications.CUSTOMER_EVIDENCE > 0;
+    const hasUnclassified = classifications.UNCLASSIFIED > 0;
+
+    // 1. INCOMPLETE -> block only if there are CUSTOMER_EVIDENCE requirements.
+    //    Pure POLICY_KNOWLEDGE snapshots are satisfied from authoritative context.
     const emptyEval = evaluateChecklist(reqs, []);
-    check(!emptyEval.canApprove, "incomplete (no documents) blocks approval");
-    check(emptyEval.blockers.length > 0, "blockers populated when incomplete", JSON.stringify(emptyEval.blockers.slice(0, 3)));
+    if (hasEvidenceReqs) {
+      check(!emptyEval.canApprove, "incomplete (no documents) blocks approval when evidence-gated");
+    } else if (hasUnclassified) {
+      check(!emptyEval.canApprove, "incomplete blocks approval when unclassified artifacts present");
+    } else {
+      check(emptyEval.canApprove, "pure POLICY_KNOWLEDGE snapshot: no documents needed for approval");
+    }
+    check(
+      hasEvidenceReqs || hasUnclassified
+        ? emptyEval.blockers.length > 0
+        : emptyEval.blockers.length === 0,
+      "blockers match classification",
+      JSON.stringify(emptyEval.blockers.slice(0, 3))
+    );
 
     // 2. The array/scalar policyTermYears flows through the frozen snapshot as
     //    opaque JSON — the checklist never reads it, so both shapes pass.

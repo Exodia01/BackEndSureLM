@@ -15,13 +15,14 @@
 5. [Corpus State (Phase 1)](#corpus-state-phase-1)
 6. [Phase 2G Model Architecture](#phase-2g-model-architecture)
 7. [Phase 2H Population (scripted ADMIN workflow)](#phase-2h-population-scripted-admin-workflow)
-8. [Implemented vs Blocked](#implemented-vs-blocked)
-9. [Developer Quick Start](#developer-quick-start)
-10. [Running & Verifying](#running--verifying)
-11. [Testing](#testing)
-12. [Protect These Files](#protect-these-files)
-13. [Historical / Forensic Notes](#historical--forensic-notes)
-14. [Known Debt & Blockers](#known-debt--blockers)
+8. [Phase 2J Taxonomy Reconciliation](#phase-2j-taxonomy-reconciliation)
+9. [Implemented vs Blocked](#implemented-vs-blocked)
+10. [Developer Quick Start](#developer-quick-start)
+11. [Running & Verifying](#running--verifying)
+12. [Testing](#testing)
+13. [Protect These Files](#protect-these-files)
+14. [Historical / Forensic Notes](#historical--forensic-notes)
+15. [Known Debt & Blockers](#known-debt--blockers)
 
 ---
 
@@ -305,6 +306,47 @@ npx tsx scripts/phase2h-verify.ts
 
 ---
 
+## Phase 2J Taxonomy Reconciliation
+
+Phase 2J reconciles the 230 approved RequirementDefinitions with the checklist/issuance evidence gate so that product-knowledge requirements do not block policy issuance.
+
+### Requirement classification
+
+Every frozen requirement is classified via `classifyRequirement()` in `lib/applications/checklist.ts`:
+
+| Category | Count | Checklist behavior |
+|----------|-------|-------------------|
+| `POLICY_KNOWLEDGE` | 222 (96.5%) | Satisfied from authoritative policy/brochure context — no customer document needed |
+| `CUSTOMER_EVIDENCE` | 5 (2.2%) | Requires a VALIDATED+PASS customer document (fail closed without one) |
+| `UNCLASSIFIED` | 3 (1.3%) | Extraction artifacts — fail closed (blocked policies flagged for cleanup) |
+
+### Issuance simulation (27 policies)
+
+| Status | Count | Description |
+|--------|-------|-------------|
+| ISSUABLE | 20 | Pure POLICY_KNOWLEDGE — no customer evidence needed |
+| EVIDENCE_REQUIRED | 5 | Need KYC/customer documents (Classic Endowment, Premier MoneyBack, Premier Pension, Wealth Optima, e-Invest) |
+| BLOCKED_ARTIFACTS | 2 | `max_attempts_*` extraction noise (Single Invest Plus, SmartLife) |
+
+### FTS brochure_id provenance repair
+
+Both `postgresFullTextSearch` implementations now LEFT JOIN `Brochure` and expose `brochure_id` in results. Legacy chunks with NULL `brochure_id` are preserved.
+
+### Verification
+
+```bash
+# Taxonomy audit
+npx tsx scripts/phase2j-requirement-taxonomy-audit.ts
+
+# Full test suite
+npx vitest run
+
+# TypeScript check (3 known pre-existing errors tolerated)
+npx tsc --noEmit
+```
+
+---
+
 ## Implemented vs Blocked
 
 **Implemented**
@@ -315,9 +357,11 @@ npx tsx scripts/phase2h-verify.ts
 - 27-brochure canonical corpus ingested; 486 chunks/vectors verified.
 - **Phase 2H: all 27 policies populated through the authoritative workflow** (230 approved requirements, 27 versions + snapshots, 0 drafts).
 - Rate limiting, audit events, concurrent-publish safety, document processing pipeline.
+- **Phase 2J: requirement taxonomy reconciliation** — 222/230 requirements classified as POLICY_KNOWLEDGE, 5 as CUSTOMER_EVIDENCE, 3 as UNCLASSIFIED artifacts. 20 policies issuable without customer evidence, 5 need KYC docs, 2 blocked by extraction artifacts. FTS brochure_id provenance repaired in both retrieval paths. 307 tests passing.
 
 **Blocked / NOT done**
 - **End-to-end recommender validation against authoritative data** — the authoritative tables are now populated (27 policies, 230 approved requirements), so the recommender can finally be validated against real data; that validation itself has **not yet been run**.
+- **2 policies blocked by `max_attempts_*` artifacts** (SmartLife, Single Invest Plus) — data cleanup required in a separate phase.
 - Fallback LLM models are not installed — do not claim them as working.
 
 ---
@@ -432,11 +476,12 @@ npx prisma validate
 ## Known Debt & Blockers
 
 1. **End-to-end recommender validation on authoritative data not yet run** — the authoritative tables are now populated (Phase 2H), but recommender validation against the 27 policies / 230 approved requirements is outstanding.
-2. **`.env` legacy model value** (`qwen2.5-coder:1.5b`) conflicts with `.env.local` (`qwen2.5:7b`); `.env.local` wins. Clean up per machine.
-3. **Fallback models not installed** in Ollama.
-4. **No `_prisma_migrations` history** on `surelm_0`; migrations must be applied by phase tooling, never by `db push`/`migrate dev`.
-5. 3 pre-existing `tsc` errors in untracked Phase 1 scripts (see [Testing](#testing)).
-6. `scripts/phase2h-populate.ts` and `scripts/phase2h-verify.ts` are committed as the Phase 2H execution/verification tooling (the latter currently asserts the Phase 2H final counts — 27 policies, 230 approved).
+2. **`max_attempts_*` extraction artifacts** — 3 requirements across 2 policies (SmartLife, Single Invest Plus) are classified UNCLASSIFIED and block issuance; data cleanup required in a separate phase.
+3. **`.env` legacy model value** (`qwen2.5-coder:1.5b`) conflicts with `.env.local` (`qwen2.5:7b`); `.env.local` wins. Clean up per machine.
+4. **Fallback models not installed** in Ollama.
+5. **No `_prisma_migrations` history** on `surelm_0`; migrations must be applied by phase tooling, never by `db push`/`migrate dev`.
+6. 3 pre-existing `tsc` errors in untracked Phase 1 scripts (see [Testing](#testing)).
+7. `scripts/phase2h-populate.ts` and `scripts/phase2h-verify.ts` are committed as the Phase 2H execution/verification tooling (the latter currently asserts the Phase 2H final counts — 27 policies, 230 approved).
 
 ---
 

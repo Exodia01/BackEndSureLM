@@ -10,6 +10,7 @@ const dbMock = {
   brochure: {
     findMany: vi.fn(),
   },
+  $queryRaw: vi.fn(),
 };
 
 const semanticSearchMock = vi.fn();
@@ -25,6 +26,8 @@ const {
   retrievePoliciesWithContext,
   getRecommendablePolicies,
   resolveRecommendablePolicyIds,
+  postgresFullTextSearch,
+  hybridRetrieve,
 } = await import("@/lib/ai/agents/retriever");
 
 describe("policy-aware retrieval", () => {
@@ -238,5 +241,119 @@ describe("policy-aware retrieval", () => {
     expect(result).toHaveLength(1);
     expect(result[0].metadata?.brochure_id).toBe("b1");
     expect(result[0].policyId).toBeUndefined();
+  });
+});
+
+describe("FTS brochure_id provenance", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("postgresFullTextSearch returns brochure_id from Brochure LEFT JOIN", async () => {
+    dbMock.$queryRaw.mockResolvedValue([
+      {
+        chunk_id: "chunk-1",
+        documentid: "doc-1",
+        chunkorder: 1,
+        content: "Minimum entry age is 18 years.",
+        brochure_id: "b-1",
+        score: 0.85,
+      },
+    ]);
+
+    const results = await postgresFullTextSearch("entry age", 10);
+
+    expect(results).toHaveLength(1);
+    expect(results[0].metadata).toMatchObject({
+      chunk_id: "chunk-1",
+      document_id: "doc-1",
+      brochure_id: "b-1",
+      chunk_order: 1,
+    });
+    expect(results[0].source).toBe("postgres_fts");
+    expect(results[0].content).toBe("Minimum entry age is 18 years.");
+  });
+
+  it("postgresFullTextSearch returns undefined brochure_id for legacy chunks with NULL", async () => {
+    dbMock.$queryRaw.mockResolvedValue([
+      {
+        chunk_id: "legacy-1",
+        documentid: null,
+        chunkorder: 0,
+        content: "Legacy content without brochure linkage.",
+        brochure_id: null,
+        score: 0.5,
+      },
+    ]);
+
+    const results = await postgresFullTextSearch("legacy", 10);
+
+    expect(results).toHaveLength(1);
+    expect(results[0].metadata?.brochure_id).toBeUndefined();
+    expect(results[0].metadata?.chunk_id).toBe("legacy-1");
+  });
+
+  it("hybridRetrieve carries FTS brochure_id through the merge", async () => {
+    dbMock.$queryRaw.mockResolvedValue([
+      {
+        chunk_id: "fts-1",
+        documentid: "doc-1",
+        chunkorder: 1,
+        content: "FTS result with brochure.",
+        brochure_id: "b-fts",
+        score: 0.7,
+      },
+    ]);
+    semanticSearchMock.mockResolvedValue([
+      {
+        id: "qdrant-1",
+        score: 0.9,
+        payload: {
+          chunk_id: "qdrant-1",
+          brochure_id: "b-qdrant",
+          content: "Vector result.",
+        },
+      },
+    ]);
+
+    const results = await hybridRetrieve("test query", undefined, [0.1, 0.2]);
+
+    expect(results).toHaveLength(2);
+    const ftsResult = results.find((r) => r.source === "postgres_fts");
+    const qdrantResult = results.find((r) => r.source === "qdrant");
+
+    expect(ftsResult?.metadata?.brochure_id).toBe("b-fts");
+    expect(qdrantResult?.metadata?.brochure_id).toBe("b-qdrant");
+  });
+
+  it("hybridRetrieve handles mixed FTS results (with and without brochure_id)", async () => {
+    dbMock.$queryRaw.mockResolvedValue([
+      {
+        chunk_id: "fts-new",
+        documentid: "doc-1",
+        chunkorder: 1,
+        content: "New chunk with brochure.",
+        brochure_id: "b-new",
+        score: 0.8,
+      },
+      {
+        chunk_id: "fts-legacy",
+        documentid: null,
+        chunkorder: 0,
+        content: "Legacy chunk without brochure.",
+        brochure_id: null,
+        score: 0.4,
+      },
+    ]);
+    semanticSearchMock.mockResolvedValue([]);
+
+    const results = await hybridRetrieve("test", undefined, [0.1]);
+
+    expect(results).toHaveLength(2);
+    const newResult = results.find((r) => r.id === "fts-new");
+    const legacyResult = results.find((r) => r.id === "fts-legacy");
+
+    expect(newResult?.metadata?.brochure_id).toBe("b-new");
+    expect(legacyResult?.metadata?.brochure_id).toBeUndefined();
   });
 });
