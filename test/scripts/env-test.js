@@ -1,1 +1,0 @@
-console.log(process.env.DATABASE_URL || "NOT SET"); process.exit(0);

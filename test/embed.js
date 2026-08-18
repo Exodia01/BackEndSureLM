@@ -1,1 +1,0 @@
-﻿import { generateEmbedding } from './lib/ai/embeddings'; (async () => { const e = await generateEmbedding('test'); console.log('Dimension:', e.length); })();

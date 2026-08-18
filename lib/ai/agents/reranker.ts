@@ -1,5 +1,194 @@
 import type { ContextResult, RerankResult } from "./types";
 
+// ---------------------------------------------------------------------------
+// Product-aware reranker (v2)
+// ---------------------------------------------------------------------------
+
+/**
+ * Known product name patterns for matching against queries.
+ * Each entry: [regex pattern, canonical brochure name keywords]
+ * Used to detect when a query explicitly mentions a product.
+ */
+const PRODUCT_NAME_PATTERNS: Array<{ pattern: RegExp; keywords: string[] }> = [
+  { pattern: /\b(?:smart\s*life|smartlife)\b/i, keywords: ["smartlife"] },
+  { pattern: /\b(?:e[\s-]*term)\b/i, keywords: ["e-term", "eterm"] },
+  { pattern: /\b(?:term\s*plan|term\s*insurance)\b/i, keywords: ["term"] },
+  { pattern: /\b(?:fortune\s*maximiser)\b/i, keywords: ["fortune", "maximiser"] },
+  { pattern: /\b(?:wealth\s*optima)\b/i, keywords: ["wealth", "optima"] },
+  { pattern: /\b(?:ace\s*investment)\b/i, keywords: ["ace", "investment"] },
+  { pattern: /\b(?:assured\s*savings)\b/i, keywords: ["assured", "savings"] },
+  { pattern: /\b(?:assured\s*pension)\b/i, keywords: ["assured", "pension"] },
+  { pattern: /\b(?:guaranteed\s*savings)\b/i, keywords: ["guaranteed", "savings"] },
+  { pattern: /\b(?:lifetime\s*income)\b/i, keywords: ["lifetime", "income"] },
+  { pattern: /\b(?:premier\s*life)\b/i, keywords: ["premier", "life"] },
+  { pattern: /\b(?:premier\s*endowment)\b/i, keywords: ["premier", "endowment"] },
+  { pattern: /\b(?:premier\s*moneyback)\b/i, keywords: ["premier", "moneyback"] },
+  { pattern: /\b(?:premier\s*pension)\b/i, keywords: ["premier", "pension"] },
+  { pattern: /\b(?:classic\s*endowment)\b/i, keywords: ["classic", "endowment"] },
+  { pattern: /\b(?:single\s*invest)\b/i, keywords: ["single", "invest"] },
+  { pattern: /\b(?:health\s*shield)\b/i, keywords: ["health", "shield"] },
+  { pattern: /\b(?:saral\s*pension)\b/i, keywords: ["saral", "pension"] },
+  { pattern: /\b(?:saral\s*jeevan)\b/i, keywords: ["saral", "jeevan"] },
+  { pattern: /\b(?:sampoorn\s*bima)\b/i, keywords: ["sampoorn", "bima"] },
+  { pattern: /\b(?:bachat\s*bima)\b/i, keywords: ["bachat", "bima"] },
+  { pattern: /\b(?:tulip)\b/i, keywords: ["tulip"] },
+  { pattern: /\b(?:e[\s-]*invest)\b/i, keywords: ["e-invest", "einvest"] },
+  { pattern: /\b(?:platinum\s*plan)\b/i, keywords: ["platinum"] },
+  { pattern: /\b(?:family\s*floater)\b/i, keywords: ["health"] },
+  { pattern: /\b(?:health\s*insurance)\b/i, keywords: ["health"] },
+  { pattern: /\b(?:death\s*benefit)\b/i, keywords: ["death", "benefit"] },
+  { pattern: /\b(?:maturity\s*benefit)\b/i, keywords: ["maturity"] },
+  { pattern: /\b(?:surrender)\b/i, keywords: ["surrender"] },
+  { pattern: /\b(?:rider)\b/i, keywords: ["rider"] },
+  { pattern: /\b(?:exclusion)\b/i, keywords: ["exclusion"] },
+  { pattern: /\b(?:tax\s*benefit|section\s*80c)\b/i, keywords: ["tax"] },
+  { pattern: /\b(?:premium\s*payment)\b/i, keywords: ["premium"] },
+  { pattern: /\b(?:entry\s*age|eligib)\b/i, keywords: ["eligib"] },
+  { pattern: /\b(?:pension|retirement|annuit)\b/i, keywords: ["pension"] },
+  { pattern: /\b(?:savings?|endow)\b/i, keywords: ["savings"] },
+  { pattern: /\b(?:invest|ulip|unit[\s-]*linked)\b/i, keywords: ["invest"] },
+  { pattern: /\b(?:protection|pure[\s-]*risk)\b/i, keywords: ["term", "protection"] },
+];
+
+/**
+ * Extract product name keywords from a query string.
+ */
+function extractQueryKeywords(query: string): string[] {
+  const keywords: string[] = [];
+  for (const { pattern, keywords: kw } of PRODUCT_NAME_PATTERNS) {
+    if (pattern.test(query)) {
+      keywords.push(...kw);
+    }
+  }
+  return [...new Set(keywords)];
+}
+
+/**
+ * Check if a brochure name matches any of the query keywords.
+ */
+function brochureNameMatchesKeywords(
+  brochureName: string,
+  keywords: string[]
+): number {
+  if (keywords.length === 0 || !brochureName) return 0;
+  const lower = brochureName.toLowerCase();
+  let matches = 0;
+  for (const kw of keywords) {
+    if (lower.includes(kw)) matches++;
+  }
+  return matches / keywords.length;
+}
+
+/**
+ * Product-aware reranking using Qdrant scores as base semantic scores,
+ * plus heuristic boosts for product name matching, chunk diversity,
+ * and content keyword overlap.
+ *
+ * This is O(n) — no additional API calls to Ollama/Qdrant needed.
+ */
+export function applyProductAwareRerank(
+  query: string,
+  candidates: ContextResult[],
+  topN: number = 10
+): RerankResult[] {
+  if (candidates.length === 0) return [];
+
+  const queryKeywords = extractQueryKeywords(query);
+  const queryLower = query.toLowerCase();
+
+  // Group chunks by brochure_id
+  const brochureGroups = new Map<string, ContextResult[]>();
+  for (const c of candidates) {
+    const bid = String((c.metadata as any)?.brochure_id || c.id);
+    if (!brochureGroups.has(bid)) brochureGroups.set(bid, []);
+    brochureGroups.get(bid)!.push(c);
+  }
+
+  // Calculate product-level composite scores
+  const productScores = new Map<
+    string,
+    {
+      maxSemanticScore: number;
+      chunkCount: number;
+      nameMatchScore: number;
+      contentKeywordScore: number;
+      compositeScore: number;
+    }
+  >();
+
+  for (const [brochureId, chunks] of brochureGroups) {
+    const maxSemanticScore = Math.max(...chunks.map((c) => c.score));
+
+    // Chunk diversity: more chunks = more relevant (logarithmic)
+    const chunkCount = chunks.length;
+    const diversityScore = Math.log2(chunkCount + 1) / Math.log2(10); // normalize to ~0-1
+
+    // Name match: does the brochure name match query keywords?
+    const brochureName =
+      String((chunks[0]?.metadata as any)?.brochure_name || "") ||
+      String(chunks[0]?.policyName || "");
+    const nameMatchScore = brochureNameMatchesKeywords(brochureName, queryKeywords);
+
+    // Content keyword overlap: do chunk contents contain query terms?
+    const contentText = chunks.map((c) => c.content.toLowerCase()).join(" ");
+    const queryTerms = queryLower.split(/\s+/).filter((t) => t.length > 2);
+    const contentKeywordScore =
+      queryTerms.length > 0
+        ? queryTerms.filter((t) => contentText.includes(t)).length / queryTerms.length
+        : 0;
+
+    // Composite score (weights derived from baseline analysis)
+    const compositeScore =
+      maxSemanticScore * 0.60 +      // base semantic similarity
+      diversityScore * 0.10 +         // chunk diversity bonus
+      nameMatchScore * 0.20 +         // product name match (strong signal)
+      contentKeywordScore * 0.10;     // content keyword overlap
+
+    productScores.set(brochureId, {
+      maxSemanticScore,
+      chunkCount,
+      nameMatchScore,
+      contentKeywordScore,
+      compositeScore,
+    });
+  }
+
+  // Re-score each candidate based on its product's composite score
+  const reranked: RerankResult[] = candidates.map((c) => {
+    const bid = String((c.metadata as any)?.brochure_id || c.id);
+    const ps = productScores.get(bid);
+    return {
+      ...c,
+      rerankedScore: ps?.compositeScore ?? c.score,
+      relevanceRank: 0,
+      relevance: undefined as any,
+    };
+  });
+
+  // Sort by composite score descending
+  reranked.sort((a, b) => (b.rerankedScore ?? 0) - (a.rerankedScore ?? 0));
+
+  // Assign ranks and relevance labels
+  const top = reranked.slice(0, topN);
+  top.forEach((result, index) => {
+    result.relevanceRank = index + 1;
+    const score = result.rerankedScore ?? 0;
+    if (score >= 0.65) {
+      result.relevance = "high";
+    } else if (score >= 0.50) {
+      result.relevance = "medium";
+    } else {
+      result.relevance = "low";
+    }
+  });
+
+  return top;
+}
+
+// ---------------------------------------------------------------------------
+// Legacy implementations (kept for backward compatibility)
+// ---------------------------------------------------------------------------
+
 export function applyRRFS(results: ContextResult[]): RerankResult[] {
   const rankBySource = new Map<string, number>();
 
@@ -130,16 +319,14 @@ export async function rerank(
   query: string,
   candidates: ContextResult[],
   topN: number = 20
-): Promise<{ results: RerankResult[]; method: "semantic" | "rrfs" }> {
+): Promise<{ results: RerankResult[]; method: "product_aware" | "semantic" | "rrfs" }> {
   try {
-    const semanticReranked = await applySemanticRerank(query, candidates, topN);
-
-    return { results: semanticReranked as any, method: "semantic" };
+    // Product-aware reranking: O(n), no API calls, uses Qdrant scores + heuristics
+    const productAwareReranked = applyProductAwareRerank(query, candidates, topN);
+    return { results: productAwareReranked, method: "product_aware" };
   } catch (error) {
-    console.warn("[WARNING] Semantic reranking failed, falling back to RRFS");
-
+    console.warn("[WARNING] Product-aware reranking failed, falling back to RRFS");
     const rrfsReranked = applyRRFS(candidates);
-
     return { results: rrfsReranked as any, method: "rrfs" };
   }
 }

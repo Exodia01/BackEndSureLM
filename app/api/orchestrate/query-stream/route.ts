@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/guards";
 import { orchestrateQueryStreaming } from "@/lib/ai/orchestrator";
+import {
+  checkRateLimit,
+  rateLimitExceeded,
+} from "@/lib/security/rateLimiter";
 import type { AgentMessage } from "@/lib/ai/agents/types";
 
 export async function POST(request: NextRequest) {
   const auth = await requireAuth(request);
   if (!auth.ok) return auth.response;
+
+  const rl = checkRateLimit(auth.user.sub, "orchestrate:query");
+  if (!rl.allowed) return rateLimitExceeded("orchestrate:query", rl.retryAfterSeconds);
 
   let body: { messages?: unknown; sessionId?: string };
   try {

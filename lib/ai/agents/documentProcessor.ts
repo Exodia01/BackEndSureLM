@@ -1,11 +1,11 @@
-import { db } from "../db";
-import { createCollection, upsert as qdrantUpsert, semanticSearch } from "../../qdrant";
+import { db } from "../../db";
+import { createCollection, upsert as qdrantUpsert, semanticSearch, POLICY_KNOWLEDGE_COLLECTION } from "../../qdrant";
 
 export const EMBEDDING_MODEL = "nomic-embed-text";
 const VECTOR_SIZE = 768;
-const COLLECTION_NAME = process.env.QDRANT_COLLECTION || "policies";
+const COLLECTION_NAME = POLICY_KNOWLEDGE_COLLECTION;
 
-export async function detectCategory(text: string): string | undefined {
+export async function detectCategory(text: string): Promise<string | undefined> {
   const headerPatterns = [
     { regex: /^#\s*(Death\s+Benefit|Death).*$/i, category: "death_benefit" },
     { regex: /^#\s*(Maturity\s+Benefit|Maturity|Survival\s+Benefit).*$/i, category: "maturity_survival_benefit" },
@@ -78,7 +78,7 @@ export async function processBrochure(
   fileData: ArrayBuffer,
   filename: string
 ): Promise<{ chunksCreated: number; totalPages: number }> {
-  const { extractPDFText, chunkText } = await import("../pdf/batchProcess");
+  const { extractPDFText, chunkText } = await import("../../pdf/batchProcess");
 
   console.log(`[processBrochure] Starting processing for brochure ${brochureId}`);
 
@@ -88,11 +88,11 @@ export async function processBrochure(
   const chunks = chunkText(pages);
   console.log(`[processBrochure] Created ${chunks.length} chunks`);
 
-  const chunksWithCategories = chunks.map((chunk) => ({
-    content: chunk.content,
-    category: detectCategory(chunk.content) || "general",
-    page: chunk.metadata?.[0]?.page as number | undefined,
-  }));
+    const chunksWithCategories = chunks.map((chunk) => ({
+      content: chunk.content,
+      // category removed - not needed for processing
+      page: chunk.metadata?.[0]?.page as number | undefined,
+    }));
 
   console.log("[processBrochure] Generating embeddings...");
   const embeddingStartTime = Date.now();
@@ -110,7 +110,7 @@ export async function processBrochure(
           content: chunk.content,
           chunkOrder: index,
           pageNumber: chunk.page ?? null,
-          category: chunk.category,
+          // category removed - not needed for processing
           metadata: { original_page: chunk.page },
         },
       })
@@ -139,7 +139,7 @@ export async function processBrochure(
 
 export async function upsertToQdrant(
   brochureId: string,
-  chunksWithCategories: Array<{ content: string; category: string; page?: number }>,
+  chunksWithCategories: Array<{ content: string; page?: number }>,
   embeddings: number[][]
 ): Promise<number> {
   const points = chunksWithCategories.map((chunk, index) => ({
@@ -149,7 +149,7 @@ export async function upsertToQdrant(
       brochure_id: brochureId,
       chunk_index: index,
       content: chunk.content,
-      category: chunk.category,
+      // category removed - not needed for processing
       page_num: chunk.page ?? null,
       version_num: 1,
     },
@@ -178,7 +178,7 @@ export async function processDocument(
   fileData: ArrayBuffer,
   filename: string
 ): Promise<{ chunksCreated: number; totalPages: number }> {
-  const { extractPDFText, chunkText } = await import("../pdf/batchProcess");
+  const { extractPDFText, chunkText } = await import("../../pdf/batchProcess");
 
   console.log(`[processDocument] Starting document processing for ${filename}`);
 

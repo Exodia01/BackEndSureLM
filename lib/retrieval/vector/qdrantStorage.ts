@@ -1,4 +1,4 @@
-const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6333";
+const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6334";
 
 import type { VectorSearchOptions } from "./types";
 

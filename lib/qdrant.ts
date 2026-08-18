@@ -1,4 +1,7 @@
-const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6333";
+const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6334";
+
+export const POLICY_KNOWLEDGE_COLLECTION =
+  process.env.QDRANT_COLLECTION || "policy_knowledge";
 
 export interface Point {
   id: string | number;
@@ -112,7 +115,7 @@ export async function search(
 export async function semanticSearch(
   vector: number[],
   filter?: SearchFilter,
-  collection: string = process.env.QDRANT_COLLECTION || "policies",
+  collection: string = POLICY_KNOWLEDGE_COLLECTION,
   limit: number = 8
 ): Promise<{ id: string; score: number; payload: Record<string, unknown> }[]> {
   const results = await search(collection, vector, limit, filter);
@@ -133,5 +136,5 @@ export async function createPolicyCollection(
     source: "keyword",
   };
 
-  await createCollection("policies", vectorSize, payloadSchema);
+  await createCollection(POLICY_KNOWLEDGE_COLLECTION, vectorSize, payloadSchema);
 }

@@ -1,17 +1,26 @@
 import { db } from "../db";
-import * as pdfjs from "pdfjs-dist";
 import crypto from "crypto";
+import fs from "fs/promises";
+import path from "path";
+import { upsert as qdrantUpsert, createCollection } from "../qdrant";
 
-// Load PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+/**
+ * Convert a CUID to a valid UUID for Qdrant point IDs.
+ * Qdrant 1.12+ requires UUID or unsigned integer point IDs.
+ */
+function cuidToUuid(cuid: string): string {
+  const hash = crypto.createHash("md5").update(cuid).digest("hex");
+  return `${hash.slice(0, 8)}-${hash.slice(8, 12)}-${hash.slice(12, 16)}-${hash.slice(16, 20)}-${hash.slice(20, 32)}`;
+}
 
 // Configuration
 export const MAX_FILE_SIZE_MB = 50;
 export const CHUNK_SIZE = 1200;
 export const OVERLAP = 200;
+export const PDF_STORAGE_DIR = process.env.PDF_STORAGE_DIR || "/data/pdfs";
+export const QDRANT_COLLECTION = process.env.QDRANT_COLLECTION || "policy_knowledge";
+export const EMBEDDING_MODEL = "nomic-embed-text";
+const VECTOR_SIZE = 768;
 
 // File extension check
 export function isValidPDF(filename: string): boolean {
@@ -34,13 +43,58 @@ export function computeFileHash(buffer: ArrayBuffer): string {
 }
 
 /**
+ * Persist a PDF to the filesystem at /data/pdfs/{versionHash}.pdf
+ * and return the absolute path. Never overwrites an existing file.
+ */
+export async function writePdfToDisk(
+  fileData: ArrayBuffer,
+  versionHash: string
+): Promise<string> {
+  await fs.mkdir(PDF_STORAGE_DIR, { recursive: true });
+  const filePath = path.join(PDF_STORAGE_DIR, `${versionHash}.pdf`);
+
+  try {
+    await fs.access(filePath);
+    return filePath; // already on disk, don't clobber
+  } catch {
+    await fs.writeFile(filePath, Buffer.from(fileData));
+    return filePath;
+  }
+}
+
+/**
+ * Read a PDF from disk (or legacy BYTEA) as an ArrayBuffer.
+ */
+export async function readPdfFromBrochure(
+  brochure: { filePath?: string | null; pdfData?: Uint8Array | null }
+): Promise<ArrayBuffer> {
+  if (brochure.filePath) {
+    const buffer = await fs.readFile(brochure.filePath);
+    return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength) as ArrayBuffer;
+  }
+  if (brochure.pdfData) {
+    return new Uint8Array(brochure.pdfData).buffer as ArrayBuffer;
+  }
+  throw new Error("Brochure has no filePath and no legacy pdfData");
+}
+
+/**
  * Extract text from PDF file
  */
 export async function extractPDFText(fileData: ArrayBuffer): Promise<{ pages: string[]; totalPages: number }> {
   try {
+    // Use legacy build for Node.js (includes DOMMatrix polyfill)
+    const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+    const workerSrc = (import.meta as unknown as { resolve?: (spec: string) => string }).resolve
+      ? (import.meta as unknown as { resolve: (spec: string) => string }).resolve(
+          "pdfjs-dist/legacy/build/pdf.worker.min.mjs"
+        )
+      : new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString();
+    pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
+
     const loadingTask = pdfjs.getDocument({ data: new Uint8Array(fileData) });
     const pdf = await loadingTask.promise;
-    
+
     const pages: string[] = [];
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       const page = await pdf.getPage(pageNum);
@@ -49,10 +103,10 @@ export async function extractPDFText(fileData: ArrayBuffer): Promise<{ pages: st
       pages.push(`[Page ${pageNum}]\n${text}`);
       await page.cleanup();
     }
-    
+
     await pdf.destroy();
-    
-    return { pages, totalPages: pdf.numPages };
+
+    return { pages, totalPages: pages.length };
   } catch (error) {
     throw new Error(`Failed to extract PDF text: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -119,14 +173,13 @@ export function detectCategory(text: string): string | undefined {
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
   const ollamaHost = process.env.OLLAMA_HOST || "http://localhost:11434";
-  const embeddingModel = "nomic-embed-text";
 
   try {
     const response = await fetch(`${ollamaHost}/api/embeddings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: embeddingModel,
+        model: EMBEDDING_MODEL,
         prompt: text,
       }),
     });
@@ -139,7 +192,7 @@ export async function generateEmbedding(text: string): Promise<number[]> {
     return data.embedding;
   } catch (error) {
     console.error("Failed to generate embedding:", error);
-    return new Array(768).fill(0);
+    return new Array(VECTOR_SIZE).fill(0);
   }
 }
 
@@ -161,7 +214,7 @@ export async function generateEmbeddingsSequentially(texts: string[]): Promise<n
       }
     } catch (error) {
       console.warn(`[embeddings] Failed for chunk ${i}:`, error);
-      embeddings.push(new Array(768).fill(0));
+      embeddings.push(new Array(VECTOR_SIZE).fill(0));
     }
   }
 
@@ -169,14 +222,58 @@ export async function generateEmbeddingsSequentially(texts: string[]): Promise<n
 }
 
 /**
- * Process brochure: extract, chunk, embed, and store in DB
+ * Upsert chunk vectors to the canonical `policy_knowledge` Qdrant collection.
+ */
+export async function upsertChunksToQdrant(
+  brochureId: string,
+  chunks: { id: string; content: string; chunkOrder: number; pageNumber: number | null; category: string | null }[],
+  embeddings: number[][],
+  versionNum: number
+): Promise<number> {
+  const points = chunks.map((chunk, index) => ({
+    id: cuidToUuid(chunk.id),
+    vector: embeddings[index] || new Array(VECTOR_SIZE).fill(0),
+    payload: {
+      brochure_id: brochureId,
+      chunk_id: chunk.id,
+      chunk_index: index,
+      content: chunk.content,
+      page_num: chunk.pageNumber ?? null,
+      category: chunk.category,
+      version_num: versionNum,
+    },
+  }));
+
+  try {
+    await qdrantUpsert(QDRANT_COLLECTION, points);
+    return points.length;
+  } catch (error) {
+    console.warn("[upsertChunksToQdrant] Upsert failed, attempting collection creation:", error);
+    await createCollection(QDRANT_COLLECTION, VECTOR_SIZE, {
+      brochure_id: "keyword",
+      chunk_id: "keyword",
+      chunk_index: "integer",
+      page_num: "integer",
+      version_num: "integer",
+    });
+    await qdrantUpsert(QDRANT_COLLECTION, points);
+    return points.length;
+  }
+}
+
+/**
+ * Process brochure: extract, chunk, embed, store in DB, upsert vectors to Qdrant.
+ * Does NOT perform requirement extraction — that is a separate, later step.
  */
 export async function processBrochure(
-  brochureId: string,
-  fileData: ArrayBuffer,
-  filename: string
+  brochureId: string
 ): Promise<{ chunksCreated: number; totalPages: number }> {
   console.log(`[processBrochure] Starting processing for brochure ${brochureId}`);
+
+  const brochure = await db.brochure.findUnique({ where: { id: brochureId } });
+  if (!brochure) throw new Error(`Brochure ${brochureId} not found`);
+
+  const fileData = await readPdfFromBrochure(brochure);
 
   const { pages, totalPages } = await extractPDFText(fileData);
   console.log(`[processBrochure] Extracted ${pages.length} pages`);
@@ -187,6 +284,7 @@ export async function processBrochure(
   const chunksWithCategories = chunks.map(chunk => ({
     content: chunk.content,
     category: detectCategory(chunk.content) || "general",
+    pageNumber: (chunk.metadata?.[0]?.page as number) || null,
   }));
 
   console.log("[processBrochure] Generating embeddings...");
@@ -199,19 +297,27 @@ export async function processBrochure(
 
   console.log("[processBrochure] Storing chunks in database...");
   
-  await db.$transaction(
+  const storedChunks = await db.$transaction(
     chunksWithCategories.map((chunk, index) =>
       db.chunk.create({
         data: {
           brochureId,
           content: chunk.content,
           chunkOrder: index,
-          pageNumber: (chunk.metadata?.[0]?.page as number) || null,
+          pageNumber: chunk.pageNumber,
           category: chunk.category,
-          metadata: { original_page: chunk.metadata?.[0]?.page },
+          metadata: { original_page: chunk.pageNumber },
         },
       })
     )
+  );
+
+  console.log("[processBrochure] Upserting vectors to Qdrant...");
+  await upsertChunksToQdrant(
+    brochureId,
+    storedChunks,
+    embeddings,
+    brochure.versionNum
   );
 
   await db.brochure.update({
@@ -223,29 +329,35 @@ export async function processBrochure(
     },
   });
 
-  console.log(`[processBrochure] Completed: ${chunks.length} chunks stored`);
+  await db.brochureLog.create({
+    data: {
+      brochureId,
+      versionNum: brochure.versionNum,
+      action: "PROCESS_COMPLETE",
+      metadata: { chunks: storedChunks.length, pages: totalPages },
+    },
+  });
+
+  console.log(`[processBrochure] Completed: ${storedChunks.length} chunks stored`);
   
-  return { chunksCreated: chunks.length, totalPages };
+  return { chunksCreated: storedChunks.length, totalPages };
 }
 
 /**
- * Delete old version's vector chunks from Qdrant
+ * Delete a brochure's vector chunks from Qdrant (canonical policy_knowledge collection).
  */
-export async function deleteOldQdrantChunks(brochureId: string, previousVersionNum: number): Promise<void> {
+export async function deleteBrochureQdrantChunks(brochureId: string): Promise<void> {
   try {
-    const qdrantUrl = process.env.QDRANT_URL || "http://localhost:6333";
-    
-    const searchResponse = await fetch(`${qdrantUrl}/collections/content_chunks/points/search`, {
+    const qdrantUrl = process.env.QDRANT_URL || "http://localhost:6334";
+
+    const searchResponse = await fetch(`${qdrantUrl}/collections/${QDRANT_COLLECTION}/points/search`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        vector: new Array(768).fill(0),
+        vector: new Array(VECTOR_SIZE).fill(0),
         limit: 1000,
         filter: {
-          must: [
-            { key: "brochure_id", match: { value: brochureId } },
-            { key: "version_num", range: { lt: previousVersionNum } },
-          ],
+          must: [{ key: "brochure_id", match: { value: brochureId } }],
         },
         with_payload: false,
       }),
@@ -254,11 +366,10 @@ export async function deleteOldQdrantChunks(brochureId: string, previousVersionN
     if (searchResponse.ok) {
       const searchData: any = await searchResponse.json();
       const pointsToDelete = searchData.result?.map((r: any) => r.id) || [];
-      
+
       if (pointsToDelete.length > 0) {
-        console.log(`[deleteOldQdrantChunks] Deleting ${pointsToDelete.length} old chunks from Qdrant`);
-        
-        await fetch(`${qdrantUrl}/collections/content_chunks/points/delete`, {
+        console.log(`[deleteBrochureQdrantChunks] Deleting ${pointsToDelete.length} chunks for brochure ${brochureId}`);
+        await fetch(`${qdrantUrl}/collections/${QDRANT_COLLECTION}/points/delete`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ points: pointsToDelete }),
@@ -266,12 +377,18 @@ export async function deleteOldQdrantChunks(brochureId: string, previousVersionN
       }
     }
   } catch (error) {
-    console.warn("[deleteOldQdrantChunks] Failed to delete old chunks:", error);
+    console.warn("[deleteBrochureQdrantChunks] Failed to delete chunks:", error);
   }
 }
 
+// @deprecated Use deleteBrochureQdrantChunks
+export async function deleteOldQdrantChunks(brochureId: string, _previousVersionNum: number): Promise<void> {
+  return deleteBrochureQdrantChunks(brochureId);
+}
+
 /**
- * Upload a brochure file
+ * Upload a brochure file to disk and create/version the DB record.
+ * PDFs are stored at /data/pdfs/{versionHash}.pdf, not in BYTEA.
  */
 export async function uploadBrochure(
   fileData: ArrayBuffer,
@@ -294,32 +411,17 @@ export async function uploadBrochure(
   
   console.log(`[uploadBrochure] Filename: ${filename}, Basename: ${basename}`);
 
-  const existingBrochure = await db.brochure.findFirst({
+  const duplicate = await db.brochure.findFirst({
     where: { basename, versionHash: fileHash },
     orderBy: { versionNum: "desc" },
   });
 
-  let brochureId: string;
-  
-  if (existingBrochure) {
+  if (duplicate) {
     console.log(`[uploadBrochure] Duplicate content detected for ${basename}`);
-    
-    await db.brochure.create({
-      data: {
-        basename,
-        originalName: filename,
-        pdfData: Buffer.from(fileData),
-        totalPages: 0,
-        currentPage: 0,
-        status: "READY",
-        versionHash: fileHash,
-        versionNum: existingBrochure.versionNum,
-        metadata: { duplicate: true },
-      },
-    });
-    
-    return { brochureId: existingBrochure.id, status: "NEW", message: "Duplicate content detected" };
+    return { brochureId: duplicate.id, status: "NEW", message: "Duplicate content detected" };
   }
+
+  const filePath = await writePdfToDisk(fileData, fileHash);
 
   const prevVersion = await db.brochure.findFirst({
     where: { basename },
@@ -329,68 +431,64 @@ export async function uploadBrochure(
   if (prevVersion) {
     const versionNum = prevVersion.versionNum + 1;
     console.log(`[uploadBrochure] Creating version ${versionNum} for ${basename}`);
-    
+
     await db.brochure.updateMany({
-      where: { basename, id: { ne: prevVersion.id } },
+      where: { basename, id: { not: prevVersion.id } },
       data: { status: "ARCHIVED" },
     });
 
-    brochureId = prevVersion.id;
-    
     await db.brochure.update({
-      where: { id: brochureId },
+      where: { id: prevVersion.id },
       data: {
         originalName: filename,
-        pdfData: Buffer.from(fileData),
+        filePath,
+        pdfData: null,
         currentPage: 0,
+        totalPages: 0,
         status: "PROCESSING",
         versionHash: fileHash,
         versionNum,
       },
     });
-    
+
     await db.brochureLog.create({
       data: {
-        brochureId,
+        brochureId: prevVersion.id,
         versionNum,
         action: "VERSION_CREATED",
         metadata: { previousVersion: prevVersion.versionNum, newVersion: versionNum },
       },
     });
-    
-    return { brochureId, status: "VERSION" };
-  } else {
-    const versionNum = 1;
-    
-    const newBrochure = await db.brochure.create({
-      data: {
-        basename,
-        originalName: filename,
-        pdfData: Buffer.from(fileData),
-        totalPages: 0,
-        currentPage: 0,
-        status: "PROCESSING",
-        versionHash: fileHash,
-        versionNum,
-        metadata: { firstVersion: true },
-      },
-    });
-    
-    brochureId = newBrochure.id;
-    
-    console.log(`[uploadBrochure] Created new brochure with ID: ${brochureId}`);
-    
-    await db.brochureLog.create({
-      data: {
-        brochureId,
-        versionNum,
-        action: "UPLOAD",
-        metadata: { filename, fileSize, versionNum },
-      },
-    });
+
+    return { brochureId: prevVersion.id, status: "VERSION" };
   }
 
-  return { brochureId, status: "NEW" };
+  const newBrochure = await db.brochure.create({
+    data: {
+      basename,
+      originalName: filename,
+      filePath,
+      totalPages: 0,
+      currentPage: 0,
+      status: "PROCESSING",
+      versionHash: fileHash,
+      versionNum: 1,
+      metadata: { firstVersion: true },
+    },
+  });
+
+  console.log(`[uploadBrochure] Created new brochure with ID: ${newBrochure.id}`);
+
+  await db.brochureLog.create({
+    data: {
+      brochureId: newBrochure.id,
+      versionNum: 1,
+      action: "UPLOAD",
+      metadata: { filename, fileSize, versionNum: 1 },
+    },
+  });
+
+  return { brochureId: newBrochure.id, status: "NEW" };
 }
 
 /**
@@ -417,6 +515,7 @@ export async function listBrochures(
         id: true,
         basename: true,
         originalName: true,
+        filePath: true,
         totalPages: true,
         versionNum: true,
         status: true,
@@ -444,6 +543,7 @@ export async function getBrochureById(id: string): Promise<any | null> {
       id: true,
       basename: true,
       originalName: true,
+      filePath: true,
       totalPages: true,
       versionNum: true,
       status: true,
@@ -483,4 +583,3 @@ export async function getBrochureChunks(brochureId: string, limit: number = 100,
 
   return { chunks, totalCount };
 }
-

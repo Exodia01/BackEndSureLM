@@ -1,3 +1,3 @@
-export { hybridRetrieve, scoreToRelevance } from "./hybrid";
-export { postgresFullTextSearch, userHistoryLookup } from "./postgres";
+export { hybridSearch, userHistoryLookup } from "./hybrid";
+export { postgresFullTextSearch } from "./postgres";
 export type { RetrievalResult, ScoreRelevance, VectorFilterCondition } from "./types";

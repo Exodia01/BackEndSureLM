@@ -32,6 +32,8 @@ export interface ContextResult {
   policyId?: string;
   policyName?: string;
   provider?: string;
+  rank?: number;
+  rerankedScore?: number;
 }
 
 export interface RerankResult extends ContextResult {

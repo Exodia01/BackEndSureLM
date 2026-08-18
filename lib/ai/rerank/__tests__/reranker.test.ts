@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { rerank } from "../reranker";
 import { applyRRFS } from "../rrfs";
 
@@ -91,7 +91,7 @@ describe("Reranker Integration Test", () => {
   });
 
   it("should return top 5 results after reranking", async () => {
-    (global.fetch as vi.Mock).mockResolvedValue({
+    (global.fetch as Mock).mockResolvedValue({
       ok: true,
       json: () =>
         Promise.resolve([
@@ -111,7 +111,7 @@ describe("Reranker Integration Test", () => {
   });
 
   it("should sort results by rerankedScore in descending order", async () => {
-    (global.fetch as vi.Mock).mockResolvedValue({
+    (global.fetch as Mock).mockResolvedValue({
       ok: true,
       json: () =>
         Promise.resolve([
@@ -127,14 +127,14 @@ describe("Reranker Integration Test", () => {
     const reranked = await rerank(mockQuery, rrfResults.slice(0, 10), 5);
 
     for (let i = 0; i < reranked.length - 1; i++) {
-      expect(reranked[i].rerankedScore).toBeGreaterThanOrEqual(
-        reranked[i + 1].rerankedScore
+      expect(reranked[i].rerankedScore ?? 0).toBeGreaterThanOrEqual(
+        reranked[i + 1].rerankedScore ?? 0
       );
     }
   });
 
   it("should assign correct relevance ranks", async () => {
-    (global.fetch as vi.Mock).mockResolvedValue({
+    (global.fetch as Mock).mockResolvedValue({
       ok: true,
       json: () =>
         Promise.resolve([
@@ -157,7 +157,7 @@ describe("Reranker Integration Test", () => {
   });
 
   it("should correctly map rerank scores to candidates", async () => {
-    (global.fetch as vi.Mock).mockResolvedValue({
+    (global.fetch as Mock).mockResolvedValue({
       ok: true,
       json: () =>
         Promise.resolve([
@@ -179,7 +179,7 @@ describe("Reranker Integration Test", () => {
   });
 
   it("should handle reranking API failure gracefully", async () => {
-    (global.fetch as vi.Mock).mockResolvedValue({
+    (global.fetch as Mock).mockResolvedValue({
       ok: false,
       statusText: "Internal Server Error",
     });
@@ -192,7 +192,7 @@ describe("Reranker Integration Test", () => {
   });
 
   it("should compare RRF vs reranked ranking changes", async () => {
-    (global.fetch as vi.Mock).mockResolvedValue({
+    (global.fetch as Mock).mockResolvedValue({
       ok: true,
       json: () =>
         Promise.resolve([
@@ -221,7 +221,7 @@ describe("Reranker Integration Test", () => {
   });
 
   it("should assign correct relevance levels based on rerankedScore", async () => {
-    (global.fetch as vi.Mock).mockResolvedValue({
+    (global.fetch as Mock).mockResolvedValue({
       ok: true,
       json: () =>
         Promise.resolve([
@@ -244,9 +244,3 @@ describe("Reranker Integration Test", () => {
     expect(reranked[4].relevance).toBe("low");
   });
 });
-
-
-
-
-
-

@@ -25,6 +25,7 @@ export type RateLimitAction =
   | "requirements:reject"
   | "brochures:link"
   | "brochures:unlink"
+  | "brochures:process"
   | "issuances:create"
   | "applications:create"
   | "applications:submit"
@@ -35,7 +36,9 @@ export type RateLimitAction =
   | "documents:retry"
   | "documents:review"
   | "documents:download"
-  | "documents:list";
+  | "documents:list"
+  | "chat:send"
+  | "orchestrate:query";
 
 export interface RateLimitConfig {
   /** Maximum number of allowed requests in the window. */
@@ -60,6 +63,7 @@ export const RATE_LIMITS: Record<RateLimitAction, RateLimitConfig> = {
   "requirements:reject": { limit: 100, windowMs: 60 * 60 * 1000 },
   "brochures:link": { limit: 60, windowMs: 60 * 60 * 1000 },
   "brochures:unlink": { limit: 60, windowMs: 60 * 60 * 1000 },
+  "brochures:process": { limit: 10, windowMs: 60 * 60 * 1000 },
   "issuances:create": { limit: 50, windowMs: 60 * 60 * 1000 },
   "applications:create": { limit: 100, windowMs: 60 * 60 * 1000 },
   "applications:submit": { limit: 100, windowMs: 60 * 60 * 1000 },
@@ -71,6 +75,8 @@ export const RATE_LIMITS: Record<RateLimitAction, RateLimitConfig> = {
   "documents:review": { limit: 100, windowMs: 60 * 60 * 1000 },
   "documents:download": { limit: 120, windowMs: 60 * 60 * 1000 },
   "documents:list": { limit: 120, windowMs: 60 * 60 * 1000 },
+  "chat:send": { limit: 30, windowMs: 60 * 60 * 1000 },
+  "orchestrate:query": { limit: 30, windowMs: 60 * 60 * 1000 },
 };
 
 interface Bucket {

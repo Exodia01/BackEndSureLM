@@ -1,7 +1,18 @@
-import { NextResponse } from "next/server";
-import { orchestrateQuery, orchestrateQueryStreaming } from "@/lib/ai/orchestrator";
+import { NextRequest, NextResponse } from "next/server";
+import { requireAuth } from "@/lib/auth/guards";
+import { orchestrateQuery } from "@/lib/ai/orchestrator";
+import {
+  checkRateLimit,
+  rateLimitExceeded,
+} from "@/lib/security/rateLimiter";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.ok) return auth.response;
+
+  const rl = checkRateLimit(auth.user.sub, "orchestrate:query");
+  if (!rl.allowed) return rateLimitExceeded("orchestrate:query", rl.retryAfterSeconds);
+
   try {
     const body = await request.json();
     const { messages, sessionId, agentId } = body;
@@ -22,9 +33,9 @@ export async function POST(request: Request) {
     return NextResponse.json(response);
   } catch (error) {
     console.error("Orchestration query error:", error);
-    
+
     return NextResponse.json(
-      { 
+      {
         error: "Orchestration failed",
         message: (error as Error).message,
       },

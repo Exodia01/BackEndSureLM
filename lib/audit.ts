@@ -45,9 +45,20 @@ export interface AuditEventInput {
   metadata?: Record<string, unknown> | null;
 }
 
+let failedAuditCount = 0;
+
+/**
+ * Returns the number of audit writes that have failed since process start.
+ * Useful for health-check endpoints and monitoring.
+ */
+export function getFailedAuditCount(): number {
+  return failedAuditCount;
+}
+
 /**
  * Record an audit event. Never throws: auditing must not break the primary
- * operation, so failures are logged and swallowed.
+ * operation, so failures are logged and swallowed. Structured logging ensures
+ * failed audit events are diagnosable in production.
  */
 export async function writeAuditEvent(input: AuditEventInput): Promise<void> {
   try {
@@ -64,6 +75,18 @@ export async function writeAuditEvent(input: AuditEventInput): Promise<void> {
       },
     });
   } catch (error) {
-    console.error("writeAuditEvent failed:", error);
+    failedAuditCount++;
+    console.error(
+      JSON.stringify({
+        level: "error",
+        event: "audit_write_failed",
+        action: input.action,
+        entityType: input.entityType,
+        entityId: input.entityId,
+        actorId: input.actorId,
+        failureCount: failedAuditCount,
+        error: (error as Error).message,
+      })
+    );
   }
 }

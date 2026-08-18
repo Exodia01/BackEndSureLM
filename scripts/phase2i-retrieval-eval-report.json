@@ -1,0 +1,1141 @@
+{
+  "timestamp": "2026-08-17T19:04:56.339Z",
+  "method": "production path: retrievePoliciesWithContext(onlyApproved) + hybridRetrieve, nomic-embed-text",
+  "metrics": {
+    "recallAt1": 0.3333333333333333,
+    "recallAt3": 0.6178861788617885,
+    "recallAt5": 0.7317073170731706,
+    "mrr": 0.5892953929539294
+  },
+  "latency": {
+    "meanMs": 315,
+    "p50Ms": 289,
+    "p95Ms": 554
+  },
+  "provenanceErrors": 0,
+  "rows": [
+    {
+      "id": 1,
+      "query": "What is the minimum entry age for Kotak term insurance?",
+      "category": "eligibility",
+      "difficulty": "easy",
+      "latencyMs": 893,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0,
+      "expectedProductNames": [
+        "e-Term Plan",
+        "Kotak Term Plan"
+      ],
+      "retrievedProducts": [
+        "",
+        "TULIP (ULIP)",
+        "E-Invest (ULIP)",
+        "Fortune Maximiser",
+        "Single Invest Advantage",
+        "Sampoorn Bima (Micro Insurance)",
+        "Premier Life Plan",
+        "Platinum Plan",
+        "e-Term Plan (Online)"
+      ],
+      "status": "MISS"
+    },
+    {
+      "id": 2,
+      "query": "Who is eligible to buy the Kotak Assured Pension Plan?",
+      "category": "eligibility",
+      "difficulty": "easy",
+      "latencyMs": 279,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Assured Pension Plan"
+      ],
+      "retrievedProducts": [
+        "Assured Pension Plan",
+        "Premier Endowment Plan",
+        "Classic Endowment Plan",
+        "Assured Savings Plan",
+        "Guaranteed Savings Plan",
+        "Premier Pension Plan",
+        "Single Invest Plus",
+        "Kotak Term Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 3,
+      "query": "What is the maximum age limit for purchasing a Kotak endowment plan?",
+      "category": "age",
+      "difficulty": "medium",
+      "latencyMs": 334,
+      "recallAt1": 0,
+      "recallAt3": 0.5,
+      "recallAt5": 0.5,
+      "mrr": 0.5,
+      "expectedProductNames": [
+        "Classic Endowment Plan",
+        "Premier Endowment Plan"
+      ],
+      "retrievedProducts": [
+        "TULIP (ULIP)",
+        "Premier Endowment Plan",
+        "Assured Pension Plan",
+        "Single Invest Advantage",
+        "Fortune Maximiser",
+        "Platinum Plan",
+        "E-Invest (ULIP)",
+        "Classic Endowment Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 4,
+      "query": "Can a 60 year old buy Kotak Wealth Optima?",
+      "category": "age",
+      "difficulty": "medium",
+      "latencyMs": 284,
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 0.5,
+      "expectedProductNames": [
+        "Wealth Optima (ULIP)"
+      ],
+      "retrievedProducts": [
+        "TULIP (ULIP)",
+        "Wealth Optima (ULIP)",
+        "Assured Pension Plan",
+        "Platinum Plan",
+        "Single Invest Advantage",
+        "Saral Pension",
+        "Lifetime Income Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 5,
+      "query": "What are the premium payment options for Kotak Premier Life Plan?",
+      "category": "premium_payment",
+      "difficulty": "easy",
+      "latencyMs": 554,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0.16666666666666666,
+      "expectedProductNames": [
+        "Premier Life Plan"
+      ],
+      "retrievedProducts": [
+        "",
+        "Assured Income Accelerator",
+        "Classic Endowment Plan",
+        "Kotak Term Plan",
+        "Premier Life Plan",
+        "Assured Savings Plan",
+        "Guaranteed Savings Plan",
+        "Premier Endowment Plan",
+        "Premier Pension Plan"
+      ],
+      "status": "MISS"
+    },
+    {
+      "id": 6,
+      "query": "How much premium do I need to pay for Kotak Assured Savings Plan?",
+      "category": "premium_payment",
+      "difficulty": "easy",
+      "latencyMs": 579,
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 0.5,
+      "expectedProductNames": [
+        "Assured Savings Plan"
+      ],
+      "retrievedProducts": [
+        "Guaranteed Savings Plan",
+        "Assured Savings Plan",
+        "Premier Life Plan",
+        "Kotak Term Plan",
+        "Classic Endowment Plan",
+        "Fortune Maximiser",
+        "Premier Pension Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 7,
+      "query": "What is the minimum annualised premium for Kotak Ace Investment?",
+      "category": "premium_payment",
+      "difficulty": "medium",
+      "latencyMs": 302,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Ace Investment"
+      ],
+      "retrievedProducts": [
+        "Ace Investment",
+        "TULIP (ULIP)",
+        "Platinum Plan",
+        "Premier Endowment Plan",
+        "Single Invest Advantage",
+        "Fortune Maximiser",
+        "Premier Pension Plan",
+        "Single Invest Plus"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 8,
+      "query": "What policy term options are available in Kotak e-Term Plan?",
+      "category": "policy_term",
+      "difficulty": "easy",
+      "latencyMs": 327,
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 0.3333333333333333,
+      "expectedProductNames": [
+        "e-Term Plan"
+      ],
+      "retrievedProducts": [
+        "e-Term Plan (Online)",
+        "Premier Endowment Plan",
+        "e-Term Plan",
+        "Kotak Term Plan",
+        "Guaranteed Savings Plan",
+        "Fortune Maximiser",
+        "Classic Endowment Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 9,
+      "query": "Can I choose a 10 year policy term in Kotak Guaranteed Savings Plan?",
+      "category": "policy_term",
+      "difficulty": "medium",
+      "latencyMs": 293,
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 0.5,
+      "expectedProductNames": [
+        "Guaranteed Savings Plan"
+      ],
+      "retrievedProducts": [
+        "Platinum Plan",
+        "Guaranteed Savings Plan",
+        "E-Invest (ULIP)",
+        "Fortune Maximiser",
+        "Single Invest Advantage",
+        "Premier Endowment Plan",
+        "Assured Savings Plan",
+        "Classic Endowment Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 10,
+      "query": "What is the maturity benefit in Kotak Classic Endowment Plan?",
+      "category": "maturity",
+      "difficulty": "easy",
+      "latencyMs": 253,
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 0.5,
+      "expectedProductNames": [
+        "Classic Endowment Plan"
+      ],
+      "retrievedProducts": [
+        "Premier Endowment Plan",
+        "Classic Endowment Plan",
+        "TULIP (ULIP)",
+        "Premier Moneyback Plan",
+        "Assured Income Accelerator",
+        "Single Invest Advantage",
+        "Platinum Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 11,
+      "query": "What happens at the end of the policy term for Kotak Single Invest Plus?",
+      "category": "maturity",
+      "difficulty": "medium",
+      "latencyMs": 273,
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 0.5,
+      "expectedProductNames": [
+        "Single Invest Plus"
+      ],
+      "retrievedProducts": [
+        "Single Invest Advantage",
+        "Single Invest Plus",
+        "Ace Investment",
+        "Premier Endowment Plan",
+        "Platinum Plan",
+        "Premier Moneyback Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 12,
+      "query": "What is the death benefit payout in Kotak Term Plan?",
+      "category": "death_benefit",
+      "difficulty": "easy",
+      "latencyMs": 273,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0.1,
+      "expectedProductNames": [
+        "Kotak Term Plan",
+        "e-Term Plan"
+      ],
+      "retrievedProducts": [
+        "",
+        "TULIP (ULIP)",
+        "Kotak Term Plan"
+      ],
+      "status": "MISS"
+    },
+    {
+      "id": 13,
+      "query": "Does Kotak SmartLife Plan provide a death benefit to nominees?",
+      "category": "death_benefit",
+      "difficulty": "medium",
+      "latencyMs": 299,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0,
+      "expectedProductNames": [
+        "SmartLife Plan"
+      ],
+      "retrievedProducts": [
+        "Premier Life Plan",
+        "e-Term Plan",
+        "Kotak Term Plan",
+        "TULIP (ULIP)",
+        "e-Term Plan (Online)",
+        "Guaranteed Savings Plan",
+        "E-Invest (ULIP)",
+        "Fortune Maximiser",
+        "Single Invest Plus"
+      ],
+      "status": "MISS"
+    },
+    {
+      "id": 14,
+      "query": "Are there tax benefits under Section 80C for Kotak life insurance plans?",
+      "category": "tax_benefits",
+      "difficulty": "medium",
+      "latencyMs": 289,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0.1111111111111111,
+      "expectedProductNames": [
+        "e-Term Plan",
+        "Premier Life Plan"
+      ],
+      "retrievedProducts": [
+        "",
+        "POS Bachat Bima",
+        "Guaranteed Savings Plan",
+        "Fortune Maximiser",
+        "Kotak Term Plan",
+        "Premier Life Plan",
+        "Assured Savings Plan"
+      ],
+      "status": "MISS"
+    },
+    {
+      "id": 15,
+      "query": "What tax exemptions apply to Kotak Fortune Maximiser payouts?",
+      "category": "tax_benefits",
+      "difficulty": "medium",
+      "latencyMs": 289,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Fortune Maximiser"
+      ],
+      "retrievedProducts": [
+        "Fortune Maximiser",
+        "Assured Pension Plan",
+        "Guaranteed Savings Plan",
+        "Premier Endowment Plan",
+        "Premier Moneyback Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 16,
+      "query": "What riders are available with Kotak Premier Life Plan?",
+      "category": "riders",
+      "difficulty": "easy",
+      "latencyMs": 430,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 1,
+      "mrr": 0.25,
+      "expectedProductNames": [
+        "Premier Life Plan"
+      ],
+      "retrievedProducts": [
+        "",
+        "e-Term Plan (Online)",
+        "Fortune Maximiser",
+        "Premier Life Plan",
+        "Guaranteed Savings Plan",
+        "SmartLife Plan",
+        "E-Invest (ULIP)",
+        "e-Term Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 17,
+      "query": "Is there a critical illness rider available in Kotak Health Shield?",
+      "category": "riders",
+      "difficulty": "medium",
+      "latencyMs": 277,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 1,
+      "mrr": 0.25,
+      "expectedProductNames": [
+        "Health Shield"
+      ],
+      "retrievedProducts": [
+        "e-Term Plan (Online)",
+        "Guaranteed Savings Plan",
+        "SmartLife Plan",
+        "Health Shield",
+        "Assured Income Accelerator",
+        "e-Term Plan",
+        "Assured Savings Plan",
+        "E-Invest (ULIP)"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 18,
+      "query": "What are the exclusions in Kotak Assured Income Accelerator?",
+      "category": "exclusions",
+      "difficulty": "easy",
+      "latencyMs": 272,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Assured Income Accelerator"
+      ],
+      "retrievedProducts": [
+        "Assured Income Accelerator",
+        "Guaranteed Savings Plan",
+        "e-Term Plan (Online)",
+        "Assured Savings Plan",
+        "Premier Endowment Plan",
+        "Premier Moneyback Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 19,
+      "query": "Are pre-existing diseases excluded under Kotak Health Shield?",
+      "category": "exclusions",
+      "difficulty": "medium",
+      "latencyMs": 302,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Health Shield"
+      ],
+      "retrievedProducts": [
+        "Health Shield",
+        "e-Term Plan",
+        "Kotak Term Plan",
+        "POS Bachat Bima",
+        "e-Term Plan (Online)",
+        "Guaranteed Savings Plan",
+        "Premier Endowment Plan",
+        "Assured Savings Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 20,
+      "query": "What is the surrender value calculation for Kotak Guaranteed Savings Plan?",
+      "category": "surrender",
+      "difficulty": "medium",
+      "latencyMs": 260,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 1,
+      "mrr": 0.2,
+      "expectedProductNames": [
+        "Guaranteed Savings Plan"
+      ],
+      "retrievedProducts": [
+        "",
+        "POS Bachat Bima",
+        "Premier Endowment Plan",
+        "Guaranteed Savings Plan",
+        "Fortune Maximiser",
+        "Assured Income Accelerator",
+        "Premier Pension Plan",
+        "Assured Savings Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 21,
+      "query": "Can I surrender my Kotak Wealth Optima policy early?",
+      "category": "surrender",
+      "difficulty": "medium",
+      "latencyMs": 293,
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 0.5,
+      "expectedProductNames": [
+        "Wealth Optima (ULIP)"
+      ],
+      "retrievedProducts": [
+        "Platinum Plan",
+        "Wealth Optima (ULIP)",
+        "Ace Investment",
+        "E-Invest (ULIP)",
+        "Premier Pension Plan",
+        "Premier Endowment Plan",
+        "Premier Moneyback Plan",
+        "Assured Savings Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 22,
+      "query": "I am looking for a retirement plan with guaranteed monthly income. What does Kotak offer?",
+      "category": "pension_retirement",
+      "difficulty": "easy",
+      "latencyMs": 282,
+      "recallAt1": 0.3333333333333333,
+      "recallAt3": 0.3333333333333333,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Assured Pension Plan",
+        "Lifetime Income Plan",
+        "Premier Pension Plan"
+      ],
+      "retrievedProducts": [
+        "Assured Pension Plan",
+        "Guaranteed Savings Plan",
+        "Assured Savings Plan",
+        "Lifetime Income Plan",
+        "Premier Pension Plan",
+        "Premier Life Plan",
+        "Saral Pension",
+        "Classic Endowment Plan",
+        "Assured Income Accelerator",
+        "E-Invest (ULIP)"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 23,
+      "query": "What is the annuity rate in Kotak Saral Pension?",
+      "category": "pension_retirement",
+      "difficulty": "medium",
+      "latencyMs": 322,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Saral Pension"
+      ],
+      "retrievedProducts": [
+        "Saral Pension",
+        "Assured Pension Plan",
+        "Lifetime Income Plan",
+        "Guaranteed Savings Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 24,
+      "query": "Which Kotak plan gives guaranteed savings with low risk?",
+      "category": "savings",
+      "difficulty": "medium",
+      "latencyMs": 247,
+      "recallAt1": 0.5,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Guaranteed Savings Plan",
+        "Assured Savings Plan"
+      ],
+      "retrievedProducts": [
+        "Guaranteed Savings Plan",
+        "Assured Savings Plan",
+        "Premier Endowment Plan",
+        "Classic Endowment Plan",
+        "Single Invest Advantage",
+        "Premier Moneyback Plan",
+        "Kotak Term Plan",
+        "POS Bachat Bima",
+        "Platinum Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 25,
+      "query": "What is the bonus structure in Kotak Premier Moneyback Plan?",
+      "category": "savings",
+      "difficulty": "medium",
+      "latencyMs": 257,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Premier Moneyback Plan"
+      ],
+      "retrievedProducts": [
+        "Premier Moneyback Plan",
+        "Premier Endowment Plan",
+        "Fortune Maximiser",
+        "Classic Endowment Plan",
+        "Platinum Plan",
+        "Guaranteed Savings Plan",
+        "Single Invest Advantage"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 26,
+      "query": "Which Kotak plan provides pure protection at the lowest cost?",
+      "category": "protection",
+      "difficulty": "medium",
+      "latencyMs": 254,
+      "recallAt1": 0.5,
+      "recallAt3": 0.5,
+      "recallAt5": 0.5,
+      "mrr": 1,
+      "expectedProductNames": [
+        "e-Term Plan",
+        "Kotak Term Plan"
+      ],
+      "retrievedProducts": [
+        "Kotak Term Plan",
+        "Premier Endowment Plan",
+        "Classic Endowment Plan",
+        "Guaranteed Savings Plan",
+        "Assured Savings Plan",
+        "Premier Moneyback Plan",
+        "POS Bachat Bima",
+        "Wealth Optima (ULIP)",
+        "e-Term Plan (Online)"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 27,
+      "query": "What is the sum assured range for Kotak Sampoorn Bima micro insurance?",
+      "category": "protection",
+      "difficulty": "medium",
+      "latencyMs": 325,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Sampoorn Bima (Micro Insurance)"
+      ],
+      "retrievedProducts": [
+        "Sampoorn Bima (Micro Insurance)",
+        "Assured Pension Plan",
+        "POS Bachat Bima",
+        "Kotak Term Plan",
+        "e-Term Plan (Online)",
+        "Assured Savings Plan",
+        "e-Term Plan",
+        "Saral Jeevan Bima",
+        "Assured Income Accelerator",
+        "Single Invest Advantage"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 28,
+      "query": "I need a plan for my child's education. Which Kotak plan should I consider?",
+      "category": "child_family",
+      "difficulty": "medium",
+      "latencyMs": 278,
+      "recallAt1": 0,
+      "recallAt3": 0.5,
+      "recallAt5": 0.5,
+      "mrr": 0.3333333333333333,
+      "expectedProductNames": [
+        "Premier Life Plan",
+        "Assured Savings Plan"
+      ],
+      "retrievedProducts": [
+        "Premier Moneyback Plan",
+        "E-Invest (ULIP)",
+        "Assured Savings Plan",
+        "Premier Endowment Plan",
+        "Classic Endowment Plan",
+        "Kotak Term Plan",
+        "Ace Investment",
+        "Premier Life Plan",
+        "Wealth Optima (ULIP)"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 29,
+      "query": "Does Kotak offer a family floater health plan?",
+      "category": "child_family",
+      "difficulty": "medium",
+      "latencyMs": 274,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0,
+      "expectedProductNames": [
+        "Health Shield"
+      ],
+      "retrievedProducts": [
+        "Premier Moneyback Plan",
+        "Kotak Term Plan",
+        "E-Invest (ULIP)",
+        "Guaranteed Savings Plan",
+        "Assured Savings Plan",
+        "Single Invest Plus",
+        "e-Term Plan",
+        "Classic Endowment Plan",
+        "POS Bachat Bima"
+      ],
+      "status": "MISS"
+    },
+    {
+      "id": 30,
+      "query": "Compare Kotak term plans vs endowment plans for a 30 year old",
+      "category": "comparative",
+      "difficulty": "hard",
+      "latencyMs": 252,
+      "recallAt1": 0,
+      "recallAt3": 0.3333333333333333,
+      "recallAt5": 0.3333333333333333,
+      "mrr": 0.5,
+      "expectedProductNames": [
+        "e-Term Plan",
+        "Kotak Term Plan",
+        "Classic Endowment Plan"
+      ],
+      "retrievedProducts": [
+        "Premier Endowment Plan",
+        "Classic Endowment Plan",
+        "Lifetime Income Plan",
+        "Assured Savings Plan",
+        "Premier Life Plan",
+        "TULIP (ULIP)",
+        "Kotak Term Plan",
+        "Ace Investment",
+        "Assured Pension Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 31,
+      "query": "Which is better for wealth creation: Kotak Wealth Optima or Ace Investment?",
+      "category": "comparative",
+      "difficulty": "hard",
+      "latencyMs": 262,
+      "recallAt1": 0.5,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Wealth Optima (ULIP)",
+        "Ace Investment"
+      ],
+      "retrievedProducts": [
+        "Ace Investment",
+        "Wealth Optima (ULIP)",
+        "Single Invest Advantage",
+        "Platinum Plan",
+        "Single Invest Plus",
+        "Assured Income Accelerator",
+        "E-Invest (ULIP)",
+        "Premier Endowment Plan",
+        "Assured Savings Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 32,
+      "query": "I want to invest money for 5 years",
+      "category": "ambiguous",
+      "difficulty": "hard",
+      "latencyMs": 299,
+      "recallAt1": 0,
+      "recallAt3": 0.3333333333333333,
+      "recallAt5": 0.3333333333333333,
+      "mrr": 0.3333333333333333,
+      "expectedProductNames": [
+        "Ace Investment",
+        "Wealth Optima (ULIP)",
+        "Guaranteed Savings Plan"
+      ],
+      "retrievedProducts": [
+        "Single Invest Advantage",
+        "Single Invest Plus",
+        "Ace Investment",
+        "TULIP (ULIP)",
+        "Platinum Plan",
+        "E-Invest (ULIP)"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 33,
+      "query": "I need financial protection for my family",
+      "category": "ambiguous",
+      "difficulty": "hard",
+      "latencyMs": 325,
+      "recallAt1": 0.5,
+      "recallAt3": 0.5,
+      "recallAt5": 0.5,
+      "mrr": 1,
+      "expectedProductNames": [
+        "e-Term Plan",
+        "Kotak Term Plan"
+      ],
+      "retrievedProducts": [
+        "Kotak Term Plan",
+        "Sampoorn Bima (Micro Insurance)",
+        "Premier Moneyback Plan",
+        "e-Term Plan (Online)",
+        "Assured Income Accelerator",
+        "Saral Jeevan Bima",
+        "POS Bachat Bima",
+        "Classic Endowment Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 34,
+      "query": "Do you have a car insurance plan?",
+      "category": "no_match",
+      "difficulty": "hard",
+      "latencyMs": 273,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0,
+      "expectedProductNames": [],
+      "retrievedProducts": [
+        "Kotak Term Plan",
+        "Health Shield",
+        "Assured Savings Plan",
+        "Sampoorn Bima (Micro Insurance)",
+        "Guaranteed Savings Plan",
+        "Premier Moneyback Plan",
+        "Classic Endowment Plan",
+        "POS Bachat Bima"
+      ],
+      "status": "NO_MATCH"
+    },
+    {
+      "id": 35,
+      "query": "What is the claim settlement ratio for Kotak Life Insurance?",
+      "category": "no_match",
+      "difficulty": "hard",
+      "latencyMs": 293,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0,
+      "expectedProductNames": [],
+      "retrievedProducts": [
+        "Kotak Term Plan",
+        "POS Bachat Bima",
+        "Fortune Maximiser",
+        "Guaranteed Savings Plan",
+        "Platinum Plan",
+        "Assured Savings Plan",
+        "e-Term Plan (Online)",
+        "SmartLife Plan"
+      ],
+      "status": "NO_MATCH"
+    },
+    {
+      "id": 36,
+      "query": "What fund options are available in Kotak TULIP?",
+      "category": "ulip_funds",
+      "difficulty": "medium",
+      "latencyMs": 310,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 1,
+      "mrr": 0.25,
+      "expectedProductNames": [
+        "TULIP (ULIP)"
+      ],
+      "retrievedProducts": [
+        "Platinum Plan",
+        "E-Invest (ULIP)",
+        "Premier Endowment Plan",
+        "TULIP (ULIP)",
+        "Wealth Optima (ULIP)",
+        "Ace Investment",
+        "Single Invest Advantage",
+        "Classic Endowment Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 37,
+      "query": "How does Kotak E-Invest ULIP work?",
+      "category": "ulip_funds",
+      "difficulty": "medium",
+      "latencyMs": 302,
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 0.3333333333333333,
+      "expectedProductNames": [
+        "E-Invest (ULIP)"
+      ],
+      "retrievedProducts": [
+        "Platinum Plan",
+        "Single Invest Advantage",
+        "E-Invest (ULIP)",
+        "SmartLife Plan",
+        "Ace Investment",
+        "e-Term Plan (Online)",
+        "Assured Savings Plan",
+        "Wealth Optima (ULIP)"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 38,
+      "query": "What is the sum assured for Kotak Sampoorn Bima micro insurance?",
+      "category": "micro_insurance",
+      "difficulty": "easy",
+      "latencyMs": 265,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Sampoorn Bima (Micro Insurance)"
+      ],
+      "retrievedProducts": [
+        "Sampoorn Bima (Micro Insurance)",
+        "POS Bachat Bima",
+        "Assured Pension Plan",
+        "Assured Savings Plan",
+        "Kotak Term Plan",
+        "SmartLife Plan",
+        "Guaranteed Savings Plan",
+        "Single Invest Advantage",
+        "E-Invest (ULIP)",
+        "Saral Jeevan Bima"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 39,
+      "query": "What are the benefits of POS Bachat Bima?",
+      "category": "micro_insurance",
+      "difficulty": "easy",
+      "latencyMs": 258,
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 0.5,
+      "expectedProductNames": [
+        "POS Bachat Bima"
+      ],
+      "retrievedProducts": [
+        "Saral Jeevan Bima",
+        "POS Bachat Bima",
+        "Sampoorn Bima (Micro Insurance)",
+        "Health Shield",
+        "Classic Endowment Plan",
+        "Saral Pension",
+        "Kotak Term Plan",
+        "Premier Moneyback Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 40,
+      "query": "What is Saral Jeevan Bima and who can buy it?",
+      "category": "micro_insurance",
+      "difficulty": "easy",
+      "latencyMs": 291,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Saral Jeevan Bima"
+      ],
+      "retrievedProducts": [
+        "Saral Jeevan Bima",
+        "POS Bachat Bima",
+        "TULIP (ULIP)",
+        "Wealth Optima (ULIP)",
+        "Health Shield",
+        "Lifetime Income Plan",
+        "Premier Life Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 41,
+      "query": "What survival benefits does Kotak Premier Moneyback Plan pay?",
+      "category": "moneyback",
+      "difficulty": "easy",
+      "latencyMs": 283,
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Premier Moneyback Plan"
+      ],
+      "retrievedProducts": [
+        "Premier Moneyback Plan",
+        "Premier Endowment Plan",
+        "Guaranteed Savings Plan",
+        "Single Invest Advantage",
+        "Classic Endowment Plan",
+        "Premier Life Plan",
+        "Assured Savings Plan",
+        "Kotak Term Plan"
+      ],
+      "status": "HIT"
+    },
+    {
+      "id": 42,
+      "query": "What is the pension amount in Kotak Premier Pension Plan?",
+      "category": "pension_standalone",
+      "difficulty": "easy",
+      "latencyMs": 295,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0,
+      "expectedProductNames": [
+        "Premier Pension Plan"
+      ],
+      "retrievedProducts": [
+        "",
+        "Assured Pension Plan",
+        "Saral Pension",
+        "Premier Endowment Plan",
+        "Guaranteed Savings Plan",
+        "Premier Moneyback Plan",
+        "Premier Life Plan",
+        "Platinum Plan"
+      ],
+      "status": "MISS"
+    },
+    {
+      "id": 43,
+      "query": "Do you offer vehicle insurance?",
+      "category": "no_match",
+      "difficulty": "hard",
+      "latencyMs": 347,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0,
+      "expectedProductNames": [],
+      "retrievedProducts": [
+        "E-Invest (ULIP)",
+        "Lifetime Income Plan",
+        "Fortune Maximiser",
+        "Assured Income Accelerator",
+        "Premier Life Plan",
+        "Assured Savings Plan",
+        "Ace Investment",
+        "Premier Pension Plan",
+        "TULIP (ULIP)"
+      ],
+      "status": "NO_MATCH"
+    },
+    {
+      "id": 44,
+      "query": "I want a credit card with travel benefits",
+      "category": "no_match",
+      "difficulty": "hard",
+      "latencyMs": 279,
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "mrr": 0,
+      "expectedProductNames": [],
+      "retrievedProducts": [
+        "Health Shield",
+        "Premier Pension Plan",
+        "e-Term Plan",
+        "Kotak Term Plan",
+        "Classic Endowment Plan",
+        "Assured Savings Plan",
+        "SmartLife Plan"
+      ],
+      "status": "NO_MATCH"
+    },
+    {
+      "id": 45,
+      "query": "Compare all Kotak ULIP plans for a 25 year old investor",
+      "category": "comparative_ulip",
+      "difficulty": "hard",
+      "latencyMs": 266,
+      "recallAt1": 0.3333333333333333,
+      "recallAt3": 0.3333333333333333,
+      "recallAt5": 0.3333333333333333,
+      "mrr": 1,
+      "expectedProductNames": [
+        "Wealth Optima (ULIP)",
+        "TULIP (ULIP)",
+        "E-Invest (ULIP)"
+      ],
+      "retrievedProducts": [
+        "TULIP (ULIP)",
+        "Platinum Plan",
+        "Ace Investment",
+        "Premier Life Plan",
+        "Wealth Optima (ULIP)",
+        "Classic Endowment Plan",
+        "Single Invest Advantage"
+      ],
+      "status": "HIT"
+    }
+  ]
+}

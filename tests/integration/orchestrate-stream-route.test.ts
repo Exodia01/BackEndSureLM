@@ -26,7 +26,7 @@ function req(body: unknown): NextRequest {
 describe("POST /api/orchestrate/query-stream", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockRequireAuth.mockResolvedValue({ ok: true, payload: AGENT });
+    mockRequireAuth.mockResolvedValue({ ok: true, user: AGENT });
   });
 
   it("returns 401 when unauthenticated", async () => {

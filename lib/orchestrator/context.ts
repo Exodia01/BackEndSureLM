@@ -1,4 +1,5 @@
 import { db } from "../db";
+import { Prisma } from "@prisma/client";
 
 export interface WorkflowContext {
   id: string;
@@ -17,6 +18,28 @@ export interface WorkflowContext {
   };
 }
 
+function toInputJson(value: unknown): Prisma.InputJsonValue {
+  if (value === null) return Prisma.JsonNull as unknown as Prisma.InputJsonValue;
+  if (value === undefined) return Prisma.JsonNull as unknown as Prisma.InputJsonValue;
+  if (Array.isArray(value)) return value.map(toInputJson) as Prisma.InputJsonValue;
+  if (typeof value === "object") {
+    const obj: Record<string, Prisma.InputJsonValue> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      obj[k] = toInputJson(v);
+    }
+    return obj as Prisma.InputJsonValue;
+  }
+  return value as Prisma.InputJsonValue;
+}
+
+function fromJsonValue<T>(value: Prisma.JsonValue | null | undefined, fallback: T): T {
+  if (value === null || value === undefined) return fallback;
+  if (typeof value === "object" && !Array.isArray(value)) {
+    return value as T;
+  }
+  return fallback;
+}
+
 export async function createContext(
   workflowId: string,
   type: "query" | "issuance" | "document",
@@ -30,12 +53,12 @@ export async function createContext(
     return {
       id: existing.id,
       workflowId: existing.workflowId,
-      workflowType: existing.type as any,
+      workflowType: existing.type as WorkflowContext["workflowType"],
       status: "pending",
-      input: existing.input as Record<string, unknown>,
-      intermediateResults: {},
-      agentsExecuted: [],
-      errors: [],
+      input: fromJsonValue(existing.input, {}),
+      intermediateResults: fromJsonValue(existing.intermediateResults, {}),
+      agentsExecuted: fromJsonValue(existing.agentsExecuted, []),
+      errors: fromJsonValue(existing.errors, []),
       timestamps: {
         created: existing.createdAt.toISOString(),
       },
@@ -45,15 +68,12 @@ export async function createContext(
   const context = await db.orchestrationLog.create({
     data: {
       workflowId,
-      type: type,
-      input,
+      type,
+      input: toInputJson(input),
       status: "pending",
-      intermediateResults: {},
+      intermediateResults: Prisma.JsonNull,
       agentsExecuted: [],
-      errors: [],
-      timestamps: {
-        created: new Date().toISOString(),
-      },
+      errors: Prisma.JsonNull,
     },
   });
 
@@ -80,10 +100,6 @@ export async function updateContext(
     finalOutput: Record<string, unknown>;
     agentsExecuted: string[];
     errors: Array<{ agent: string; error: string }>;
-    timestamps: {
-      started?: string;
-      completed?: string;
-    };
   }>
 ): Promise<WorkflowContext | null> {
   const context = await db.orchestrationLog.findUnique({
@@ -96,28 +112,34 @@ export async function updateContext(
     where: { workflowId },
     data: {
       status: updates.status,
-      input: context.input,
-      intermediateResults:
-        updates.intermediateResults ?? context.intermediateResults,
-      finalOutput: updates.finalOutput ?? context.finalOutput,
-      agentsExecuted: [...new Set([...context.agentsExecuted, ...(updates.agentsExecuted || [])])],
-      errors: [...(context.errors || []), ...(updates.errors || [])],
+      input: toInputJson(context.input),
+      intermediateResults: updates.intermediateResults !== undefined
+        ? toInputJson(updates.intermediateResults)
+        : undefined,
+      finalOutput: updates.finalOutput !== undefined
+        ? toInputJson(updates.finalOutput)
+        : undefined,
+      agentsExecuted: updates.agentsExecuted !== undefined
+        ? [...new Set([...fromJsonValue(context.agentsExecuted, []), ...(updates.agentsExecuted || [])])]
+        : undefined,
+      errors: updates.errors !== undefined
+        ? [...fromJsonValue(context.errors, []), ...(updates.errors || [])]
+        : undefined,
     },
   });
 
   return {
     id: updated.id,
     workflowId: updated.workflowId,
-    workflowType: updated.type as any,
-    status: updated.status as any,
-    input: updated.input as Record<string, unknown>,
-    intermediateResults: updated.intermediateResults as Record<string, unknown>,
-    finalOutput: updated.finalOutput ? (updated.finalOutput as Record<string, unknown>) : undefined,
-    agentsExecuted: updated.agentsExecuted,
-    errors: updated.errors || [],
+    workflowType: updated.type as WorkflowContext["workflowType"],
+    status: updated.status as WorkflowContext["status"],
+    input: fromJsonValue(updated.input, {}),
+    intermediateResults: fromJsonValue(updated.intermediateResults, {}),
+    finalOutput: updated.finalOutput !== null ? fromJsonValue(updated.finalOutput, undefined) : undefined,
+    agentsExecuted: fromJsonValue(updated.agentsExecuted, []),
+    errors: fromJsonValue(updated.errors, []),
     timestamps: {
       created: updated.createdAt.toISOString(),
-      started: context.completedAt?.toISOString(),
       completed: updated.completedAt?.toISOString(),
     },
   };
@@ -133,16 +155,15 @@ export async function getContext(workflowId: string): Promise<WorkflowContext | 
   return {
     id: context.id,
     workflowId: context.workflowId,
-    workflowType: context.type as any,
-    status: context.status as any,
-    input: context.input as Record<string, unknown>,
-    intermediateResults: context.intermediateResults as Record<string, unknown>,
-    finalOutput: context.finalOutput ? (context.finalOutput as Record<string, unknown>) : undefined,
-    agentsExecuted: context.agentsExecuted,
-    errors: context.errors || [],
+    workflowType: context.type as WorkflowContext["workflowType"],
+    status: context.status as WorkflowContext["status"],
+    input: fromJsonValue(context.input, {}),
+    intermediateResults: fromJsonValue(context.intermediateResults, {}),
+    finalOutput: context.finalOutput !== null ? fromJsonValue(context.finalOutput, undefined) : undefined,
+    agentsExecuted: fromJsonValue(context.agentsExecuted, []),
+    errors: fromJsonValue(context.errors, []),
     timestamps: {
       created: context.createdAt.toISOString(),
-      started: context.completedAt?.toISOString(),
       completed: context.completedAt?.toISOString(),
     },
   };
@@ -161,8 +182,8 @@ export async function logAgentExecution(
       workflowId,
       agent: agentName,
       status,
-      input: input ?? null,
-      output: output ?? null,
+      input: input !== undefined ? toInputJson(input) : Prisma.JsonNull,
+      output: output !== undefined ? toInputJson(output) : Prisma.JsonNull,
       latencyMs: latencyMs ?? null,
     },
   });

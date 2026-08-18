@@ -26,9 +26,14 @@ async function generateEmbeddingsBatch(texts: string[], model: string = "bge-m3"
 }
 
 export async function rerank(query: string, candidates: RetrievalResult[], topN: number = 5): Promise<RerankResult[]> {
-  const documents: string[] = candidates.map(c =>
-    c.content || `${c.payload?.content_snippet || ""} ${c.policyName || ""}`
-  );
+  const documents: string[] = candidates.map((c) => {
+    const payload = c.payload ?? {};
+    const content = typeof payload.content === "string" ? payload.content
+      : typeof payload.content_snippet === "string" ? payload.content_snippet : "";
+    const policyName = typeof payload.policy_name === "string" ? payload.policy_name
+      : typeof payload.policyName === "string" ? payload.policyName : "";
+    return `${content} ${policyName}`.trim();
+  });
 
   try {
     const queryEmbedding = await generateOllamaEmbedding(query);

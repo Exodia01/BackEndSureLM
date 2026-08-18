@@ -1,3 +1,10 @@
+/**
+ * @deprecated Use lib/ai/agents/retriever.ts instead.
+ *
+ * This module is superseded by `hybridRetrieve` in `lib/ai/agents/retriever.ts`
+ * and is retained for backward compatibility only. Do not extend it; prefer the
+ * canonical retriever for all new retrieval flows.
+ */
 import { db } from "../db";
 import { semanticSearch, type SearchFilter } from "../qdrant";
 
@@ -86,9 +93,9 @@ export async function hybridRetrieve(
       id: String(row.id),
       source: "qdrant" as const,
       score: row.score,
-      content: row.payload.content,
-      policyName: row.payload.policy_name,
-      provider: row.payload.provider,
+content: row.payload.content as string | undefined,
+policyName: row.payload.policy_name as string | undefined,
+provider: row.payload.provider as string | undefined,
       metadata: row.payload
     }))),
     agentId ? userHistoryLookup(agentId) : Promise.resolve([]),
@@ -108,9 +115,9 @@ export async function searchPolicies(
       id: String(row.id),
       source: "qdrant" as const,
       score: row.score,
-      content: row.payload.content,
-      policyName: row.payload.policy_name,
-      provider: row.payload.provider,
+content: row.payload.content as string | undefined,
+policyName: row.payload.policy_name as string | undefined,
+provider: row.payload.provider as string | undefined,
       metadata: row.payload
     }))),
   ]);

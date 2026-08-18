@@ -5,6 +5,10 @@ import {
   orchestrateQueryStreaming,
   type OrchestratorResponse,
 } from "@/lib/ai/orchestrator";
+import {
+  checkRateLimit,
+  rateLimitExceeded,
+} from "@/lib/security/rateLimiter";
 
 const encoder = new TextEncoder();
 
@@ -116,6 +120,9 @@ function toSSEStream(source: ReadableStream, fallbackContent: string): ReadableS
 export async function POST(request: NextRequest) {
   const auth = await requireAuth(request);
   if (!auth.ok) return auth.response;
+
+  const rl = checkRateLimit(auth.user.sub, "chat:send");
+  if (!rl.allowed) return rateLimitExceeded("chat:send", rl.retryAfterSeconds);
 
   let body: Record<string, unknown>;
   try {
