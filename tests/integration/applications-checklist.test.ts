@@ -20,7 +20,7 @@ vi.mock("@/lib/db", () => ({ db: dbMock }));
 
 const { GET: getChecklist } = await import("@/app/api/applications/[id]/checklist/route");
 const { getApplicationChecklist, getChecklistEvaluation } = await import("@/lib/applications/lifecycle");
-const { evaluateChecklist } = await import("@/lib/applications/checklist");
+const { evaluateChecklist, classifyRequirement } = await import("@/lib/applications/checklist");
 
 const AGENT_A = {
   sub: "agent-a",
@@ -366,5 +366,40 @@ describe("evaluateChecklist — taxonomy-aware classification", () => {
     expect(evaluation.blockers).not.toContainEqual(
       expect.stringContaining("No documents uploaded")
     );
+  });
+});
+
+describe("classifyRequirement — Phase 2L genuine attempt allowlist", () => {
+  it("max_attempts_change_option → POLICY_KNOWLEDGE (SmartLife brochure-backed)", () => {
+    expect(classifyRequirement("max_attempts_change_option")).toBe("POLICY_KNOWLEDGE");
+  });
+
+  it("max_attempts_return_policy → POLICY_KNOWLEDGE (SmartLife free-look period)", () => {
+    expect(classifyRequirement("max_attempts_return_policy")).toBe("POLICY_KNOWLEDGE");
+  });
+
+  it("max_attempts_message → UNCLASSIFIED (extraction noise, Single Invest Plus)", () => {
+    expect(classifyRequirement("max_attempts_message")).toBe("UNCLASSIFIED");
+  });
+
+  it("other max_attempts_* keys remain UNCLASSIFIED (artifact rule not weakened)", () => {
+    expect(classifyRequirement("max_attempts_foo")).toBe("UNCLASSIFIED");
+    expect(classifyRequirement("max_attempts_something_else")).toBe("UNCLASSIFIED");
+  });
+
+  it("CUSTOMER_EVIDENCE keys remain unchanged", () => {
+    expect(classifyRequirement("kyc_documents")).toBe("CUSTOMER_EVIDENCE");
+    expect(classifyRequirement("kyc_pan")).toBe("CUSTOMER_EVIDENCE");
+    expect(classifyRequirement("income_proof")).toBe("CUSTOMER_EVIDENCE");
+  });
+
+  it("ordinary policy knowledge keys remain POLICY_KNOWLEDGE", () => {
+    expect(classifyRequirement("min_entry_age")).toBe("POLICY_KNOWLEDGE");
+    expect(classifyRequirement("death_benefit")).toBe("POLICY_KNOWLEDGE");
+    expect(classifyRequirement("premium_payment")).toBe("POLICY_KNOWLEDGE");
+  });
+
+  it("empty ruleKey returns UNCLASSIFIED", () => {
+    expect(classifyRequirement("")).toBe("UNCLASSIFIED");
   });
 });

@@ -37,6 +37,17 @@ const CUSTOMER_EVIDENCE_KEYS = new Set([
   "bank_statement",
 ]);
 
+/**
+ * Genuine attempt-limiting requirements backed by explicit brochure text.
+ * These ruleKeys match the artifact regex but are real policy knowledge:
+ *  - max_attempts_change_option: SmartLife "change bonus option only once" (EXPLICIT, confidence=1.0)
+ *  - max_attempts_return_policy: SmartLife free-look period 15/30 days (EXPLICIT, confidence=1.0)
+ */
+const GENUINE_ATTEMPT_KEYS = new Set([
+  "max_attempts_change_option",
+  "max_attempts_return_policy",
+]);
+
 /** Artifact / extraction-noise patterns — always UNCLASSIFIED (fail closed). */
 const ARTIFACT_RE = /^max_attempts_/i;
 
@@ -58,6 +69,9 @@ export function classifyRequirement(ruleKey: string): RequirementClassification 
 
   // Explicit customer evidence set (deterministic, documented)
   if (CUSTOMER_EVIDENCE_KEYS.has(ruleKey)) return "CUSTOMER_EVIDENCE";
+
+  // Genuine attempt-limiting requirements backed by explicit brochure text
+  if (GENUINE_ATTEMPT_KEYS.has(ruleKey)) return "POLICY_KNOWLEDGE";
 
   // Artifact detection — extraction noise, not real requirements
   if (ARTIFACT_RE.test(ruleKey)) return "UNCLASSIFIED";
