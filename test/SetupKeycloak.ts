@@ -4,7 +4,14 @@ export const KEYCLOAK_URL = process.env.KEYCLOAK_URL || 'https://localhost:18444
 export const KEYCLOAK_REALM = process.env.KEYCLOAK_REALM || 'surelm_0_realm';
 export const KEYCLOAK_CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || 'web-app';
 export const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3001';
-export const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://admin:[REDACTED-CREDENTIAL]@localhost:6432/surelm_0';
+export const DATABASE_URL = (() => {
+  if (!process.env.DATABASE_URL) {
+    throw new Error(
+      "DATABASE_URL is not set. Ensure .env exists at the repository root with DATABASE_URL configured for the local integration database (localhost:6432/surelm_0)."
+    );
+  }
+  return process.env.DATABASE_URL;
+})();
 
 // The local Keycloak used by the integration suite serves a self-signed cert.
 // Trust it for loopback hosts only so the live smoke tests can actually connect
@@ -26,8 +33,13 @@ export async function verifyKeycloakHealth(): Promise<boolean> {
 export async function getTestAccessToken(username?: string, password?: string): Promise<string | null> {
   try {
     const client_id = KEYCLOAK_CLIENT_ID;
-    const user = username || process.env.TEST_USERNAME || 'admin';
-    const pass = password || process.env.TEST_PASSWORD || 'admin';
+    const user = username || process.env.TEST_USERNAME;
+    const pass = password || process.env.TEST_PASSWORD;
+    if (!user || !pass) {
+      throw new Error(
+        "TEST_USERNAME and TEST_PASSWORD must be set in .env for integration tests."
+      );
+    }
 
     const params = new URLSearchParams({
       grant_type: 'password',

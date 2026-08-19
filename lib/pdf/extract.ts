@@ -28,7 +28,8 @@ export async function extractPDF(filePath: string): Promise<string[]> {
 }
 
 export async function generateEmbedding(text: string): Promise<number[]> {
-  const response = await fetch("http://localhost:11434/api/embeddings", {
+  const ollamaHost = process.env.OLLAMA_HOST || "http://localhost:11434";
+  const response = await fetch(`${ollamaHost}/api/embeddings`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

@@ -4,15 +4,15 @@ services:
     container_name: surelm_0_postgres
     environment:
       POSTGRES_DB: surelm_0
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: [REDACTED-CREDENTIAL]
+      POSTGRES_USER: ${POSTGRES_USER:-surelm_dev_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env or shell environment}
     command: ["postgres", "-c", "listen_addresses=*"]
     ports:
       - "6432:5432"
     volumes:
       - postgres_data_0:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d surelm_0"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-surelm_dev_user} -d surelm_0"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -31,12 +31,12 @@ services:
     image: quay.io/keycloak/keycloak:23.0
     container_name: surelm_0_keycloak
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?Set KEYCLOAK_ADMIN_PASSWORD in .env or shell environment}
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/surelm_0
-      KC_DB_USERNAME: admin
-      KC_DB_PASSWORD: [REDACTED-CREDENTIAL]
+      KC_DB_USERNAME: ${POSTGRES_USER:-surelm_dev_user}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env or shell environment}
       KC_HOSTNAME: localhost
       KC_HOSTNAME_PORT: 18444
       KC_HOSTNAME_STRICT: false
@@ -45,7 +45,7 @@ services:
       KC_HTTP_RELATIVE_PATH: /auth
       KC_HTTPS_PORT: 8443
       KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/keycloak-dev.p12
-      KC_HTTPS_KEY_STORE_PASSWORD: keycloak
+      KC_HTTPS_KEY_STORE_PASSWORD: ${KC_HTTPS_KEY_STORE_PASSWORD:-keycloak}
       KC_HTTPS_KEY_STORE_TYPE: PKCS12
     ports:
       - "18444:8443"

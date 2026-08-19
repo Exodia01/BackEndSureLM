@@ -6,7 +6,7 @@ import SplashScreen from "@/components/SplashScreen";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SureIm — Insurance for Rural India",
+  title: "SureLM — Insurance for Rural India",
   description: "AI-powered insurance platform for rural communities",
 };
 

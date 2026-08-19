@@ -6,11 +6,13 @@ node_modules/
 out/
 build/
 
-# Environment
+# Environment (NEVER commit)
 .env
 .env.local
 .env.production
 .env*.local
+config/.env
+config/.env.local
 
 # Logs
 logs/

@@ -3,7 +3,7 @@ import { validateAuth } from "@/lib/auth/keycloak";
 
 export const runtime = "nodejs";
 
-const PROTECTED_ROUTES = ["/dashboard", "/policies"];
+const PROTECTED_ROUTES = ["/dashboard", "/policies", "/crm"];
 
 function isProtectedRoute(pathname: string): boolean {
   return PROTECTED_ROUTES.some((route) =>
@@ -29,6 +29,7 @@ export const config = {
   matcher: [
     "/dashboard/:path*",
     "/policies/:path*",
+    "/crm/:path*",
     "/api/:path*",
   ],
 };

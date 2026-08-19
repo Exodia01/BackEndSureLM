@@ -1,3 +1,9 @@
+# ⚠️  DEPRECATED — this is an alternative/legacy Keycloak setup.
+# The primary setup is in docker-compose.yml (port 18444, Keycloak 23.0, shared Postgres).
+# Only use this file if you need an isolated Keycloak instance on port 18443.
+#
+# Required environment variables (set in .env or shell):
+#   POSTGRES_PASSWORD, KEYCLOAK_ADMIN_PASSWORD, KC_HTTPS_KEY_STORE_PASSWORD
 version: "3.8"
 
 services:
@@ -10,19 +16,19 @@ services:
     environment:
       KC_HTTPS_PORT: 8443
       KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/certs/keycloak.keystore.p12
-      KC_HTTPS_KEY_STORE_PASSWORD: [REDACTED-CREDENTIAL]
+      KC_HTTPS_KEY_STORE_PASSWORD: ${KC_HTTPS_KEY_STORE_PASSWORD:?Set KC_HTTPS_KEY_STORE_PASSWORD}
       KC_HTTPS_PRIVATE_KEY_ALIAS: keycloak
       KC_HTTP_RELAXED_AUTH: "true"
 
       # Admin credentials
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: kc[REDACTED-CREDENTIAL]
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?Set KEYCLOAK_ADMIN_PASSWORD}
 
       # Database configuration
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://surelm-postgres:5432/keycloak
-      KC_DB_USERNAME: admin
-      KC_DB_PASSWORD: [REDACTED-CREDENTIAL]
+      KC_DB_USERNAME: ${KC_DB_USERNAME:-admin}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD:?Set KC_DB_PASSWORD}
 
       # Realm import configuration
       KC_IMPORT_DIR: /opt/keycloak/data/import
@@ -44,8 +50,8 @@ services:
     container_name: surelm-postgres
     environment:
       POSTGRES_DB: keycloak
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: [REDACTED-CREDENTIAL]
+      POSTGRES_USER: ${KC_DB_USERNAME:-admin}
+      POSTGRES_PASSWORD: ${KC_DB_PASSWORD:?Set KC_DB_PASSWORD}
     command: ["postgres", "-c", "listen_addresses=*"]
     ports:
       - "5432:5432"
@@ -53,7 +59,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./init-keycloak-db.sql:/docker-entrypoint-initdb.d/init-keycloak-db.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d keycloak"]
+      test: ["CMD-SHELL", "pg_isready -U ${KC_DB_USERNAME:-admin} -d keycloak"]
       interval: 5s
       timeout: 5s
       retries: 5

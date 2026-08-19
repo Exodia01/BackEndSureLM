@@ -9,9 +9,9 @@ export default function SignInPage() {
 
   useEffect(() => {
     const keycloak = new Keycloak({
-      url: process.env.NEXT_PUBLIC_KEYCLOAK_URL || "https://localhost:18443/auth",
-      realm: process.env.KEYCLOAK_REALM || "surelm_realm",
-      clientId: process.env.KEYCLOAK_CLIENT_ID || "web-app",
+      url: process.env.NEXT_PUBLIC_KEYCLOAK_URL || "https://localhost:18444/auth",
+      realm: process.env.NEXT_PUBLIC_KEYCLOAK_REALM || "surelm_0_realm",
+      clientId: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID || "web-app",
     });
 
     keycloak

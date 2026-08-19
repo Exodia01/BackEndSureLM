@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { KeycloakSession } from "@/lib/auth/session";
 import { BirthdaySection } from "@/components/dashboard/BirthdaySection";
 import Link from "next/link";
 import {

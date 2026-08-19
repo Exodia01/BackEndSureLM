@@ -1,6 +1,5 @@
 "use client";
 
-import { KeycloakSession } from "@/lib/auth/session";
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import ChatArea from "@/components/dashboard/ChatArea";

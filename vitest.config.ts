@@ -11,9 +11,6 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, "test/api-auth.test.ts"],
     testTimeout: 60000,
     setupFiles: ["./test/SetupKeycloak.ts"],
-    env: {
-      DATABASE_URL: "postgresql://admin:[REDACTED-CREDENTIAL]@localhost:6432/surelm_0",
-    },
   },
   resolve: {
     alias: {

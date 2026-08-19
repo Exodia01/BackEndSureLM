@@ -62,7 +62,14 @@ const REALM_NAME = CONFIG.realmName;
 
 const INITIAL_USERNAME = CONFIG.initialAdminUsername || "initial-admin";
 const INITIAL_EMAIL = CONFIG.initialAdminEmail || "admin@surelm.com";
-const INITIAL_PASSWORD = CONFIG.initialAdminPassword || "[REDACTED-CREDENTIAL]!";
+const INITIAL_PASSWORD: string = (() => {
+  if (!CONFIG.initialAdminPassword) {
+    console.error("❌ Missing required environment variable: INITIAL_ADMIN_PASSWORD");
+    console.error("   Set INITIAL_ADMIN_PASSWORD in your .env.local file.");
+    process.exit(1);
+  }
+  return CONFIG.initialAdminPassword;
+})();
 
 console.log("🔐 Starting Keycloak Bootstrap:");
 console.log(`   Realm:     ${REALM_NAME}`);

@@ -8,7 +8,7 @@ export default {
     environment: process.env.NODE_ENV || 'development',
   },
   database: {
-    url: process.env.DATABASE_URL || 'postgresql://admin:[REDACTED-CREDENTIAL]@localhost:6432/surelm_0',
+    url: process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/surelm',
   },
   vectorStore: {
     url: process.env.QDRANT_URL || 'http://localhost:6334',

@@ -43,7 +43,7 @@ SureLM empowers grassroots insurance agents to bring financial protection to hou
 |----------|--------------------|
 | Framework | Next.js 16.1.6 (App Router), runs on port **3001** |
 | UI Library | React 19, shadcn/ui |
-| Database | PostgreSQL `surelm_0` @ **`localhost:6432`** (user `admin`, password `[REDACTED-CREDENTIAL]`) |
+| Database | PostgreSQL `surelm_0` @ **`localhost:6432`** (user and password from `POSTGRES_USER` / `POSTGRES_PASSWORD` env vars) |
 | Vector DB | Qdrant, collection `policy_knowledge` @ **`localhost:6334`** (768-dim, Cosine) |
 | Auth | Keycloak `surelm_0_keycloak` @ **`localhost:18444`**, realm `surelm_0_realm` |
 | LLM (primary) | Ollama `qwen2.5:7b` (see model resolution note below) |
@@ -357,11 +357,10 @@ npx tsc --noEmit
 - 27-brochure canonical corpus ingested; 486 chunks/vectors verified.
 - **Phase 2H: all 27 policies populated through the authoritative workflow** (230 approved requirements, 27 versions + snapshots, 0 drafts).
 - Rate limiting, audit events, concurrent-publish safety, document processing pipeline.
-- **Phase 2J: requirement taxonomy reconciliation** — 222/230 requirements classified as POLICY_KNOWLEDGE, 5 as CUSTOMER_EVIDENCE, 3 as UNCLASSIFIED artifacts. 20 policies issuable without customer evidence, 5 need KYC docs, 2 blocked by extraction artifacts. FTS brochure_id provenance repaired in both retrieval paths. 307 tests passing.
+- **Phase 2J: requirement taxonomy reconciliation** — 224/230 requirements classified as POLICY_KNOWLEDGE, 5 as CUSTOMER_EVIDENCE, 1 as UNCLASSIFIED artifact. 21 policies issuable without customer evidence, 5 need KYC docs, 1 blocked by extraction artifact. FTS brochure_id provenance repaired in both retrieval paths. 314 tests passing.
 
 **Blocked / NOT done**
-- **End-to-end recommender validation against authoritative data** — the authoritative tables are now populated (27 policies, 230 approved requirements), so the recommender can finally be validated against real data; that validation itself has **not yet been run**.
-- **2 policies blocked by `max_attempts_*` artifacts** (SmartLife, Single Invest Plus) — data cleanup required in a separate phase.
+- **1 policy blocked by `max_attempts_message` extraction artifact** (Single Invest Plus) — data cleanup required in a separate phase.
 - Fallback LLM models are not installed — do not claim them as working.
 
 ---
@@ -374,19 +373,21 @@ Prerequisites: Docker & Docker Compose, Node.js 20+, Ollama running on `localhos
 # 1. Start infrastructure (PostgreSQL surelm_0 + Qdrant + Keycloak)
 docker-compose up -d
 
-# 2. Ensure env files exist (never commit these)
-#    .env.local (runtime-authoritative): DATABASE_URL=surelm_0@6432, QDRANT_URL=http://localhost:6334,
-#    PRIMARY_MODEL_NAME=qwen2.5:7b, EXTRACTION_MODEL=qwen2.5:7b, KEYCLOAK_URL=https://localhost:18444/auth,
-#    KEYCLOAK_REALM=surelm_0_realm, PDF_STORAGE_DIR=S:/BackEndSureLM/data_phase2/pdfs
+# 2. Copy .env.example to .env.local and fill in real values
+cp .env.example .env.local
+# Edit .env.local: set DATABASE_URL, SESSION_SECRET, KEYCLOAK_ADMIN_PWD, etc.
 
 # 3. Install deps + generate Prisma client
 npm install
 npx prisma generate
 
-# 4. Bootstrap Keycloak (development)
+# 4. Apply database schema (see Database Setup section below)
+npx prisma db push
+
+# 5. Bootstrap Keycloak (development)
 npm run bootstrap:keycloak
 
-# 5. Start the dev server (port 3001, bound to 127.0.0.1)
+# 6. Start the dev server (port 3001, bound to 127.0.0.1)
 npm run dev
 # Open http://localhost:3001
 ```
@@ -396,6 +397,24 @@ Verify the canonical DB before anything else:
 ```bash
 npx tsx scripts/check-db-state.ts      # or phase2f-verify-state.ts for Phase 2F columns
 ```
+
+### Database Setup
+
+The database `surelm_0` was originally created via `prisma db push`, so it has **no `_prisma_migrations` history table**. For a fresh database:
+
+```bash
+# Apply the schema from schema.prisma (creates all tables)
+npx prisma db push
+
+# Two critical partial unique indexes are NOT representable in Prisma schema DSL.
+# After prisma db push, apply them manually:
+#   1. At most one isCurrent=true version per policy (PolicyVersion)
+#   2. At most one ACTIVE application per (leadId, policyName, policyVersionId) triple (Application)
+# These indexes exist in prisma/migrations/20260807130000_phase3_security/migration.sql
+# and prisma/migrations/20260808140000_phase4a_application/migration.sql.
+```
+
+> **Important**: `prisma migrate deploy` will NOT work on a fresh database because there is no migration history to build on. Use `prisma db push` for schema application, then apply the partial unique indexes manually if needed for production.
 
 ---
 
@@ -446,7 +465,7 @@ npx prisma validate
 ```
 
 **Current status (verified):**
-- `npx vitest run` → **37 files / 300 tests passing**.
+- `npx vitest run` → **37 files / 314 tests passing**.
 - `npx prisma validate` and `npx prisma generate` pass.
 - `npx tsc --noEmit` → only **3 pre-existing errors** in untracked Phase 1 scripts (`scripts/eval-baseline-retrieval.mts` duplicate property; `scripts/qdrant-integrity-audit.ts` cannot find module `./lib/db`; `scripts/qdrant-integrity-audit.ts` `Property 'filter' does not exist`). These are not in the shipped workflow code.
 
@@ -475,13 +494,11 @@ npx prisma validate
 
 ## Known Debt & Blockers
 
-1. **End-to-end recommender validation on authoritative data not yet run** — the authoritative tables are now populated (Phase 2H), but recommender validation against the 27 policies / 230 approved requirements is outstanding.
-2. **`max_attempts_*` extraction artifacts** — 3 requirements across 2 policies (SmartLife, Single Invest Plus) are classified UNCLASSIFIED and block issuance; data cleanup required in a separate phase.
-3. **`.env` legacy model value** (`qwen2.5-coder:1.5b`) conflicts with `.env.local` (`qwen2.5:7b`); `.env.local` wins. Clean up per machine.
-4. **Fallback models not installed** in Ollama.
-5. **No `_prisma_migrations` history** on `surelm_0`; migrations must be applied by phase tooling, never by `db push`/`migrate dev`.
-6. 3 pre-existing `tsc` errors in untracked Phase 1 scripts (see [Testing](#testing)).
-7. `scripts/phase2h-populate.ts` and `scripts/phase2h-verify.ts` are committed as the Phase 2H execution/verification tooling (the latter currently asserts the Phase 2H final counts — 27 policies, 230 approved).
+1. **1 UNCLASSIFIED artifact blocks 1 policy** — `max_attempts_message` in Single Invest Plus (extraction artifact, no brochure basis). SmartLife was fixed in Phase 2L.
+2. **No `_prisma_migrations` history** on `surelm_0`; the DB was created via `prisma db push`. See [Database Setup](#database-setup) for the reproducible initialization path. Two partial unique indexes exist only in migration SQL, not in `schema.prisma`.
+3. **Fallback LLM models** (`llama3.1:8b`, `llava:7b`) are not installed in Ollama — treat as non-functional.
+4. 3 pre-existing `tsc` errors in untracked Phase 1 scripts (see [Testing](#testing)).
+5. `config/.env` is deprecated — canonical config is at repository root `.env` / `.env.local`.
 
 ---
 
