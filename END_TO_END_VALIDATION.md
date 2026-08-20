@@ -15,7 +15,7 @@ S:\BackEndSureLM\test\end-to-end-validation.ps1
 
 ### Prerequisites
 
-1. **Database (PostgreSQL)**: Must be running with connection string `postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm`
+1. **Database (PostgreSQL)**: Must be running with connection string `postgresql://admin:[REDACTED]@localhost:5432/surelm`
 2. **Vector Store (Qdrant)**: Must be running at `http://localhost:6333`
 3. **PDF file**: Exists at `S:\BackEndSureLM\test\Kotak_Premier_Life_Plan_-_Brochure_-_18th_June_2020.pdf`
 
@@ -29,7 +29,7 @@ cd S:\BackEndSureLM
 
 **Option 2: Direct execution with npx tsx**
 ```powershell
-$env:DATABASE_URL="postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm"
+$env:DATABASE_URL="postgresql://admin:[REDACTED]@localhost:5432/surelm"
 $env:QDRANT_URL="http://localhost:6333"
 npx tsx test/integration/end-to-end-validation.ts
 ```
@@ -242,7 +242,7 @@ Query: "premium options"
 ## Environment Variables Required
 
 ```
-DATABASE_URL=postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm
+DATABASE_URL=postgresql://admin:[REDACTED]@localhost:5432/surelm
 QDRANT_URL=http://localhost:6333
 ```
 

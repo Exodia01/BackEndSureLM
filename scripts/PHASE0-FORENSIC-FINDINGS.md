@@ -7,13 +7,13 @@
 
 ## 1. Actual Intended Database
 
-**surelm_0** on port 6432 (user: `admin`, password: `[REDACTED-CREDENTIAL]`)
+**surelm_0** on port 6432 (user: `admin`, password: `[REDACTED]`)
 
 | Source | Evidence |
 |--------|----------|
 | `docker-compose.yml` | `container_name: surelm_0_postgres`, `POSTGRES_DB: surelm_0`, `ports: "6432:5432"` |
-| `.env` | `DATABASE_URL=postgresql://admin:[REDACTED-CREDENTIAL]@localhost:6432/surelm_0` |
-| `.env.local` | `DATABASE_URL=postgresql://admin:[REDACTED-CREDENTIAL]@localhost:6432/surelm_0` |
+| `.env` | `DATABASE_URL=postgresql://admin:[REDACTED]@localhost:6432/surelm_0` |
+| `.env.local` | `DATABASE_URL=postgresql://admin:[REDACTED]@localhost:6432/surelm_0` |
 | `prisma.config.ts` | `datasource.url = env("DATABASE_URL")` → resolves to `.env` → surelm_0 |
 | `SureLM_Business_Context_Contract.md` | Silo 1 pipeline operates against the canonical DB; docker-compose defines it |
 | Keycloak config | `KC_DB_URL: jdbc:postgresql://postgres:5432/surelm_0` |
@@ -22,11 +22,11 @@
 
 ## 2. Actual Runtime Database
 
-**surelm** on port 55432 (user: `postgres`, password: `[REDACTED-CREDENTIAL]`)
+**surelm** on port 55432 (user: `postgres`, password: `[REDACTED]`)
 
 | Source | Evidence |
 |--------|----------|
-| Windows env var `DATABASE_URL` | `postgresql://postgres:[REDACTED-CREDENTIAL]@localhost:55432/surelm?schema=public` |
+| Windows env var `DATABASE_URL` | `postgresql://postgres:[REDACTED]@localhost:55432/surelm?schema=public` |
 | `dotenv` behavior | Never overrides existing env vars → runtime uses Windows var |
 | `lib/db.ts` | `process.env.DATABASE_URL` → Windows var → surelm |
 | Docker container | `surelm-postgres` from `S:\SureLMv2\AiForBharat2SureLM\docker-compose.infra.yml` — a **different project** |

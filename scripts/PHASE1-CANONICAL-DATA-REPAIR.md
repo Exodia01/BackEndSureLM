@@ -14,10 +14,10 @@
 | Check | Evidence |
 |-------|----------|
 | Windows `DATABASE_URL` absent | Not set in environment; dotenv reads `.env` + `.env.local` |
-| `.env` resolves to `surelm_0` | `DATABASE_URL=postgresql://admin:[REDACTED-CREDENTIAL]@localhost:6432/surelm_0` |
-| `.env.local` resolves to `surelm_0` | `DATABASE_URL=postgresql://admin:[REDACTED-CREDENTIAL]@localhost:6432/surelm_0` |
+| `.env` resolves to `surelm_0` | `DATABASE_URL=postgresql://admin:[REDACTED]@localhost:6432/surelm_0` |
+| `.env.local` resolves to `surelm_0` | `DATABASE_URL=postgresql://admin:[REDACTED]@localhost:6432/surelm_0` |
 | Prisma `prisma.config.ts` | `datasource.url = env("DATABASE_URL")` → `.env` → `surelm_0` |
-| Vitest `vitest.config.ts` | Explicitly sets `DATABASE_URL: "postgresql://admin:[REDACTED-CREDENTIAL]@localhost:6432/surelm_0"` |
+| Vitest `vitest.config.ts` | Explicitly sets `DATABASE_URL: "postgresql://admin:[REDACTED]@localhost:6432/surelm_0"` |
 | Docker containers | `surelm_0_postgres` (6432), `surelm_0_qdrant` (6334), `surelm_0_keycloak` (18444) — only surelm_0 stack running |
 | Other-project containers | `surelm-postgres` (55432) exists but is NOT used by this repository |
 | Effective DATABASE_URL (tsx) | `check-db-connection.ts` → connected to `surelm_0` on `172.18.0.3:5432` |

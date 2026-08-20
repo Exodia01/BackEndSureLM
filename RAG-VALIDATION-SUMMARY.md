@@ -116,7 +116,7 @@ Question → Embedding Generation → Qdrant Search
 
 ### Environment (.env file verified)
 ```
-DATABASE_URL=postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm
+DATABASE_URL=postgresql://admin:[REDACTED]@localhost:5432/surelm
 QDRANT_URL=http://localhost:6333  
 OLLAMA_HOST=http://127.0.0.1:11434
 PRIMARY_MODEL_NAME=qwen2.5-coder:1.5b

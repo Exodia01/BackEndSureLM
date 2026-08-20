@@ -225,7 +225,7 @@ END-TO-END RETRIEVAL VALIDATION: PASS
 
 ### "Cannot reach database server"
 - Wait 10 seconds after docker compose start
-- Check connection string in `.env.local`: `DATABASE_URL=postgresql://admin:[REDACTED-CREDENTIAL]@localhost:5432/surelm`
+- Check connection string in `.env.local`: `DATABASE_URL=postgresql://admin:[REDACTED]@localhost:5432/surelm`
 
 ---
 
