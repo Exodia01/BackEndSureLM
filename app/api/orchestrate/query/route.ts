@@ -35,10 +35,7 @@ export async function POST(request: NextRequest) {
     console.error("Orchestration query error:", error);
 
     return NextResponse.json(
-      {
-        error: "Orchestration failed",
-        message: (error as Error).message,
-      },
+      { error: "Orchestration failed" },
       { status: 500 }
     );
   }

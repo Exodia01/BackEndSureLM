@@ -44,10 +44,7 @@ export async function POST(request: NextRequest) {
     console.error("Orchestration stream error:", error);
 
     return NextResponse.json(
-      {
-        error: "Stream failed",
-        message: (error as Error).message,
-      },
+      { error: "Stream failed" },
       { status: 500 }
     );
   }

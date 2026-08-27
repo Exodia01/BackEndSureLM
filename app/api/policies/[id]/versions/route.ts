@@ -61,7 +61,6 @@ export async function POST(
     );
   } catch (error) {
     console.error("[POST /api/policies/[id]/versions] Error:", error);
-    const message = error instanceof Error ? error.message : "Failed to publish version";
-    return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.json({ error: "Failed to publish version" }, { status: 400 });
   }
 }

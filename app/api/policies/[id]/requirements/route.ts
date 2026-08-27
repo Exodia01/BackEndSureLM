@@ -63,7 +63,6 @@ export async function POST(
     );
   } catch (error) {
     console.error("[POST /api/policies/[id]/requirements] Error:", error);
-    const message = error instanceof Error ? error.message : "Failed to extract requirements";
-    return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.json({ error: "Failed to extract requirements" }, { status: 400 });
   }
 }

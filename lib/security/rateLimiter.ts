@@ -26,6 +26,7 @@ export type RateLimitAction =
   | "brochures:link"
   | "brochures:unlink"
   | "brochures:process"
+  | "brochures:upload"
   | "issuances:create"
   | "applications:create"
   | "applications:submit"
@@ -64,6 +65,7 @@ export const RATE_LIMITS: Record<RateLimitAction, RateLimitConfig> = {
   "brochures:link": { limit: 60, windowMs: 60 * 60 * 1000 },
   "brochures:unlink": { limit: 60, windowMs: 60 * 60 * 1000 },
   "brochures:process": { limit: 10, windowMs: 60 * 60 * 1000 },
+  "brochures:upload": { limit: 20, windowMs: 60 * 60 * 1000 },
   "issuances:create": { limit: 50, windowMs: 60 * 60 * 1000 },
   "applications:create": { limit: 100, windowMs: 60 * 60 * 1000 },
   "applications:submit": { limit: 100, windowMs: 60 * 60 * 1000 },

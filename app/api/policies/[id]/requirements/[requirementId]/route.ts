@@ -58,8 +58,7 @@ export async function PATCH(
     return NextResponse.json({ success: true, requirement: updated });
   } catch (error) {
     console.error("[PATCH /api/policies/[id]/requirements/[requirementId]] Error:", error);
-    const message = error instanceof Error ? error.message : "Failed to update requirement";
-    return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.json({ error: "Failed to update requirement" }, { status: 400 });
   }
 }
 
@@ -88,7 +87,6 @@ export async function DELETE(
     return NextResponse.json({ success: true, rejected: true });
   } catch (error) {
     console.error("[DELETE /api/policies/[id]/requirements/[requirementId]] Error:", error);
-    const message = error instanceof Error ? error.message : "Failed to reject requirement";
-    return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.json({ error: "Failed to reject requirement" }, { status: 400 });
   }
 }

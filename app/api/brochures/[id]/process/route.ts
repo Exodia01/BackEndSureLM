@@ -46,7 +46,7 @@ export async function POST(
     console.error("[POST /api/brochures/[id]/process] Error:", error);
 
     return NextResponse.json(
-      { error: "Failed to process brochure", message: (error as Error).message },
+      { error: "Failed to process brochure" },
       { status: 500 }
     );
   }

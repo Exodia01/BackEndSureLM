@@ -41,7 +41,6 @@ export async function POST(
     return NextResponse.json({ success: true, requirement: approved });
   } catch (error) {
     console.error("[POST /api/policies/[id]/requirements/[requirementId]/approve] Error:", error);
-    const message = error instanceof Error ? error.message : "Failed to approve requirement";
-    return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.json({ error: "Failed to approve requirement" }, { status: 400 });
   }
 }

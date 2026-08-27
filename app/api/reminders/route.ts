@@ -2,6 +2,7 @@
 import { db } from "@/lib/db";
 import { validateAuth, getUserFromToken, ensureUserInDb } from "@/lib/auth/keycloak";
 import { requireAgent } from "@/lib/auth/guards";
+import { CreateReminderSchema } from "@/lib/validation/schemas";
 
 // POST /api/reminders — create a reminder
 export async function POST(req: NextRequest) {
@@ -13,10 +14,12 @@ export async function POST(req: NextRequest) {
     }
 
     const user = auth.user;
-    const { leadId, type, scheduledAt, note } = await req.json();
-    if (!leadId || !type || !scheduledAt) {
-      return Response.json({ success: false, error: "Missing fields" }, { status: 400 });
+    const parsed = CreateReminderSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return Response.json({ success: false, error: "Invalid input" }, { status: 400 });
     }
+
+    const { leadId, type, scheduledAt, note } = parsed.data;
 
     // Self-provision user in DB
     await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });

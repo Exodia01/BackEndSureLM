@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
 
   keycloak:
-    image: quay.io/keycloak/keycloak:23.0
+    image: quay.io/keycloak/keycloak:26.7.2
     container_name: surelm_0_keycloak
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
@@ -49,8 +49,7 @@ services:
       KC_HTTPS_KEY_STORE_TYPE: PKCS12
     ports:
       - "18444:8443"
-      - "8081:8080"
-    command: start-dev
+    command: start
     depends_on:
       postgres:
         condition: service_healthy

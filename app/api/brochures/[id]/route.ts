@@ -20,7 +20,6 @@ export async function GET(
         id: true,
         basename: true,
         originalName: true,
-        filePath: true,
         currentPage: true,
         totalPages: true,
         status: true,

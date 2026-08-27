@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { validateAuth, getUserFromToken, ensureUserInDb } from "@/lib/auth/keycloak";
 import { requireAgent, requireAuth } from "@/lib/auth/guards";
 import { writeAuditEvent } from "@/lib/audit";
+import { CreateLeadSchema } from "@/lib/validation/schemas";
 
 export async function GET(req: NextRequest) {
   try {
@@ -41,11 +42,13 @@ export async function POST(req: NextRequest) {
     }
 
     const user = auth.user;
-    const { householdName, notes } = await req.json();
+    const parsed = CreateLeadSchema.safeParse(await req.json());
 
-    if (!householdName) {
-      return Response.json({ success: false, error: "householdName is required" }, { status: 400 });
+    if (!parsed.success) {
+      return Response.json({ success: false, error: "Invalid input" }, { status: 400 });
     }
+
+    const { householdName, notes } = parsed.data;
 
     // Self-provision user in DB
     await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });

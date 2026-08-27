@@ -2,6 +2,7 @@
 import { db } from "@/lib/db";
 import { validateAuth, getUserFromToken, ensureUserInDb } from "@/lib/auth/keycloak";
 import { requireAgent, requireAuth } from "@/lib/auth/guards";
+import { CreateMessageSchema } from "@/lib/validation/schemas";
 
 // GET /api/messages?leadId=xxx
 export async function GET(req: NextRequest) {
@@ -47,10 +48,12 @@ export async function POST(req: NextRequest) {
     }
 
     const user = auth.user;
-    const { leadId, role, content, policies } = await req.json();
-    if (!leadId || !role || !content) {
-      return Response.json({ success: false, error: "Missing fields" }, { status: 400 });
+    const parsed = CreateMessageSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return Response.json({ success: false, error: "Invalid input" }, { status: 400 });
     }
+
+    const { leadId, role, content, policies } = parsed.data;
 
     // Self-provision user in DB
     await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });
@@ -64,9 +67,9 @@ export async function POST(req: NextRequest) {
     const message = await db.message.create({
       data: {
         leadId,
-        role: role.toUpperCase(),
+        role,
         content,
-        policies: policies ?? null,
+        policies: policies ?? undefined,
       },
     });
 

@@ -37,7 +37,7 @@ function normalizeRequest(body: Record<string, unknown>): NormalizedRequest | nu
     const messages: ChatTurn[] = (body.messages as Array<{ role?: string; content?: unknown }>)
       .map((m) => {
         const role: ChatTurn["role"] =
-          m.role === "system" ? "system" : m.role === "assistant" || m.role === "ai" ? "assistant" : "user";
+          m.role === "assistant" || m.role === "ai" ? "assistant" : "user";
         return { role, content: typeof m.content === "string" ? m.content : "" };
       })
       .filter((m) => m.content.length > 0);

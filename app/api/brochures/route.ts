@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadBrochure, listBrochures } from "@/lib/pdf/batchProcess";
 import { requireAuth, requireAdmin } from "@/lib/auth/guards";
+import { detectMimeType } from "@/lib/documents/mime";
+import { checkRateLimit, rateLimitExceeded } from "@/lib/security/rateLimiter";
 
 export async function GET(request: NextRequest) {
   const auth = await requireAuth(request);
@@ -29,6 +31,9 @@ export async function POST(request: NextRequest) {
   const auth = await requireAdmin(request);
   if (!auth.ok) return auth.response;
 
+  const rl = checkRateLimit(auth.user.sub, "brochures:upload");
+  if (!rl.allowed) return rateLimitExceeded("brochures:upload", rl.retryAfterSeconds);
+
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
@@ -48,7 +53,16 @@ export async function POST(request: NextRequest) {
     }
 
     const fileArrayBuffer = await file.arrayBuffer();
-    
+    const fileBuffer = Buffer.from(fileArrayBuffer);
+
+    const detectedMime = detectMimeType(fileBuffer);
+    if (!detectedMime || detectedMime !== "application/pdf") {
+      return NextResponse.json(
+        { error: "File content does not match PDF format. Only genuine PDF files are accepted." },
+        { status: 400 }
+      );
+    }
+
     const result = await uploadBrochure(
       fileArrayBuffer,
       file.name,

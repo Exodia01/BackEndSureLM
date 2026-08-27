@@ -244,9 +244,11 @@ export class KeycloakSession {
   private static getSessionSecret(): string {
     const secret = process.env.SESSION_SECRET;
     if (!secret) {
-      throw new Error(
-        "[Keycloak Session] SESSION_SECRET is not configured. Set SESSION_SECRET to a stable, high-entropy secret before starting the server."
-      );
+      const msg = process.env.NODE_ENV === "production"
+        ? "[Keycloak Session] SESSION_SECRET must be set in production. " +
+          "Set SESSION_SECRET to a high-entropy secret (e.g. openssl rand -hex 32)."
+        : "[Keycloak Session] SESSION_SECRET is not configured. Set SESSION_SECRET to a stable, high-entropy secret before starting the server.";
+      throw new Error(msg);
     }
     return secret;
   }

@@ -200,7 +200,7 @@ describe("requirement approval workflow", () => {
     );
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body.error).toContain("Approved requirements cannot be edited");
+    expect(body.error).toBe("Failed to update requirement");
     expect(dbMock.requirementDefinition.update).not.toHaveBeenCalled();
   });
 
@@ -232,7 +232,7 @@ describe("requirement approval workflow", () => {
     );
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body.error).toContain("Approved requirements cannot be deleted");
+    expect(body.error).toBe("Failed to reject requirement");
     expect(dbMock.requirementDefinition.delete).not.toHaveBeenCalled();
   });
 

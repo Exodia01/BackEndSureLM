@@ -39,3 +39,54 @@ tspareport.txt
 
 # Editor
 .vscode/
+
+# TLS certificates / keystores (NEVER commit)
+certs/
+keycloak/certs/
+
+# Dev-only eval scripts & reports
+scripts/eval-*
+scripts/corpus-*.json
+
+# Dev-only diagnostic scripts
+_dbinspect.cjs
+scripts/check-db-state.*
+scripts/check-qdrant-counts.mts
+scripts/read-embeddings.ps1
+scripts/debug-failing-queries.mts
+scripts/audit-check-tables.cjs
+scripts/check-db-connection.ts
+scripts/check-env.ts
+scripts/check-migrations.sql
+scripts/db-check*.sql
+scripts/cleanup-stale.ts
+scripts/integration-test-runner.ts
+
+# Old test directory (superseded by tests/security/)
+test/
+
+# Dev-only one-shot scripts (audits, seeding, smoke tests)
+scripts/ingest-all-brochures.ts
+scripts/model-reality-test.ts
+scripts/phase1-manifest-audit.ts
+scripts/phase2-validate-brochure.ts
+scripts/phase3-full-corpus-ingest.ts
+scripts/phase4-8-verify.ts
+scripts/qdrant-audit.ts
+scripts/qdrant-integrity-audit.ts
+scripts/recommender-dep-check.ts
+scripts/seed-policies.mts
+scripts/smoke-test-1brochure.ts
+
+# Historical docs (pre-Phase 2O)
+DATABASE_PORT_SETUP.md
+KEYCLOAK_REPORT.md
+OLLAMA_SETUP.md
+PRE-DEPLOYMENT-CHECKLIST.md
+SURELM_CURRENT_STATE_AUDIT.md
+SURELM_PHASE4A_VERIFICATION.md
+SURELM_PHASE4B_AUDIT.md
+SURELM_PHASE4B_IMPLEMENTATION.md
+SURELM_PHASE4C_IMPLEMENTATION.md
+TESTING_STATUS.md
+scripts/PHASE11-REPORT.md

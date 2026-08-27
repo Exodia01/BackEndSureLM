@@ -11,9 +11,9 @@ export async function POST(request: NextRequest) {
   if (!auth.ok) return auth.response;
 
   try {
-    const body = await request.json() as { folderPath?: string; recursive?: boolean };
+    const body = await request.json() as { recursive?: boolean };
     
-    const folderPath = body.folderPath || FOLDER_PATH;
+    const folderPath = FOLDER_PATH;
     const recursive = body.recursive ?? true;
 
     console.log(`[batch-upload] Scanning folder: ${folderPath} (recursive: ${recursive})`);
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         status: "failed",
-        error: (error as Error).message,
+        error: "Batch upload failed",
       },
       { status: 500 }
     );

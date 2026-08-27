@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { validateAuth, getUserFromToken, ensureUserInDb } from "@/lib/auth/keycloak";
 import { requireAgent, requireAuth } from "@/lib/auth/guards";
+import { UpdateLeadSchema } from "@/lib/validation/schemas";
 
 export async function GET(req: NextRequest) {
   try {
@@ -100,15 +101,16 @@ export async function PATCH(req: NextRequest) {
     }
 
     const user = auth.user;
-    const body = await req.json();
-    const { leadId, ...updates } = body;
+    const parsed = UpdateLeadSchema.safeParse(await req.json());
 
-    if (!leadId) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { success: false, error: "leadId required" },
+        { success: false, error: "Invalid input" },
         { status: 400 }
       );
     }
+
+    const { leadId, ...updates } = parsed.data;
 
     // Self-provision user in DB
     await ensureUserInDb({ sub: user.sub, email: user.email, name: user.name, realm_access: { roles: user.realmRoles }, resource_access: { "web-app": { roles: user.clientRoles } } });
@@ -125,13 +127,13 @@ export async function PATCH(req: NextRequest) {
     const lead = await db.policyLead.update({
       where: { id: leadId, agentId: dbUser.id },
       data: {
-        ...(updates.status && { status: updates.status }),
+        ...(updates.status !== undefined && { status: updates.status as any }),
         ...(updates.phone !== undefined && { phone: updates.phone }),
-        ...(updates.income !== undefined && { income: updates.income ? parseInt(updates.income) : null }),
-        ...(updates.familySize !== undefined && { familySize: updates.familySize ? parseInt(updates.familySize) : null }),
+        ...(updates.income !== undefined && { income: updates.income }),
+        ...(updates.familySize !== undefined && { familySize: updates.familySize }),
         ...(updates.notes !== undefined && { notes: updates.notes }),
-        ...(updates.dateOfBirth !== undefined && { dateOfBirth: updates.dateOfBirth ? new Date(updates.dateOfBirth) : null }),
-        ...(updates.followUpAt !== undefined && { followUpAt: updates.followUpAt ? new Date(updates.followUpAt) : null }),
+        ...(updates.dateOfBirth !== undefined && { dateOfBirth: updates.dateOfBirth ? new Date(updates.dateOfBirth as string) : null }),
+        ...(updates.followUpAt !== undefined && { followUpAt: updates.followUpAt ? new Date(updates.followUpAt as string) : null }),
       },
     });
 

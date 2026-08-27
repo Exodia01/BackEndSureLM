@@ -113,7 +113,7 @@ describe("brochure API auth + pipeline", () => {
       status: "NEW",
     });
     const form = new FormData();
-    form.append("file", new File([new Uint8Array([0x25, 0x50, 0x44, 0x46])], "a.pdf", { type: "application/pdf" }));
+    form.append("file", new File([new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34, 0x00, 0x00, 0x00, 0x00])], "a.pdf", { type: "application/pdf" }));
     const res = await POST(req("http://localhost:3000/api/brochures", { method: "POST", body: form }));
     expect(res.status).toBe(200);
     const body = await res.json();
