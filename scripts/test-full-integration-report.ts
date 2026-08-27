@@ -1,8 +1,31 @@
-import { db } from "./lib/db";
-import * as postgresRetrieval from "./lib/retrieval/postgres";
-import * as qdrantRetrieval from "./lib/retrieval/vector/index";
-import { hybridSearch } from "./lib/retrieval/hybrid";
-import { hybridRerank, rerank } from "./lib/ai/rerank/reranker";
+import { db } from "../lib/db";
+import {
+  postgresFullTextSearch,
+  hybridRetrieve,
+} from "../lib/ai/agents/retriever";
+import {
+  healthCheck as qdrantHealthCheck,
+  upsert as qdrantUpsert,
+  search as qdrantSearch,
+} from "../lib/qdrant";
+
+const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6334";
+
+async function deleteQdrantPoints(
+  collection: string,
+  pointIds: (string | number)[]
+): Promise<void> {
+  const response = await fetch(`${QDRANT_URL}/collections/${collection}/points/delete`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ points: pointIds }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`Failed to delete points: ${error.status}`);
+  }
+}
 
 interface QueryResult {
   query: string;
@@ -42,12 +65,12 @@ async function cleanUp() {
     if (createdDocs.length > 0) {
       await db.document.deleteMany({ where: { id: { in: createdDocs } } });
     }
-    
+
     try {
-      const results = await qdrantRetrieval.searchPoints("content_chunks", Array.from({ length: 768 }, () => 0), { limit: 100 });
+      const results = await qdrantSearch("content_chunks", Array.from({ length: 768 }, () => 0), 100);
       const pointIds = results.filter(r => String(r.payload?.chunk_id).includes("test_full")).map(r => String(r.id));
       if (pointIds.length > 0) {
-        await qdrantRetrieval.deletePoints("content_chunks", pointIds);
+        await deleteQdrantPoints("content_chunks", pointIds);
       }
     } catch {}
   } catch (err) {
@@ -73,7 +96,7 @@ async function setupTestEnvironment() {
 
   const vector = Array.from({ length: 768 }, () => 0.1);
   try {
-    await qdrantRetrieval.upsertPoints("content_chunks", [
+    await qdrantUpsert("content_chunks", [
       {
         id: TEST_CHUNK_ID,
         vector,
@@ -113,7 +136,7 @@ function escapeMarkdown(text: string): string {
 async function runTests() {
   const outputLogs: string[] = [];
   const timestamp = generateTimestamp();
-  
+
   const logMessage = (message: string): void => {
     console.log(message);
     outputLogs.push(message);
@@ -139,7 +162,7 @@ async function runTests() {
     logMessage("STEP 1: PostgreSQL FTS Tests");
     logMessage("-".repeat(70));
 
-    const ftsResults1 = await postgresRetrieval.postgresFullTextSearch("waiting period");
+    const ftsResults1 = await postgresFullTextSearch("waiting period");
     assert(ftsResults1.length > 0, "FTS should find chunks with exact keyword 'waiting period'");
     assert(
       ftsResults1.some(r => r.id === TEST_CHUNK_ID),
@@ -147,11 +170,11 @@ async function runTests() {
     );
     logMessage("[OK] Test 1: Exact keyword match - PASSED");
 
-    const ftsResults2 = await postgresRetrieval.postgresFullTextSearch("car insurance");
+    const ftsResults2 = await postgresFullTextSearch("car insurance");
     assert(ftsResults2.length === 0, "FTS should NOT find chunks when query doesn't match content");
     logMessage("[OK] Test 2: Partial semantic mismatch - PASSED");
 
-    const ftsResults3 = await postgresRetrieval.postgresFullTextSearch("");
+    const ftsResults3 = await postgresFullTextSearch("");
     assert(Array.isArray(ftsResults3), "FTS should handle empty query and return array");
     logMessage("[OK] Test 3: Empty query handling - PASSED");
 
@@ -166,7 +189,7 @@ async function runTests() {
     });
     createdChunks.push(nullChunkId);
 
-    const ftsResults4 = await postgresRetrieval.postgresFullTextSearch("metadata");
+    const ftsResults4 = await postgresFullTextSearch("metadata");
     assert(
       ftsResults4.some(r => r.id === nullChunkId),
       "FTS should find chunks with minimal/null metadata"
@@ -176,7 +199,7 @@ async function runTests() {
 
     const chunk2Id = TEST_CHUNK_ID + "_2";
     const chunk3Id = TEST_CHUNK_ID + "_3";
-    
+
     await db.chunk.create({
       data: {
         id: chunk2Id,
@@ -186,7 +209,7 @@ async function runTests() {
       },
     });
     createdChunks.push(chunk2Id);
-    
+
     await db.chunk.create({
       data: {
         id: chunk3Id,
@@ -197,7 +220,7 @@ async function runTests() {
     });
     createdChunks.push(chunk3Id);
 
-    const ftsResults5 = await postgresRetrieval.postgresFullTextSearch("waiting period");
+    const ftsResults5 = await postgresFullTextSearch("waiting period");
     assert(
       ftsResults5.length >= 2,
       "FTS should return multiple matching chunks"
@@ -215,12 +238,12 @@ async function runTests() {
     logMessage("-".repeat(70));
 
     try {
-      const health = await qdrantRetrieval.healthCheck();
+      const health = await qdrantHealthCheck();
       assert(health, "Qdrant should be available and collection exists");
       logMessage("[OK] Test 6: Collection existence - PASSED");
 
       const testVector = Array.from({ length: 768 }, () => 0.2);
-      await qdrantRetrieval.upsertPoints("content_chunks", [
+      await qdrantUpsert("content_chunks", [
         {
           id: TEST_CHUNK_ID,
           vector: testVector,
@@ -229,7 +252,7 @@ async function runTests() {
       ]);
       logMessage("[OK] Test 7: Upsert points with payload - PASSED");
 
-      const searchResults1 = await qdrantRetrieval.searchPoints("content_chunks", testVector, { limit: 5 });
+      const searchResults1 = await qdrantSearch("content_chunks", testVector, 5);
       assert(
         searchResults1.length > 0,
         "Qdrant search should return results"
@@ -240,9 +263,8 @@ async function runTests() {
       );
       logMessage("[OK] Test 8: Search returns payload - PASSED");
 
-      const searchResults2 = await qdrantRetrieval.searchPoints("content_chunks", testVector, {
-        limit: 5,
-        filter: [{ key: "chunk_id", match: { value: TEST_CHUNK_ID } }],
+      const searchResults2 = await qdrantSearch("content_chunks", testVector, 5, {
+        must: [{ key: "chunk_id", match: { value: TEST_CHUNK_ID } }],
       });
       assert(
         searchResults2.length > 0,
@@ -251,11 +273,11 @@ async function runTests() {
       logMessage("[OK] Test 9: Payload filtering - PASSED");
 
       const unrelatedVector = Array.from({ length: 768 }, () => 0.9);
-      const searchResults3 = await qdrantRetrieval.searchPoints("content_chunks", unrelatedVector, { limit: 1 });
+      const searchResults3 = await qdrantSearch("content_chunks", unrelatedVector, 1);
       logMessage(`[OK] Test 10: Empty results handling - PASSED (score: ${searchResults3[0]?.score || "N/A"})`);
 
       try {
-        await qdrantRetrieval.searchPoints("content_chunks", [1, 2, 3], { limit: 5 });
+        await qdrantSearch("content_chunks", [1, 2, 3], 5);
         assert(false, "Should handle invalid vector size");
       } catch (err: any) {
         if (!err.message.includes("invalid") && !err.message.includes("size")) {
@@ -263,7 +285,7 @@ async function runTests() {
         }
       }
       try {
-        await qdrantRetrieval.searchPoints("content_chunks", [], { limit: 5 });
+        await qdrantSearch("content_chunks", [], 5);
         assert(false, "Should handle empty vector");
       } catch (err: any) {
         if (!err.message.includes("invalid") && !err.message.includes("size")) {
@@ -287,7 +309,7 @@ async function runTests() {
     const hybridVector = Array.from({ length: 768 }, () => 0.15);
 
     try {
-      await qdrantRetrieval.upsertPoints("content_chunks", [
+      await qdrantUpsert("content_chunks", [
         {
           id: TEST_CHUNK_ID,
           vector: hybridVector,
@@ -295,11 +317,11 @@ async function runTests() {
         },
       ]);
     } catch (err) {
-      logMessage("[WARN] Qdrant upsert failed:", err);
+      logMessage("[WARN] Qdrant upsert failed: " + String(err));
     }
 
     const test12QueryStart = Date.now();
-    const hybridResults1 = await hybridSearch("waiting period", hybridVector);
+    const hybridResults1 = await hybridRetrieve("waiting period", undefined, hybridVector);
     const test12Duration = Date.now() - test12QueryStart;
     assert(hybridResults1.length > 0, "Hybrid search should return results");
     logMessage(`[OK] Test 12: Concurrent execution - PASSED (time: ${test12Duration}ms)`);
@@ -319,7 +341,7 @@ async function runTests() {
 
     const testChunkId_dup = TEST_CHUNK_ID + "_dup";
     const docId = createdDocs[0];
-    
+
     await db.chunk.create({
       data: {
         id: testChunkId_dup,
@@ -331,15 +353,15 @@ async function runTests() {
     createdChunks.push(testChunkId_dup);
 
     const dupVector = Array.from({ length: 768 }, () => 0.3);
-    
+
     try {
-      await qdrantRetrieval.upsertPoints("content_chunks", [
+      await qdrantUpsert("content_chunks", [
         { id: testChunkId_dup, vector: dupVector, payload: { chunk_id: testChunkId_dup } },
       ]);
     } catch {}
 
-    const hybridResults2 = await hybridSearch("high scoring chunk", dupVector);
-    
+    const hybridResults2 = await hybridRetrieve("high scoring chunk", undefined, dupVector);
+
     const dupResult = hybridResults2.find(r => r.id === testChunkId_dup);
     assert(
       typeof dupResult?.score === "number",
@@ -349,17 +371,17 @@ async function runTests() {
 
     await db.chunk.deleteMany({ where: { id: testChunkId_dup } });
     try {
-      await qdrantRetrieval.deletePoints("content_chunks", [testChunkId_dup]);
+      await deleteQdrantPoints("content_chunks", [testChunkId_dup]);
     } catch {}
 
-    const hybridResults3 = await hybridSearch("waiting period", hybridVector);
-    
+    const hybridResults3 = await hybridRetrieve("waiting period", undefined, hybridVector);
+
     assert(
       Array.isArray(hybridResults3),
       "Should return array even if one source fails"
     );
     assert(
-      hybridResults3.every(r => r.id && typeof r.score === "number" && r.source && r.payload),
+      hybridResults3.every(r => r.id && typeof r.score === "number" && r.source && r.metadata),
       "All results should have valid format"
     );
     logMessage("[OK] Test 16: Single failure handling - PASSED");
@@ -372,12 +394,12 @@ async function runTests() {
       assert(typeof result.id === "string", `id should be string, got ${typeof result.id}`);
       assert(typeof result.score === "number" && !isNaN(result.score), `score should be number, got ${typeof result.score}`);
       assert(
-        ["fts", "vector", "history"].includes(result.source),
-        `source should be one of fts|vector|history, got ${result.source}`
+        ["postgres_fts", "qdrant", "user_history"].includes(result.source),
+        `source should be one of postgres_fts|qdrant|user_history, got ${result.source}`
       );
       assert(
-        typeof result.payload === "object" && result.payload !== null,
-        `payload should be object, got ${typeof result.payload}`
+        typeof result.metadata === "object" && result.metadata !== null,
+        `metadata should be object, got ${typeof result.metadata}`
       );
     }
     logMessage("[OK] Test 17: Type validation - PASSED");
@@ -390,15 +412,15 @@ async function runTests() {
     const ruralVector = Array.from({ length: 768 }, () => 0.12);
 
     try {
-      await qdrantRetrieval.upsertPoints("content_chunks", [
+      await qdrantUpsert("content_chunks", [
         { id: TEST_CHUNK_ID, vector: ruralVector, payload: { chunk_id: TEST_CHUNK_ID } },
       ]);
     } catch (err) {
-      logMessage("[WARN] Qdrant upsert failed:", err);
+      logMessage("[WARN] Qdrant upsert failed: " + String(err));
     }
 
     const test18QueryStart = Date.now();
-    const hybridResults4 = await hybridSearch(TEST_QUERY_RURAL_FAMILIES, ruralVector);
+    const hybridResults4 = await hybridRetrieve(TEST_QUERY_RURAL_FAMILIES, undefined, ruralVector);
     const test18Duration = Date.now() - test18QueryStart;
 
     assert(
@@ -412,7 +434,7 @@ async function runTests() {
 
     await db.chunk.deleteMany({ where: { id: TEST_CHUNK_ID } });
     try {
-      await qdrantRetrieval.deletePoints("content_chunks", [TEST_CHUNK_ID]);
+      await deleteQdrantPoints("content_chunks", [TEST_CHUNK_ID]);
     } catch {}
 
     const totalTime = Date.now() - startTime;

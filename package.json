@@ -9,9 +9,8 @@
     "start": "next start",
     "worker:documents": "tsx scripts/document-worker.ts",
     "lint": "eslint",
-    "test-db": "tsx test-db.ts",
     "test:api-auth": "vitest run --config vitest.smoke.config.ts",
-    "test:all": "tsx test-full-integration-report.ts",
+    "test:all": "tsx scripts/test-full-integration-report.ts",
     "bootstrap:keycloak": "tsx scripts/bootstrap-keycloak.ts"
   },
   "dependencies": {

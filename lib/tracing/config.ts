@@ -1,2 +1,0 @@
-﻿export const PHOENIX_PROJECT_NAME = process.env.PHOENIX_PROJECT_NAME || 'surelm-platform';
-export const PHOENIX_ENDPOINT = process.env.PHOENIX_ENDPOINT || 'http://localhost:6007';

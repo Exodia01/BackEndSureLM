@@ -80,7 +80,7 @@ SureLM empowers grassroots insurance agents to bring financial protection to hou
 ## Repository Map
 
 ```
-Content/
+docs/
   SureLM_Business_Context_Contract.md        # Frozen business contract (incl. §8 requirement contract)
   SureLM_Architecture_Remediation_Plan.md    # Architecture remediation authority
 prisma/
@@ -101,15 +101,13 @@ lib/
     extractRequirements.ts                   # LLM extraction → RequirementDefinition drafts
     generateRecommendations.ts               # Recommendation generation (protected)
     retrievePolicies.ts                      # Policy retrieval (protected)
-    hybridRetrieval.ts                       # FTS + vector + history hybrid retrieval
     orchestrator.ts                          # Orchestration entry
     embeddings.ts                            # Embedding helpers
     intent.ts                                # Intent classification
     agents/llm.ts                            # Primary/fallback LLM resolution
+    agents/retriever.ts                      # FTS + vector + history hybrid retrieval
     services/policyVersioning.ts             # Publish PolicyVersion + immutable RequirementSnapshot
   applications/checklist.ts                  # Application checklist + FrozenRequirement contract
-  retrieval/                                 # Search implementations (protected)
-  vector/                                    # Vector storage utilities (protected)
   qdrant.ts                                  # Qdrant client utilities
   db.ts                                      # Prisma client
   orchestrator/                              # Orchestration context
@@ -121,18 +119,10 @@ components/dashboard/
   RequirementApproval.tsx                    # Admin approval UI
   PolicyVersionHistory.tsx                   # Version history UI
 scripts/
-  phase2b-brochure-catalog.ts                # Read-only brochure catalog (27 products)
-  phase2f-apply-migration.ts                 # Applies the additive 2F migration to surelm_0
-  phase2f-verify-state.ts                    # Verifies migration + DB state
-  phase2h-populate.ts                        # Scripted ADMIN workflow: populates 27 policies (idempotent)
-  phase2h-verify.ts                          # Full Phase 2H integrity audit (277 checks)
   bootstrap-keycloak.ts                      # Keycloak initialization
   document-worker.ts                         # Document processing worker
   cleanup.ts                                 # Build cleanup
-  PHASE0-FORENSIC-FINDINGS.md                # Forensic report (legacy DB incident)
-  PHASE1-CANONICAL-DATA-REPAIR.md            # Phase 1 report (canonical corpus + baseline)
-  PHASE2-AUTHORITATIVE-DATA-WORKFLOW.md      # Phase 2 report (verdict: PARTIAL)
-  PHASE1-CANONICAL-MANIFEST.json             # Canonical corpus manifest
+  test-full-integration-report.ts            # Integration report runner (all deep-retrieval paths)
 tests/
   unit/    (requirement-extraction, policy-versioning, retrieval, auth, rate-limit, documents, ...)
   integration/ (policy-api, policy-versions-api, requirement-approval, concurrent-publish, chat, ...)
@@ -143,7 +133,7 @@ tests/
 - `lib/ai/generateRecommendations.ts`
 - `lib/ai/retrievePolicies.ts`
 - `app/api/chat/route.ts`
-- `lib/retrieval/*`, `lib/vector/*`
+- `lib/ai/agents/retriever.ts`, `lib/qdrant.ts`
 
 ---
 
@@ -181,7 +171,7 @@ ADMIN publishes a version
 
 ### Frozen-contract fields (Phase 2F — added additively)
 
-Per `Content/SureLM_Business_Context_Contract.md` §8, `RequirementDefinition` now carries (all nullable, so the migration is safe on any row state):
+Per `docs/SureLM_Business_Context_Contract.md` §8, `RequirementDefinition` now carries (all nullable, so the migration is safe on any row state):
 
 | Field | Meaning |
 |-------|---------|
@@ -212,13 +202,13 @@ These fields are **persisted verbatim** when produced by extraction and **copied
 
 ### Why there is no `_prisma_migrations` history
 
-`surelm_0` was created via `prisma db push`, so it has **no `_prisma_migrations` history table**. The Phase 2F migration is recorded in the repo for history, and its exact SQL is applied directly to the DB by `scripts/phase2f-apply-migration.ts` (BEGIN/COMMIT, rollback on error, `ADD COLUMN IF NOT EXISTS`). `scripts/phase2f-verify-state.ts` confirms the columns exist and reports row counts.
+`surelm_0` was created via `prisma db push`, so it has **no `_prisma_migrations` history table**. The Phase 2F migration is recorded in the repo for history, and its exact SQL (`ADD COLUMN IF NOT EXISTS` within a BEGIN/COMMIT transaction with rollback on error) is in `prisma/migrations/20260816120000_phase2f_frozen_requirement_fields/migration.sql`.
 
 ---
 
 ## Corpus State (Phase 1)
 
-Verified canonical state (see `scripts/PHASE1-CANONICAL-DATA-REPAIR.md` and `scripts/PHASE1-CANONICAL-MANIFEST.json`):
+Verified canonical state (corpus facts below):
 
 - **27** READY brochures (source PDFs in `PDF_STORAGE_DIR=S:/BackEndSureLM/data_phase2/pdfs`).
 - **486** canonical chunks, **486** Qdrant vectors (`policy_knowledge`, 768-dim, Cosine).
@@ -259,7 +249,7 @@ Silo boundary: **Silo 1** = PDF → chunks → extraction (`qwen2.5:7b`) → ADM
 
 ## Phase 2H Population (scripted ADMIN workflow)
 
-All 27 canonical brochures were populated into the authoritative chain by a **scripted ADMIN workflow** (`scripts/phase2h-populate.ts`) that invokes the **same service/workflow functions used by the ADMIN APIs** — no business logic is duplicated:
+All 27 canonical brochures were populated into the authoritative chain by a **scripted ADMIN workflow** (historically `scripts/phase2h-populate.ts`, since removed) that invoked the **same service/workflow functions used by the ADMIN APIs** — no business logic was duplicated:
 
 ```
 27 Policy + PolicyBrochure links (mirrors POST /api/policies + /api/policies/[id]/brochures)
@@ -272,7 +262,7 @@ All 27 canonical brochures were populated into the authoritative chain by a **sc
 
 ### Frozen extraction schema (Phase 2H-R contract decision)
 
-`validationRules.policyTermYears` / `premiumTermYears` accept **either a scalar number or an array of numbers**. The frozen contract (`Content/SureLM_Business_Context_Contract.md` §8) defines `validationRules` as extensible JSON and never requires scalar-only term years. Brochures legitimately list multiple allowed terms:
+`validationRules.policyTermYears` / `premiumTermYears` accept **either a scalar number or an array of numbers**. The frozen contract (`docs/SureLM_Business_Context_Contract.md` §8) defines `validationRules` as extensible JSON and never requires scalar-only term years. Brochures legitimately list multiple allowed terms:
 
 - **Kotak Ace Investment**: "Policy Term: 10 / 15 / 20 / 25 / 30 years" → `policyTermYears: [10,15,20,25,30]`
 - **Kotak POS Bachat Bima**: "Policy Term (Fixed): 16 years / 20 years" → `policyTermYears: [16,20]`
@@ -295,14 +285,7 @@ Provenance is present on all 230 approved requirements: `source_brochure_id`, no
 
 ### How Phase 2H was executed / verified
 
-```bash
-# Population (idempotent; skips already-published policies)
-npx tsx scripts/phase2h-populate.ts
-
-# Full integrity audit (277 checks: counts, links, versions, snapshots,
-# no orphans/duplicates, no drafts in snapshots, provenance, Qdrant count)
-npx tsx scripts/phase2h-verify.ts
-```
+The one-shot phase scripts (`phase2h-populate.ts`, `phase2h-verify.ts`) were removed on completion (2026-08-27 cleanup). DB counts below were captured at the time and are pinned in the [Current authoritative DB counts](#current-authoritative-db-counts-verified) table.
 
 ---
 
@@ -335,13 +318,10 @@ Both `postgresFullTextSearch` implementations now LEFT JOIN `Brochure` and expos
 ### Verification
 
 ```bash
-# Taxonomy audit
-npx tsx scripts/phase2j-requirement-taxonomy-audit.ts
-
 # Full test suite
 npx vitest run
 
-# TypeScript check (3 known pre-existing errors tolerated)
+# TypeScript check
 npx tsc --noEmit
 ```
 
@@ -395,7 +375,7 @@ npm run dev
 Verify the canonical DB before anything else:
 
 ```bash
-npx tsx scripts/check-db-state.ts      # or phase2f-verify-state.ts for Phase 2F columns
+npx prisma validate
 ```
 
 ### Database Setup
@@ -429,22 +409,13 @@ npx prisma db push
 | `start` | `next start` | Serve production build |
 | `worker:documents` | `tsx scripts/document-worker.ts` | Document processing worker |
 | `lint` | `eslint` | Lint |
-| `test-db` | `tsx test-db.ts` | DB connectivity check |
 | `test:api-auth` | `vitest run --config vitest.smoke.config.ts` | Live smoke auth test against a running instance |
-| `test:all` | `tsx test-full-integration-report.ts` | Integration report runner (root `test-full-integration-report.ts`) |
+| `test:all` | `tsx scripts/test-full-integration-report.ts` | Integration report runner (`scripts/test-full-integration-report.ts`) |
 | `bootstrap:keycloak` | `tsx scripts/bootstrap-keycloak.ts` | Keycloak init |
 
-### Phase 2F verification
+### Phase 2F migration
 
-```bash
-# Apply the additive migration (safe to re-run; idempotent ADD COLUMN IF NOT EXISTS)
-npx tsx scripts/phase2f-apply-migration.ts
-
-# Verify columns + row counts
-npx tsx scripts/phase2f-verify-state.ts
-```
-
-Expected post-2F state: the 5 frozen columns exist on `RequirementDefinition`; authoritative tables are `0` rows until an ADMIN runs the workflow.
+The additive migration (`ADD COLUMN IF NOT EXISTS`) is recorded in `prisma/migrations/20260816120000_phase2f_frozen_requirement_fields/migration.sql`. The one-shot apply/verify scripts were removed on completion (2026-08-27 cleanup); expected post-2F state is that the 5 frozen columns exist on `RequirementDefinition`.
 
 ---
 
@@ -465,9 +436,10 @@ npx prisma validate
 ```
 
 **Current status (verified):**
-- `npx vitest run` → **37 files / 314 tests passing**.
+- `npx vitest run` → **44 files / 321 tests passing**.
 - `npx prisma validate` and `npx prisma generate` pass.
-- `npx tsc --noEmit` → only **3 pre-existing errors** in untracked Phase 1 scripts (`scripts/eval-baseline-retrieval.mts` duplicate property; `scripts/qdrant-integrity-audit.ts` cannot find module `./lib/db`; `scripts/qdrant-integrity-audit.ts` `Property 'filter' does not exist`). These are not in the shipped workflow code.
+- `npx tsc --noEmit` → **clean** (no errors).
+- `npm run build` (cleanup + prisma generate + next build) → compiles successfully.
 
 ---
 
@@ -478,16 +450,15 @@ npx prisma validate
 | `lib/ai/generateRecommendations.ts` | Core recommender logic — business-critical |
 | `lib/ai/retrievePolicies.ts` | Retrieval entry — business-critical |
 | `app/api/chat/route.ts` | Conversational API — business-critical |
-| `lib/retrieval/*`, `lib/vector/*` | Search/vector internals |
+| `lib/ai/agents/retriever.ts`, `lib/qdrant.ts` | Hybrid retrieval internals |
 | `prisma/schema.prisma` | Schema changes must be additive migrations, not destructive |
-| `Content/SureLM_Business_Context_Contract.md` | Frozen business contract |
+| `docs/SureLM_Business_Context_Contract.md` | Frozen business contract |
 
 ---
 
 ## Historical / Forensic Notes
 
-- **Legacy DB incident (Phase 0):** the old runtime used `surelm` @ port `55432`, which was **not** the intended DB (intended: `surelm_0` @ `6432`). The `surelm` DB suffered destructive `db push` damage. The Windows `DATABASE_URL` override that caused this was removed. Full forensic details: `scripts/PHASE0-FORENSIC-FINDINGS.md`.
-- Phase reports (in `scripts/`): `PHASE0-FORENSIC-FINDINGS.md`, `PHASE1-CANONICAL-DATA-REPAIR.md`, `PHASE2-AUTHORITATIVE-DATA-WORKFLOW.md`.
+- **Legacy DB incident (Phase 0):** the old runtime used `surelm` @ port `55432`, which was **not** the intended DB (intended: `surelm_0` @ `6432`). The `surelm` DB suffered destructive `db push` damage. The Windows `DATABASE_URL` override that caused this was removed. Forensic report (`scripts/PHASE0-FORENSIC-FINDINGS.md`) was archived out of the repo during the 2026-08-27 cleanup.
 - Legacy chunks with `brochureId=null` (`113736`, `113736_2`, `113736_3`) are reported, not deleted.
 
 ---
@@ -497,8 +468,7 @@ npx prisma validate
 1. **1 UNCLASSIFIED artifact blocks 1 policy** — `max_attempts_message` in Single Invest Plus (extraction artifact, no brochure basis). SmartLife was fixed in Phase 2L.
 2. **No `_prisma_migrations` history** on `surelm_0`; the DB was created via `prisma db push`. See [Database Setup](#database-setup) for the reproducible initialization path. Two partial unique indexes exist only in migration SQL, not in `schema.prisma`.
 3. **Fallback LLM models** (`llama3.1:8b`, `llava:7b`) are not installed in Ollama — treat as non-functional.
-4. 3 pre-existing `tsc` errors in untracked Phase 1 scripts (see [Testing](#testing)).
-5. `config/.env` is deprecated — canonical config is at repository root `.env` / `.env.local`.
+4. `config/` and its legacy env-splitting modules were removed in the 2026-08-27 cleanup — canonical config is at repository root `.env` / `.env.local`, loaded via `next/dotenv` and `vitest.config.ts`.
 
 ---
 
